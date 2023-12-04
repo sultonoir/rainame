@@ -62,7 +62,7 @@ model Store{
   id                String    @id @default(cuid())
   email             String      @unique
   hashedPassword    String?
-  imageUrl          String?
+  image             String?
   desc              String?     
   products          Products[]
   rattings          Rattings[]
