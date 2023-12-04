@@ -5,10 +5,13 @@ import {
   NavbarContent,
   NavbarItem,
 } from "@nextui-org/navbar";
-import { Link } from "@nextui-org/link";
 import SearchInput from "./SearchInput";
+import { getServerAuthSession } from "@/server/auth";
+import ModalAuth from "../modal/ModalAuth";
+import { Link } from "@nextui-org/link";
 
 export default async function NavbarUi() {
+  const session = await getServerAuthSession();
   return (
     <Navbar
       isBordered
@@ -17,14 +20,16 @@ export default async function NavbarUi() {
       }}
     >
       <NavbarBrand>
-        <p className="font-bold text-inherit">Rainame</p>
+        <Link href="/" className="font-bold text-inherit text-primary">
+          Rainame
+        </Link>
       </NavbarBrand>
       <NavbarContent className="hidden grow gap-4 sm:flex" justify="center">
         <SearchInput />
       </NavbarContent>
       <NavbarContent justify="end">
         <NavbarItem className="hidden lg:flex">
-          <Link href="#">Login</Link>
+          {!session ? <ModalAuth /> : null}
         </NavbarItem>
         <NavbarItem></NavbarItem>
       </NavbarContent>

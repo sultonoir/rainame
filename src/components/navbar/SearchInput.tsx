@@ -8,8 +8,10 @@ const SearchInput = () => {
     <div className="relative w-full">
       <Input
         placeholder="Search..."
-        size="sm"
+        size="md"
         radius="lg"
+        variant="flat"
+        labelPlacement="outside"
         endContent={
           <Button
             size="sm"

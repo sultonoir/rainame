@@ -5,6 +5,7 @@ import { GeistSans } from "geist/font/sans";
 import { TRPCReactProvider } from "@/trpc/react";
 import { EdgeStoreProvider } from "@/lib/edgestore";
 import { Providers } from "@/components/shared/Providers";
+import { Toaster } from "sonner";
 
 export const metadata = {
   title: "Rainame",
@@ -22,7 +23,10 @@ export default function RootLayout({
       <body className={GeistSans.className}>
         <TRPCReactProvider cookies={cookies().toString()}>
           <Providers>
-            <EdgeStoreProvider>{children}</EdgeStoreProvider>
+            <EdgeStoreProvider>
+              <Toaster richColors position="bottom-left" />
+              {children}
+            </EdgeStoreProvider>
           </Providers>
         </TRPCReactProvider>
       </body>

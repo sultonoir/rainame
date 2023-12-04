@@ -5,6 +5,7 @@ import {
   type NextAuthOptions,
 } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
+import GoogleProvider from "next-auth/providers/google";
 import bcrypt from "bcryptjs";
 import { env } from "@/env";
 import { db } from "@/server/db";
@@ -36,30 +37,82 @@ declare module "next-auth" {
  * @see https://next-auth.js.org/configuration/options
  */
 export const authOptions: NextAuthOptions = {
-  callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
-  },
   adapter: PrismaAdapter(db),
+  callbacks: {
+    session: ({ session, token }) => {
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: token.sub,
+        },
+      };
+    },
+  },
+  session: {
+    strategy: "jwt",
+  },
   providers: [
     DiscordProvider({
       clientId: env.DISCORD_CLIENT_ID,
       clientSecret: env.DISCORD_CLIENT_SECRET,
     }),
+    GoogleProvider({
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
+    }),
     CredentialsProvider({
       id: "admin",
+      name: "Sign in",
       credentials: {
-        email: { label: "email", type: "text" },
-        password: { label: "password", type: "password" },
+        email: {
+          label: "Email",
+          type: "email",
+          placeholder: "example@example.com",
+        },
+        password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          throw new Error("Invalid credentials");
+        if (!credentials?.email || !credentials.password) {
+          return null;
+        }
+
+        const user = await db.store.findUnique({
+          where: {
+            email: credentials.email,
+          },
+        });
+
+        if (!user?.hashedPassword) {
+          throw new Error("admin not found");
+        }
+
+        const isCorrectPassword = await bcrypt.compare(
+          credentials.password,
+          user.hashedPassword,
+        );
+
+        if (!isCorrectPassword) {
+          throw new Error("Wrong password");
+        }
+
+        return user;
+      },
+    }),
+    CredentialsProvider({
+      id: "user",
+      name: "Sign in",
+      credentials: {
+        email: {
+          label: "Email",
+          type: "email",
+          placeholder: "example@example.com",
+        },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials.password) {
+          return null;
         }
 
         const user = await db.user.findUnique({
