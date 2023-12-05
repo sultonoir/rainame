@@ -11,6 +11,8 @@ datasource db {
 }
 
 
+
+
 // Necessary for Next auth
 model Account {
     id                String  @id @default(cuid())
@@ -80,11 +82,11 @@ model Products{
   imageUrl          String[]
   price             Int
   discount          Int?
+  subcategory       String
   stock             Int
   selling           Int?
   size              String[]
   category          String[]
-  subscategory      String
   color             String[]
   createdAt         DateTime @default(now())
   updatedAt         DateTime @default(now())

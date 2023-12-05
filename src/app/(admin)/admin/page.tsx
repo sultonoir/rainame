@@ -1,4 +1,5 @@
 import AuthAdmin from "@/components/authadmin/AuthAdmin";
+import ModalCreateProduct from "@/components/modal/ModalCreateProduct";
 import { getServerAuthSession } from "@/server/auth";
 import React from "react";
 
@@ -11,7 +12,10 @@ const page = async () => {
           <AuthAdmin />
         </>
       ) : (
-        <div className="container">{admin.user.id}</div>
+        <div className="container">
+          <ModalCreateProduct />
+          {admin.user.id}
+        </div>
       )}
     </>
   );
