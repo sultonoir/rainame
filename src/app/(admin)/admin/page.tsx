@@ -14,7 +14,6 @@ const page = async () => {
       ) : (
         <div className="container">
           <ModalCreateProduct />
-          {admin.user.id}
         </div>
       )}
     </>
