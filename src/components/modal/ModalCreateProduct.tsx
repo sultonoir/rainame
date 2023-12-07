@@ -16,7 +16,7 @@ import {
   SelectItem,
   Image,
 } from "@nextui-org/react";
-import { PlusCircleIcon } from "lucide-react";
+import { PlusCircleIcon, XIcon } from "lucide-react";
 import { z } from "zod";
 import { useForm, Controller, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -472,15 +472,18 @@ export default function ModalCreateProduct() {
                                 alt={`Gambar ${index + 1}`}
                                 className="z-0 aspect-square object-cover"
                               />
-                              <button
+                              <Button
+                                isIconOnly
+                                size="sm"
+                                radius="full"
                                 onClick={(e) => {
                                   e.preventDefault();
                                   handleDeleteImage(index);
                                 }}
-                                className="absolute right-2 top-2 z-[9999999999999] rounded-md bg-red-500 px-2 py-1 text-white"
+                                className="absolute right-2 top-2 z-50 bg-danger px-2 py-1 text-white"
                               >
-                                x
-                              </button>
+                                <XIcon />
+                              </Button>
                             </div>
                           ))}
                         </div>
