@@ -62,7 +62,8 @@ model Store{
   email             String      @unique
   hashedPassword    String?
   image             String?
-  desc              String?     
+  desc              String?
+  hasnotify         Boolean     @default(false)     
   products          Products[]
   rattings          Rattings[]
   notify            Notify[]
