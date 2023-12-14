@@ -21,7 +21,7 @@ export default async function RootLayout({
 }) {
   const session = await getServerAuthSession();
   return (
-    <html lang="en" className="dark">
+    <html lang="en">
       <body className={GeistSans.className}>
         <SessionProvider session={session}>
           <TRPCReactProvider cookies={cookies().toString()}>

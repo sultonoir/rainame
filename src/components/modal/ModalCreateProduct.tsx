@@ -20,7 +20,7 @@ import { PlusCircleIcon, XIcon } from "lucide-react";
 import { z } from "zod";
 import { useForm, Controller, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Categories, Colors, Sizes } from "@/lib/types";
+import { Categories, Colors, Sizes } from "@/lib/utils";
 import { useUploadThing } from "@/lib/uploadthing";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
@@ -42,9 +42,7 @@ const productSchema = z.object({
   color: z.array(z.string()).min(1, {
     message: "form has not been filled out",
   }),
-  category: z.array(z.string()).min(1, {
-    message: "form has not been filled out",
-  }),
+  category: z.string(),
   size: z.array(z.string()).min(1, {
     message: "form has not been filled out",
   }),
@@ -86,17 +84,20 @@ export default function ModalCreateProduct() {
       subcategory: "",
       imageUrl: [],
       color: [],
-      category: [],
+      category: "",
       size: [],
     },
   });
 
   // api create product
+  const ctx = api.useUtils();
   const { mutate } = api.product.createProduct.useMutation({
     onSuccess: () => {
+      ctx.product.getAllProduct.getData();
       toast.success("product created");
       reset();
       onClose();
+      setFiles([]);
     },
     onError: (e) => {
       toast.error(e.message);
@@ -181,11 +182,16 @@ export default function ModalCreateProduct() {
 
   return (
     <>
-      <Button size="sm" color="primary" onPress={onOpen}>
-        <PlusCircleIcon />
+      <Button size="md" color="primary" onPress={onOpen}>
         Create product
+        <PlusCircleIcon />
       </Button>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="5xl">
+      <Modal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        size="5xl"
+        scrollBehavior="inside"
+      >
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1">
             Create product
@@ -334,10 +340,8 @@ export default function ModalCreateProduct() {
                           labelPlacement="outside"
                           aria-label="select"
                           selectedKeys={field.value}
-                          onChange={(e) =>
-                            handleSelectionChange(e, field.onChange)
-                          }
-                          selectionMode="multiple"
+                          onChange={(e) => e.target.value}
+                          selectionMode="single"
                           placeholder="Select a category"
                           classNames={{
                             base: "max-w-full",
@@ -347,7 +351,9 @@ export default function ModalCreateProduct() {
                             return (
                               <div className="flex flex-wrap gap-2">
                                 {items.map((item) => (
-                                  <Chip key={item.key}>{item.data?.title}</Chip>
+                                  <Chip key={item.key} color="primary">
+                                    {item.data?.title}
+                                  </Chip>
                                 ))}
                               </div>
                             );
@@ -393,7 +399,9 @@ export default function ModalCreateProduct() {
                             return (
                               <div className="flex flex-wrap gap-2">
                                 {items.map((item) => (
-                                  <Chip key={item.key}>{item.data?.name}</Chip>
+                                  <Chip key={item.key} color="primary">
+                                    {item.data?.name}
+                                  </Chip>
                                 ))}
                               </div>
                             );
@@ -439,7 +447,9 @@ export default function ModalCreateProduct() {
                             return (
                               <div className="flex flex-wrap gap-2">
                                 {items.map((item) => (
-                                  <Chip key={item.key}>{item.data?.name}</Chip>
+                                  <Chip key={item.key} color="primary">
+                                    {item.data?.name}
+                                  </Chip>
                                 ))}
                               </div>
                             );

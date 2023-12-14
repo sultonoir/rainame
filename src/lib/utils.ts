@@ -87,8 +87,30 @@ export const Colors = [
   },
 ];
 
-export type FileState = {
-  file: File;
-  key: string; // used to identify the file in the progress callback
-  progress: "PENDING" | "COMPLETE" | "ERROR" | number;
-};
+export function capitalize(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+const columns = [
+  { name: "ID", uid: "id", sortable: true },
+  { name: "NAME", uid: "name", sortable: true },
+  { name: "PRICE", uid: "price", sortable: true },
+  { name: "STOCK", uid: "stock", sortable: true },
+  { name: "SUBCATEGORY", uid: "subcategory", sortable: true },
+  { name: "SIZE", uid: "size" },
+  { name: "ACTIONS", uid: "actions" },
+];
+
+const statusOptions = [
+  { name: "Active", uid: "active" },
+  { name: "Paused", uid: "paused" },
+  { name: "Vacation", uid: "vacation" },
+];
+
+const category = [
+  { name: "Man", uid: "man" },
+  { name: "Paused", uid: "paused" },
+  { name: "Vacation", uid: "vacation" },
+];
+
+export { columns, statusOptions, category };

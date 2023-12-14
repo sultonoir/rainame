@@ -102,6 +102,7 @@ const Signin = ({ auth }: TSignin) => {
       <Button
         isLoading={isSubmitting}
         type="submit"
+        variant="solid"
         className="w-full bg-white text-black"
         size="sm"
       >

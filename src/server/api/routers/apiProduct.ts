@@ -1,6 +1,10 @@
 import { z } from "zod";
 
-import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 
 export const apiProduct = createTRPCRouter({
@@ -23,9 +27,7 @@ export const apiProduct = createTRPCRouter({
         color: z.array(z.string()).min(1, {
           message: "form has not been filled out",
         }),
-        category: z.array(z.string()).min(1, {
-          message: "form has not been filled out",
-        }),
+        category: z.string(),
         size: z.array(z.string()).min(1, {
           message: "form has not been filled out",
         }),
@@ -67,4 +69,12 @@ export const apiProduct = createTRPCRouter({
         },
       });
     }),
+  getAllProduct: publicProcedure.query(async ({ ctx }) => {
+    const products = await ctx.db.products.findMany({
+      orderBy: {
+        createdAt: "asc",
+      },
+    });
+    return products;
+  }),
 });
