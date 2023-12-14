@@ -29,8 +29,8 @@ const AsideAdmin = () => {
       icons: BookIcon,
     },
     {
-      title: "Payment",
-      path: "/admin/payment",
+      title: "Payments",
+      path: "/admin/payments",
       icons: Banknote,
     },
     {
@@ -83,7 +83,9 @@ const AsideAdmin = () => {
             className="flex gap-2"
             href="/admin/settings"
           >
-            <SlidersHorizontal />
+            <SlidersHorizontal
+              className={path === "/admin/settings" ? "text-primary" : ""}
+            />
             Settings
           </Link>
           <button

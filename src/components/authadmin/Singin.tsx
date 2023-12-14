@@ -103,7 +103,7 @@ const Signin = ({ auth }: TSignin) => {
         isLoading={isSubmitting}
         type="submit"
         variant="solid"
-        className="w-full bg-white text-black"
+        color="primary"
         size="sm"
       >
         Signin
