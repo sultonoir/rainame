@@ -40,7 +40,6 @@ export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(db),
   callbacks: {
     session: ({ session, token }) => {
-      console.log({ session, token });
       return {
         ...session,
         user: {

@@ -18,21 +18,15 @@ import {
   Select,
   SelectItem,
   User,
-  DropdownSection,
-  cn,
 } from "@nextui-org/react";
 
 import { capitalize, columns } from "@/lib/utils";
-import {
-  ChevronDownIcon,
-  Edit,
-  EyeIcon,
-  MoreVertical,
-  SearchIcon,
-  TrashIcon,
-} from "lucide-react";
+import { ChevronDownIcon, SearchIcon, TrashIcon } from "lucide-react";
 import ModalCreateProduct from "../modal/ModalCreateProduct";
 import { type Products } from "@prisma/client";
+import ModalEditProduct from "../modal/ModalEditProduct";
+import { api } from "@/trpc/react";
+import { toast } from "sonner";
 
 const INITIAL_VISIBLE_COLUMNS = ["name", "price", "stock", "actions"];
 
@@ -113,8 +107,23 @@ export default function TableProduct({ products }: TProduct) {
     });
   }, [sortDescriptor, items]);
 
-  const iconClasses =
-    "text-xl text-default-500 pointer-events-none flex-shrink-0";
+  // edit product
+  const editProduct = React.useCallback((id: string) => {
+    const product = products.find((e) => e.id === id);
+    return product;
+  }, []);
+
+  //delete product
+  const ctx = api.useUtils();
+  const { mutate, isLoading } = api.product.deleteByid.useMutation({
+    onSuccess: async () => {
+      await ctx.product.getAllProduct.refetch();
+      toast.success("Product deleted");
+    },
+    onError: (e) => {
+      toast.error(e.message);
+    },
+  });
 
   const renderCell = React.useCallback(
     (product: NewProducts, columnKey: React.Key) => {
@@ -130,6 +139,8 @@ export default function TableProduct({ products }: TProduct) {
               name={cellValue}
             />
           );
+        case "price":
+          return <p>$ {cellValue}</p>;
         case "size":
           return (
             <div className="flex flex-row">
@@ -144,50 +155,24 @@ export default function TableProduct({ products }: TProduct) {
         case "actions":
           return (
             <div className="relative flex items-center justify-end gap-2">
-              <Dropdown>
-                <DropdownTrigger>
-                  <Button isIconOnly size="sm" variant="light">
-                    <MoreVertical className="text-default-300" />
-                  </Button>
-                </DropdownTrigger>
-                <DropdownMenu
-                  variant="faded"
-                  aria-label="Dropdown menu with description"
-                >
-                  <DropdownSection title="Actions" showDivider>
-                    <DropdownItem
-                      key="new"
-                      shortcut="⌘N"
-                      description="Open a file"
-                      startContent={<EyeIcon className={iconClasses} />}
-                    >
-                      Open file
-                    </DropdownItem>
-                    <DropdownItem
-                      key="edit"
-                      shortcut="⌘⇧E"
-                      description="Allows you to edit the file"
-                      startContent={<Edit className={iconClasses} />}
-                    >
-                      Edit file
-                    </DropdownItem>
-                  </DropdownSection>
-                  <DropdownSection title="Danger zone">
-                    <DropdownItem
-                      key="delete"
-                      className="text-danger"
-                      color="danger"
-                      shortcut="⌘⇧D"
-                      description="Permanently delete the file"
-                      startContent={
-                        <TrashIcon className={cn(iconClasses, "text-danger")} />
-                      }
-                    >
-                      Delete file
-                    </DropdownItem>
-                  </DropdownSection>
-                </DropdownMenu>
-              </Dropdown>
+              <ModalEditProduct product={editProduct(product.id)} />
+              <Button
+                isIconOnly
+                isLoading={isLoading}
+                size="sm"
+                color="danger"
+                variant="flat"
+                onClick={() => {
+                  mutate({
+                    id: product.id,
+                  });
+                }}
+              >
+                <TrashIcon
+                  size={15}
+                  className={isLoading ? "hidden" : "inline-flex"}
+                />
+              </Button>
             </div>
           );
         default:

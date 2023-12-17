@@ -42,7 +42,9 @@ const productSchema = z.object({
   color: z.array(z.string()).min(1, {
     message: "form has not been filled out",
   }),
-  category: z.string(),
+  category: z.array(z.string()).min(1, {
+    message: "form has not been filled out",
+  }),
   size: z.array(z.string()).min(1, {
     message: "form has not been filled out",
   }),
@@ -84,7 +86,7 @@ export default function ModalCreateProduct() {
       subcategory: "",
       imageUrl: [],
       color: [],
-      category: "",
+      category: [],
       size: [],
     },
   });
@@ -92,8 +94,8 @@ export default function ModalCreateProduct() {
   // api create product
   const ctx = api.useUtils();
   const { mutate } = api.product.createProduct.useMutation({
-    onSuccess: () => {
-      ctx.product.getAllProduct.getData();
+    onSuccess: async () => {
+      await ctx.product.getAllProduct.refetch();
       toast.success("product created");
       reset();
       onClose();
@@ -340,7 +342,9 @@ export default function ModalCreateProduct() {
                           labelPlacement="outside"
                           aria-label="select"
                           selectedKeys={field.value}
-                          onChange={(e) => e.target.value}
+                          onChange={(e) =>
+                            handleSelectionChange(e, field.onChange)
+                          }
                           selectionMode="single"
                           placeholder="Select a category"
                           classNames={{

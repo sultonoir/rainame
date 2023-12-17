@@ -111,7 +111,7 @@ const FormUpdateAdmin = ({ admin }: Tadmin) => {
         color="primary"
         size="sm"
       >
-        Signin
+        Update profile
       </Button>
     </form>
   );

@@ -27,7 +27,9 @@ export const apiProduct = createTRPCRouter({
         color: z.array(z.string()).min(1, {
           message: "form has not been filled out",
         }),
-        category: z.string(),
+        category: z.array(z.string()).min(1, {
+          message: "form has not been filled out",
+        }),
         size: z.array(z.string()).min(1, {
           message: "form has not been filled out",
         }),
@@ -77,4 +79,65 @@ export const apiProduct = createTRPCRouter({
     });
     return products;
   }),
+  getProductById: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const products = await ctx.db.products.findUnique({
+        where: {
+          id: input.id,
+        },
+      });
+      return products;
+    }),
+  deleteByid: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.products.delete({
+        where: {
+          id: input.id,
+          storeId: ctx.session.user.id,
+        },
+      });
+    }),
+  updateByid: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        name: z.string().min(2, {
+          message: "name must be at least 2 characters",
+        }),
+        desc: z.string(),
+        price: z.number(),
+        stock: z.number().min(1, {
+          message: "form has not been filled out",
+        }),
+        discount: z.number().max(100).optional().nullable(),
+        subcategory: z.string(),
+        imageUrl: z.array(z.string()).min(1, {
+          message: "form has not been filled out",
+        }),
+        color: z.array(z.string()).min(1, {
+          message: "form has not been filled out",
+        }),
+        category: z.array(z.string()).min(1, {
+          message: "form has not been filled out",
+        }),
+        size: z.array(z.string()).min(1, {
+          message: "form has not been filled out",
+        }),
+        path : z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.products.update({
+        where: {
+          id: input.id,
+        },
+        data: input,
+      });
+    }),
 });
