@@ -1,10 +1,16 @@
 "use client";
 
 import React from "react";
-import { Navbar, NavbarContent, Avatar, Input } from "@nextui-org/react";
-
+import {
+  Navbar,
+  NavbarContent,
+  Avatar,
+  Input,
+  NavbarItem,
+} from "@nextui-org/react";
 import { SearchIcon } from "lucide-react";
 import { api } from "@/trpc/react";
+import NotifyAdmin from "../notify/NotifyAdmin";
 
 export default function NavbarAdmin() {
   const { data } = api.admin.getAdmin.useQuery();
@@ -25,6 +31,9 @@ export default function NavbarAdmin() {
         />
       </NavbarContent>
       <NavbarContent as="div" justify="end">
+        <NavbarItem className="border-r-2 border-default-300 px-2">
+          <NotifyAdmin />
+        </NavbarItem>
         <Avatar
           isBordered
           className="transition-transform"
