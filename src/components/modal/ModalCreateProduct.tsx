@@ -128,33 +128,26 @@ export default function ModalCreateProduct() {
   };
 
   // handle render image
-  const handleImage = (
-    e: ChangeEvent<HTMLInputElement>,
-    fieldChange: (values: string[]) => void,
-  ) => {
+  const handleImage = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    const imageUrls: string[] = [];
 
     if (e.target.files && e.target.files.length > 0) {
-      const files = Array.from(e.target.files);
-      setFiles(files);
-      files.map((file) => {
+      const newFiles = Array.from(e.target.files);
+      const uniqueFiles: File[] = [];
+
+      newFiles.forEach((file) => {
         if (!file.type.includes("image")) return;
 
+        const isDuplicate = files.some((item) => item.name === file.name);
+        if (!isDuplicate) {
+          uniqueFiles.push(file);
+        }
+
         const fileReader = new FileReader();
-
-        fileReader.onload = async (event) => {
-          const imageDataUrl = event.target?.result?.toString() ?? "";
-          imageUrls.push(imageDataUrl);
-
-          if (imageUrls.length === files.length) {
-            // Setelah semua gambar telah diunggah, panggil fieldChange
-            fieldChange(imageUrls);
-          }
-        };
-
         fileReader.readAsDataURL(file);
       });
+
+      setFiles((prevFiles) => [...prevFiles, ...uniqueFiles]);
     }
   };
 
@@ -502,11 +495,12 @@ export default function ModalCreateProduct() {
                           ))}
                         </div>
                         <input
+                          {...field}
                           type="file"
                           multiple
                           accept="image/*"
                           placeholder="Add profile photo"
-                          onChange={(e) => handleImage(e, field.onChange)}
+                          onChange={(e) => handleImage(e)}
                           className="file:mr-4 file:rounded-md file:border-0 file:bg-primary file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:cursor-pointer hover:file:bg-primary/80"
                         />
                         {errors.name && (

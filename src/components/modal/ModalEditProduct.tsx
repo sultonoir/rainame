@@ -1,5 +1,5 @@
 "use client";
-import React, { type ChangeEvent, useState, useEffect } from "react";
+import React, { type ChangeEvent, useState } from "react";
 import {
   Modal,
   ModalContent,
@@ -79,32 +79,8 @@ type TEdit = {
 };
 export default function ModalEditProduct({ product }: TEdit) {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
-  const [isLoading, setisLoading] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
-
-  useEffect(() => {
-    const convertToFiles = async () => {
-      const filesArray: File[] = [];
-      for (const imageUrl of product?.imageUrl ?? []) {
-        try {
-          const response = await fetch(imageUrl);
-          const blob = await response.blob();
-
-          const file = new File([blob], `image_${Date.now()}.png`, {
-            type: "image/png",
-          });
-          filesArray.push(file);
-        } catch (error) {
-          toast.error("Error: Failed to create Blob file.");
-        }
-      }
-      setFiles(filesArray);
-    };
-
-    convertToFiles().catch(() => {
-      toast.error("An error occurred while converting the image:");
-    });
-  }, [product?.imageUrl]);
+  const [isLoading, setisLoading] = useState(false);
 
   const form = useForm<ProductSchema>({
     resolver: zodResolver(productSchema),
@@ -138,30 +114,6 @@ export default function ModalEditProduct({ product }: TEdit) {
     },
   });
 
-  //convert
-  const convertDataUrlToBlob = (dataUrl: string): Blob | null => {
-    const arr = dataUrl.split(",");
-
-    if (arr.length < 2 || !arr[1]) {
-      // Menampilkan pesan kesalahan jika data URL tidak sesuai
-      toast.error("Invalid URL data");
-      return null;
-    }
-
-    const mime = arr[0]?.match(/:(.*?);/) ?? [];
-    const mimeType = mime[1] ?? "image/png";
-
-    const byteString = atob(arr[1]);
-    const arrayBuffer = new ArrayBuffer(byteString.length);
-    const int8Array = new Uint8Array(arrayBuffer);
-
-    for (let i = 0; i < byteString.length; i++) {
-      int8Array[i] = byteString.charCodeAt(i);
-    }
-
-    return new Blob([arrayBuffer], { type: mimeType });
-  };
-
   //change value number
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -184,71 +136,44 @@ export default function ModalEditProduct({ product }: TEdit) {
   };
 
   // handle render image
-  const handleImage = (
-    e: ChangeEvent<HTMLInputElement>,
-    fieldChange: (values: string[]) => void,
-    fieldValue: string[],
-  ) => {
+  const handleImage = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
 
     if (e.target.files && e.target.files.length > 0) {
-      const filesToConvert = Array.from(e.target.files);
-      const newFiles: File[] = [];
+      const newFiles = Array.from(e.target.files);
+      const uniqueFiles: File[] = [];
 
-      const filePromises = filesToConvert.map((file) => {
-        return new Promise<string>((resolve) => {
-          const fileReader = new FileReader();
+      newFiles.forEach((file) => {
+        if (!file.type.includes("image")) return;
 
-          fileReader.onload = (event) => {
-            const imageDataUrl = event.target?.result?.toString() ?? "";
-            resolve(imageDataUrl);
-          };
+        const isDuplicate = files.some((item) => item.name === file.name);
+        if (!isDuplicate) {
+          uniqueFiles.push(file);
+        }
 
-          fileReader.readAsDataURL(file);
-        });
+        const fileReader = new FileReader();
+        fileReader.readAsDataURL(file);
       });
 
-      Promise.all(filePromises)
-        .then((results) => {
-          const allFiles: string[] = [...fieldValue];
-
-          results.forEach((imageDataUrl) => {
-            if (!allFiles.includes(imageDataUrl)) {
-              const blob = convertDataUrlToBlob(imageDataUrl);
-              if (blob) {
-                const fileName = `image_${Date.now()}`;
-                const newFile = new File([blob], fileName, { type: blob.type });
-                newFiles.push(newFile);
-                allFiles.push(imageDataUrl); // Tambahkan ke allFiles jika belum ada
-              } else {
-                toast.error("Error: Gagal membuat file Blob.");
-              }
-            } else {
-              toast.error("file has been added");
-            }
-          });
-
-          // Setelah semua file baru dan yang ada di allFiles diubah dari URL gambar, simpan di state files
-          setFiles((prevFiles) => [...prevFiles, ...newFiles]);
-          // Panggil fieldChange untuk mengubah nilai fieldValue jika diperlukan
-          fieldChange(allFiles);
-        })
-        .catch(() => {
-          toast.error("Error reading files:");
-        });
+      setFiles((prevFiles) => [...prevFiles, ...uniqueFiles]);
     }
   };
 
-  // delete image
+  // delete image prev
   const handleDeleteImage = (
     index: number,
     fieldChange: (value: string[] | undefined) => void,
   ) => {
     const updatedImages = form.getValues("imageUrl");
-    const updatefile = [...files];
-    updatefile.splice(index, 1);
+
     updatedImages?.splice(index, 1);
     fieldChange(updatedImages);
+  };
+
+  //delete image files
+  const handleDeleteFiles = (index: number) => {
+    const updatefile = [...files];
+    updatefile.splice(index, 1);
     setFiles(updatefile);
   };
 
@@ -259,24 +184,41 @@ export default function ModalEditProduct({ product }: TEdit) {
     const path = values.name.replaceAll(/[^a-zA-Z0-9]/g, "-");
     setisLoading(true);
     try {
-      const imageUpload = await startUpload(files);
-      if (imageUpload) {
-        const imageRes = imageUpload.map((image) => image.url);
-        values.imageUrl = imageRes;
+      if (files.length > 0) {
+        const imageUpload = await startUpload(files);
+        if (imageUpload) {
+          imageUpload.map((image) => {
+            values.imageUrl.push(image.url);
+          });
+        }
+        mutate({
+          id: product?.id ?? "",
+          name: values.name,
+          desc: values.desc,
+          stock: values.stock,
+          subcategory: values.subcategory,
+          imageUrl: values.imageUrl,
+          color: values.color,
+          category: values.category,
+          size: values.size,
+          price: values.price,
+          path,
+        });
+      } else {
+        mutate({
+          id: product?.id ?? "",
+          name: values.name,
+          desc: values.desc,
+          stock: values.stock,
+          subcategory: values.subcategory,
+          imageUrl: values.imageUrl,
+          color: values.color,
+          category: values.category,
+          size: values.size,
+          price: values.price,
+          path,
+        });
       }
-      mutate({
-        id: product?.id ?? "",
-        name: values.name,
-        desc: values.desc,
-        stock: values.stock,
-        subcategory: values.subcategory,
-        imageUrl: values.imageUrl,
-        color: values.color,
-        category: values.category,
-        size: values.size,
-        price: values.price,
-        path,
-      });
     } catch (error) {
       toast.error(error as string);
     } finally {
@@ -377,18 +319,16 @@ export default function ModalEditProduct({ product }: TEdit) {
                           <FormLabel>Price</FormLabel>
                           <FormControl>
                             <Input
-                              {...field}
+                              variant="flat"
                               type="number"
                               labelPlacement="outside"
-                              placeholder="0.00"
-                              value={field.value?.toString()}
-                              startContent={
-                                <div className="pointer-events-none flex items-center">
-                                  <span className="text-small text-default-400">
-                                    $
-                                  </span>
-                                </div>
-                              }
+                              placeholder="0"
+                              {...field}
+                              value={field.value.toString()}
+                              onChange={(e) => {
+                                handleChange(e, field.onChange);
+                              }}
+                              startContent={<p>$</p>}
                             />
                           </FormControl>
                           <FormMessage />
@@ -406,6 +346,9 @@ export default function ModalEditProduct({ product }: TEdit) {
                               type="number"
                               labelPlacement="outside"
                               {...field}
+                              onChange={(e) => {
+                                handleChange(e, field.onChange);
+                              }}
                               value={field.value?.toString()}
                             />
                           </FormControl>
@@ -444,8 +387,8 @@ export default function ModalEditProduct({ product }: TEdit) {
                               labelPlacement="outside"
                               variant="bordered"
                               isMultiline={true}
-                              aria-label="select category"
                               selectedKeys={field.value}
+                              aria-label="select category"
                               onChange={(e) =>
                                 handleSelectionChange(e, field.onChange)
                               }
@@ -493,8 +436,8 @@ export default function ModalEditProduct({ product }: TEdit) {
                               labelPlacement="outside"
                               variant="bordered"
                               isMultiline={true}
-                              aria-label="select"
                               selectedKeys={field.value}
+                              aria-label="select"
                               onChange={(e) =>
                                 handleSelectionChange(e, field.onChange)
                               }
@@ -541,8 +484,8 @@ export default function ModalEditProduct({ product }: TEdit) {
                               variant="bordered"
                               labelPlacement="outside"
                               isMultiline={true}
-                              aria-label="select"
                               selectedKeys={field.value}
+                              aria-label="select"
                               onChange={(e) =>
                                 handleSelectionChange(e, field.onChange)
                               }
@@ -609,15 +552,34 @@ export default function ModalEditProduct({ product }: TEdit) {
                                     </Button>
                                   </div>
                                 ))}
+                                {files.map((item, index) => (
+                                  <div key={item.name} className="relative">
+                                    <Image
+                                      src={URL.createObjectURL(item)}
+                                      alt={`Gambar ${index + 1}`}
+                                      className="z-0 aspect-square object-cover"
+                                    />
+                                    <Button
+                                      isIconOnly
+                                      size="sm"
+                                      radius="full"
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        handleDeleteFiles(index);
+                                      }}
+                                      className="absolute right-2 top-2 z-50 bg-danger px-2 py-1 text-white"
+                                    >
+                                      <XIcon />
+                                    </Button>
+                                  </div>
+                                ))}
                               </div>
                               <input
                                 type="file"
                                 multiple
                                 accept="image/*"
                                 placeholder="Add profile photo"
-                                onChange={(e) =>
-                                  handleImage(e, field.onChange, field.value)
-                                }
+                                onChange={(e) => handleImage(e)}
                                 className="file:mr-4 file:rounded-md file:border-0 file:bg-primary file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:cursor-pointer hover:file:bg-primary/80"
                               />
                             </div>

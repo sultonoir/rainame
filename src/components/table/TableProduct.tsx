@@ -305,7 +305,15 @@ export default function TableProduct({ products }: TProduct) {
               : `${selectedKeys.size} of ${filteredItems.length} selected`}
           </span>
           {deleteFilter.length > 0 && (
-            <Button isIconOnly size="sm" color="danger" variant="flat">
+            <Button
+              isIconOnly
+              size="sm"
+              color="danger"
+              variant="flat"
+              onClick={() => {
+                console.log(deleteFilter);
+              }}
+            >
               <TrashIcon size={15} />
             </Button>
           )}
