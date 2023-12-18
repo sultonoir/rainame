@@ -18,6 +18,7 @@ import {
   Select,
   SelectItem,
   User,
+  Chip,
 } from "@nextui-org/react";
 
 import { capitalize, columns } from "@/lib/utils";
@@ -28,7 +29,13 @@ import ModalEditProduct from "../modal/ModalEditProduct";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
 
-const INITIAL_VISIBLE_COLUMNS = ["name", "price", "stock", "actions"];
+const INITIAL_VISIBLE_COLUMNS = [
+  "name",
+  "price",
+  "stock",
+  "actions",
+  "category",
+];
 
 type TProduct = {
   products: Products[];
@@ -52,7 +59,7 @@ export default function TableProduct({ products }: TProduct) {
   );
   const [rowsPerPage, setRowsPerPage] = React.useState(15);
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
-    column: "age",
+    column: "price",
     direction: "ascending",
   });
 
@@ -153,6 +160,18 @@ export default function TableProduct({ products }: TProduct) {
           );
         case "price":
           return <p>$ {cellValue}</p>;
+        case "category":
+          return (
+            <Chip
+              className="capitalize"
+              color="primary"
+              size="sm"
+              variant="flat"
+            >
+              {cellValue}
+            </Chip>
+          );
+
         case "size":
           return (
             <div className="flex flex-row">
@@ -164,6 +183,18 @@ export default function TableProduct({ products }: TProduct) {
               ))}
             </div>
           );
+        case "color":
+          return (
+            <div className="flex flex-row">
+              {product.color.map((item, index) => (
+                <React.Fragment key={item}>
+                  <p>{item},</p>
+                  {index !== product.size.length - 1 && <p>&nbsp;</p>}
+                </React.Fragment>
+              ))}
+            </div>
+          );
+
         case "actions":
           return (
             <div className="relative flex items-center justify-end gap-2">
@@ -274,7 +305,7 @@ export default function TableProduct({ products }: TProduct) {
           <span className="text-small text-default-400">
             Total {newProducts.length} products
           </span>
-          <label className="flex w-fit items-center text-small text-default-400">
+          <label className="flex w-fit items-center gap-2 text-small text-default-400">
             <p className="whitespace-nowrap">Rows per page:</p>
             <Select
               size="sm"

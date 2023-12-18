@@ -245,7 +245,7 @@ export default function ModalEditProduct({ product }: TEdit) {
       >
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1">
-            Create product
+            Edit product
           </ModalHeader>
           <ModalBody>
             <Form {...form}>

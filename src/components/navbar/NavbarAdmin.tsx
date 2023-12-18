@@ -2,11 +2,12 @@
 
 import React from "react";
 import { Navbar, NavbarContent, Avatar, Input } from "@nextui-org/react";
-import { useSession } from "next-auth/react";
+
 import { SearchIcon } from "lucide-react";
+import { api } from "@/trpc/react";
 
 export default function NavbarAdmin() {
-  const { data: session } = useSession();
+  const { data } = api.admin.getAdmin.useQuery();
   return (
     <Navbar
       isBordered
@@ -28,9 +29,9 @@ export default function NavbarAdmin() {
           isBordered
           className="transition-transform"
           color="primary"
-          name={session?.user.name ?? ""}
+          src={data?.image ?? ""}
+          alt={data?.name ?? ""}
           size="sm"
-          src={session?.user.image ?? ""}
         />
       </NavbarContent>
     </Navbar>
