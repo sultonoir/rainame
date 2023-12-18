@@ -129,7 +129,7 @@ export const apiProduct = createTRPCRouter({
         size: z.array(z.string()).min(1, {
           message: "form has not been filled out",
         }),
-        path : z.string(),
+        path: z.string(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -138,6 +138,22 @@ export const apiProduct = createTRPCRouter({
           id: input.id,
         },
         data: input,
+      });
+    }),
+  deleteAll: protectedProcedure
+    .input(
+      z.array(
+        z.object({
+          id: z.string(),
+        }),
+      ),
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.products.deleteMany({
+        where: {
+          id: { in: input.map((item) => item.id) },
+          storeId: ctx.session.user.id,
+        },
       });
     }),
 });

@@ -125,6 +125,18 @@ export default function TableProduct({ products }: TProduct) {
     },
   });
 
+  // delete product selection
+  const { mutate: deleteSelection, isLoading: loading } =
+    api.product.deleteAll.useMutation({
+      onSuccess: async () => {
+        await ctx.product.getAllProduct.refetch();
+        toast.success("Product deleted");
+      },
+      onError: (e) => {
+        toast.error(e.message);
+      },
+    });
+
   const renderCell = React.useCallback(
     (product: NewProducts, columnKey: React.Key) => {
       const cellValue = product[columnKey as keyof NewProducts];
@@ -307,14 +319,21 @@ export default function TableProduct({ products }: TProduct) {
           {deleteFilter.length > 0 && (
             <Button
               isIconOnly
+              isLoading={loading}
               size="sm"
               color="danger"
               variant="flat"
               onClick={() => {
-                console.log(deleteFilter);
+                const prduct = deleteFilter.map((item) => ({
+                  id: item.id,
+                }));
+                deleteSelection(prduct);
               }}
             >
-              <TrashIcon size={15} />
+              <TrashIcon
+                size={15}
+                className={`${loading ? "invisible" : "visible"}`}
+              />
             </Button>
           )}
         </div>
