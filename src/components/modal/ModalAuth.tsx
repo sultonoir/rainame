@@ -10,10 +10,11 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import AuthHeaders from "../authadmin/AuthHeaders";
-import Signin from "../authadmin/Singin";
 import useToggleAuth from "@/hooks/useToggleAuth";
-import Signup from "../authadmin/Signup";
 import { signIn } from "next-auth/react";
+import FormSignin from "../form/FormSingin";
+import FormSignup from "../form/FormSignup";
+import FormForgotPass from "../form/FormForgotPass";
 
 export default function ModalAuth() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -25,28 +26,35 @@ export default function ModalAuth() {
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
-          {toggle.signin ? (
-            <>
-              <ModalHeader className="flex flex-col">
-                <AuthHeaders title="Welcome to Rainame" client />
-              </ModalHeader>
-              <ModalBody>
-                <Signin auth="user" />
-              </ModalBody>
-            </>
-          ) : (
-            <>
-              <ModalHeader className="flex flex-col">
-                <AuthHeaders title="Welcome to Rainame" client />
-              </ModalHeader>
-              <ModalBody>
-                <Signup user />
-              </ModalBody>
-            </>
+          <ModalHeader className="flex flex-col">
+            <AuthHeaders title="Welcome to Rainame" />
+          </ModalHeader>
+          {toggle.signin && (
+            <ModalBody>
+              <FormSignin />
+            </ModalBody>
+          )}
+          {toggle.signup && (
+            <ModalBody>
+              <FormSignup />
+            </ModalBody>
+          )}
+          {toggle.forgot && (
+            <ModalBody>
+              <FormForgotPass />
+            </ModalBody>
           )}
           <ModalFooter className="w-full max-w-md flex-col gap-0 pt-0">
+            {toggle.signin && (
+              <button
+                onClick={toggle.onForgot}
+                className="flex justify-end bg-transparent text-primary underline hover:opacity-80"
+              >
+                Forgot Password ?
+              </button>
+            )}
             <div className="w-full max-w-md">
-              <hr className="mt-8 h-0 border-t border-zinc-300 dark:border-zinc-600" />
+              <hr className="mt-5 h-0 border-t border-zinc-300 dark:border-zinc-600" />
               <p className="-mt-2.5 text-center text-xs text-zinc-500 dark:text-zinc-400">
                 <span className="bg-content1 px-4">Or with</span>
               </p>
@@ -55,7 +63,8 @@ export default function ModalAuth() {
             <div className="mt-6 flex w-full max-w-md flex-col gap-2">
               <Button
                 onClick={() => signIn("google")}
-                className="border border-default bg-transparent dark:bg-white dark:text-black"
+                variant="bordered"
+                color="default"
                 size="sm"
               >
                 <svg
@@ -85,7 +94,8 @@ export default function ModalAuth() {
               </Button>
               <Button
                 onClick={() => signIn("discord")}
-                className="border border-default bg-transparent dark:bg-white dark:text-black"
+                variant="bordered"
+                color="default"
                 size="sm"
               >
                 <svg

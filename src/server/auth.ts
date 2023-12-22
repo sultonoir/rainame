@@ -10,6 +10,8 @@ import bcrypt from "bcryptjs";
 import { env } from "@/env";
 import { db } from "@/server/db";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { type UserRole } from "@prisma/client";
+import "next-auth/jwt";
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
  * object and keep type safety.
@@ -20,8 +22,8 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
+      role: UserRole;
       // ...other properties
-      // role: UserRole;
     } & DefaultSession["user"];
   }
 
@@ -29,6 +31,13 @@ declare module "next-auth" {
   //   // ...other properties
   //   // role: UserRole;
   // }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    id: string;
+    role: UserRole;
+  }
 }
 
 /**
@@ -40,12 +49,36 @@ export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(db),
   callbacks: {
     session: ({ session, token }) => {
-      return {
-        ...session,
-        user: {
-          ...session.user,
-          id: token.sub,
+      if (token) {
+        session.user.id = token.id;
+        session.user.email = token.email;
+        session.user.image = token.picture;
+        session.user.role = token.role;
+      }
+      return session;
+    },
+    async jwt({ token, user, trigger }) {
+      const dbuser = await db.user.findUnique({
+        where: {
+          email: token.email ?? "",
         },
+      });
+
+      if (!dbuser) {
+        token.id = user.id;
+        return token;
+      }
+      if (trigger === "update" && dbuser) {
+        // Note, that `session` can be any arbitrary object, remember to validate it!
+        token.name = dbuser.name;
+        token.picture = dbuser.image;
+      }
+      return {
+        id: dbuser.id,
+        name: dbuser.name,
+        email: dbuser.email,
+        picture: dbuser.image,
+        role: dbuser.role,
       };
     },
   },
@@ -62,46 +95,7 @@ export const authOptions: NextAuthOptions = {
       clientSecret: env.GOOGLE_CLIENT_SECRET,
     }),
     CredentialsProvider({
-      id: "admin",
-      name: "Sign in",
-      credentials: {
-        email: {
-          label: "Email",
-          type: "email",
-          placeholder: "example@example.com",
-        },
-        password: { label: "Password", type: "password" },
-      },
-      async authorize(credentials) {
-        if (!credentials?.email || !credentials.password) {
-          return null;
-        }
-
-        const user = await db.store.findUnique({
-          where: {
-            email: credentials.email,
-          },
-        });
-
-        if (!user?.hashedPassword) {
-          throw new Error("admin not found");
-        }
-
-        const isCorrectPassword = await bcrypt.compare(
-          credentials.password,
-          user.hashedPassword,
-        );
-
-        if (!isCorrectPassword) {
-          throw new Error("Wrong password");
-        }
-
-        return user;
-      },
-    }),
-    CredentialsProvider({
-      id: "user",
-      name: "Sign in",
+      id: "signin",
       credentials: {
         email: {
           label: "Email",

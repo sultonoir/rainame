@@ -35,6 +35,9 @@ const INITIAL_VISIBLE_COLUMNS = [
   "stock",
   "actions",
   "category",
+  "subcategory",
+  "color",
+  "discount",
 ];
 
 type TProduct = {
@@ -197,7 +200,7 @@ export default function TableProduct({ products }: TProduct) {
 
         case "actions":
           return (
-            <div className="relative flex items-center justify-end gap-2">
+            <div className="relative flex items-center justify-start gap-2">
               <ModalEditProduct product={editProduct(product.id)} />
               <Button
                 isIconOnly

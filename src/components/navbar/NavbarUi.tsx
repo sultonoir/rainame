@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import {
   Navbar,
@@ -6,12 +7,16 @@ import {
   NavbarItem,
 } from "@nextui-org/navbar";
 import SearchInput from "./SearchInput";
-import { getServerAuthSession } from "@/server/auth";
 import ModalAuth from "../modal/ModalAuth";
 import { Link } from "@nextui-org/link";
+import Image from "next/image";
+import { Button } from "@nextui-org/react";
+import { ThemeSwitcher } from "../shared/ThemeSwithcer";
+import { signOut, useSession } from "next-auth/react";
 
-export default async function NavbarUi() {
-  const session = await getServerAuthSession();
+export default function NavbarUi() {
+  const { data: user } = useSession();
+
   return (
     <Navbar
       isBordered
@@ -20,7 +25,13 @@ export default async function NavbarUi() {
       }}
     >
       <NavbarBrand>
-        <Link href="/" className="font-bold text-inherit text-primary">
+        <Link href="/" className="font-bold text-foreground text-inherit">
+          <Image
+            src="/logo-transparent.png"
+            alt="logo"
+            width={40}
+            height={40}
+          />
           Rainame
         </Link>
       </NavbarBrand>
@@ -28,10 +39,23 @@ export default async function NavbarUi() {
         <SearchInput />
       </NavbarContent>
       <NavbarContent justify="end">
-        <NavbarItem className="hidden lg:flex">
-          {!session ? <ModalAuth /> : null}
+        <NavbarItem>
+          <ThemeSwitcher />
         </NavbarItem>
-        <NavbarItem></NavbarItem>
+        <NavbarItem className="hidden lg:flex">
+          {!user ? (
+            <ModalAuth />
+          ) : (
+            <Button
+              variant="solid"
+              color="primary"
+              size="sm"
+              onPress={() => signOut()}
+            >
+              Logout
+            </Button>
+          )}
+        </NavbarItem>
       </NavbarContent>
     </Navbar>
   );

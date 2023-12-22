@@ -6,7 +6,8 @@ import { Button, Input } from "@nextui-org/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
-import { type Store } from "@prisma/client";
+import { useSession } from "next-auth/react";
+import { type Session } from "next-auth";
 
 const updateAdmin = z.object({
   email: z.string().email().optional(),
@@ -18,7 +19,7 @@ const updateAdmin = z.object({
 
 type UpdateAdmin = z.infer<typeof updateAdmin>;
 type Tadmin = {
-  admin?: Store;
+  admin?: Session;
 };
 const FormUpdateAdmin = ({ admin }: Tadmin) => {
   const {
@@ -30,10 +31,12 @@ const FormUpdateAdmin = ({ admin }: Tadmin) => {
   } = useForm<UpdateAdmin>({
     resolver: zodResolver(updateAdmin),
     defaultValues: {
-      email: admin?.email,
-      name: admin?.name ?? "",
+      email: admin?.user.email ?? "",
+      name: admin?.user.name ?? "",
     },
   });
+
+  const { update, data: user } = useSession();
 
   //update data admin
   const ctx = api.useUtils();
@@ -51,10 +54,11 @@ const FormUpdateAdmin = ({ admin }: Tadmin) => {
     },
   });
 
-  const onSubmit: SubmitHandler<UpdateAdmin> = (data) => {
+  const onSubmit: SubmitHandler<UpdateAdmin> = async (data) => {
     mutate({
       name: data.name,
     });
+    await update({ name: data.name, image: user?.user.image });
   };
 
   return (
@@ -72,7 +76,7 @@ const FormUpdateAdmin = ({ admin }: Tadmin) => {
               variant="flat"
               size="sm"
               labelPlacement="outside"
-              defaultValue={admin?.email}
+              defaultValue={admin?.user.email ?? ""}
               type="email"
               placeholder="Enter your email"
               label="Email"

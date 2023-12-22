@@ -3,9 +3,28 @@ export const Categories = [
     title: "Man",
   },
   {
-    title: "women",
+    title: "Women",
   },
-  { title: `kid's` },
+  { title: `Kid's` },
+  { title: "Universal" },
+];
+
+export const Subcategory = [
+  {
+    title: "Hat",
+  },
+  {
+    title: "Clothes",
+  },
+  {
+    title: "Pants",
+  },
+  {
+    title: "Shoes",
+  },
+  {
+    title: "Accessories",
+  },
 ];
 
 export const Sizes = [
@@ -26,6 +45,30 @@ export const Sizes = [
   },
   {
     name: "XXXL",
+  },
+  {
+    name: "35",
+  },
+  {
+    name: "36",
+  },
+  {
+    name: "37",
+  },
+  {
+    name: "38",
+  },
+  {
+    name: "39",
+  },
+  {
+    name: "40",
+  },
+  {
+    name: "41",
+  },
+  {
+    name: "42",
   },
 ];
 
@@ -96,10 +139,10 @@ const columns = [
   { name: "NAME", uid: "name", sortable: true },
   { name: "PRICE", uid: "price", sortable: true },
   { name: "STOCK", uid: "stock", sortable: true },
+  { name: "DISCOUNT", uid: "discount" },
   { name: "CATEGORY", uid: "category", sortable: true },
   { name: "SUBCATEGORY", uid: "subcategory", sortable: true },
   { name: "COLOR", uid: "color" },
-  { name: "DISCOUNT", uid: "discount" },
   { name: "SIZE", uid: "size" },
   { name: "ACTIONS", uid: "actions" },
 ];
@@ -215,3 +258,19 @@ export default async function getCroppedImg(
     }, "image/jpeg");
   });
 }
+interface PropsCall {
+  price: number;
+  discount: number | null;
+}
+
+export const calculateTotalPrice = ({ price, discount }: PropsCall) => {
+  let discountedPrice = price;
+  if (discount && discount > 0) {
+    const discountAmount = (price * discount) / 100;
+    discountedPrice = price - discountAmount;
+  }
+  return {
+    price,
+    discountedPrice,
+  };
+};

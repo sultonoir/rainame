@@ -18,13 +18,14 @@ import getCroppedImg from "@/lib/utils";
 import { toast } from "sonner";
 import { CameraIcon } from "lucide-react";
 import { api } from "@/trpc/react";
+import { useSession } from "next-auth/react";
 
 interface Props {
   imageUrl: string;
-  user?: boolean;
 }
 
-export default function ModalUploadImage({ imageUrl, user }: Props) {
+export default function ModalUploadImage({ imageUrl }: Props) {
+  const { update, data } = useSession();
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [image, setImage] = useState("");
   const [rotation, setRotation] = useState<number>(0);
@@ -71,6 +72,7 @@ export default function ModalUploadImage({ imageUrl, user }: Props) {
       await ctx.admin.getAdmin.invalidate();
       toast.success("Image has change");
       onClose();
+      setImage("");
     },
     onError: (e) => {
       toast.error(e.message);
@@ -108,6 +110,7 @@ export default function ModalUploadImage({ imageUrl, user }: Props) {
       const imgRes = await startUpload([file]);
       if (imgRes?.at(0)) {
         imgUpload = imgRes.at(0)?.url ?? "";
+        await update({ name: data?.user.name, image: imgRes.at(0)?.url });
       }
       mutate({
         imageUrl: imgUpload,

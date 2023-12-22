@@ -1,6 +1,7 @@
 // app/components/ThemeSwitcher.tsx
 "use client";
 
+import { Button } from "@nextui-org/react";
 import { MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
@@ -18,15 +19,23 @@ export function ThemeSwitcher() {
   return (
     <>
       {theme === "dark" ? (
-        <button className="flex gap-2" onClick={() => setTheme("light")}>
+        <Button
+          isIconOnly
+          radius="full"
+          variant="light"
+          onClick={() => setTheme("light")}
+        >
           <SunIcon />
-          Light mode
-        </button>
+        </Button>
       ) : (
-        <button className="flex gap-2" onClick={() => setTheme("dark")}>
+        <Button
+          isIconOnly
+          radius="full"
+          variant="light"
+          onClick={() => setTheme("dark")}
+        >
           <MoonIcon />
-          Dark mode
-        </button>
+        </Button>
       )}
     </>
   );

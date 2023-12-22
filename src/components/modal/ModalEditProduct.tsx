@@ -29,7 +29,7 @@ import { Edit, XIcon } from "lucide-react";
 import { z } from "zod";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Categories, Colors, Sizes } from "@/lib/utils";
+import { Categories, Colors, Sizes, Subcategory } from "@/lib/utils";
 import { useUploadThing } from "@/lib/uploadthing";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
@@ -50,9 +50,7 @@ const productSchema = z.object({
   color: z.array(z.string()).min(1, {
     message: "form has not been filled out",
   }),
-  category: z.array(z.string()).min(1, {
-    message: "form has not been filled out",
-  }),
+  category: z.string(),
   size: z.array(z.string()).min(1, {
     message: "form has not been filled out",
   }),
@@ -87,13 +85,13 @@ export default function ModalEditProduct({ product }: TEdit) {
     defaultValues: {
       name: product?.name ? product.name : "",
       desc: product?.desc ? product.desc : "",
-      stock: product?.stock,
-      price: product?.price,
+      stock: product?.stock ? product.stock : 1,
+      price: product?.price ? product.price : 1,
       discount: product?.discount,
-      subcategory: product?.subcategory,
+      subcategory: product?.subcategory ? product.subcategory : "Hat",
       imageUrl: product?.imageUrl ? product.imageUrl : [],
       color: product?.color ? product.color : [],
-      category: product?.category ? product.category : [],
+      category: product?.category ? product.category : "Man",
       size: product?.size ? product.size : [],
     },
     shouldUnregister: false,
@@ -132,6 +130,15 @@ export default function ModalEditProduct({ product }: TEdit) {
     fieldChange: (value: string[]) => void,
   ) => {
     const selectedValues = e.target.value.split(",");
+    fieldChange(selectedValues);
+  };
+
+  //handle select string
+  const handleOnchange = (
+    e: React.ChangeEvent<HTMLSelectElement>,
+    fieldChange: (value: string) => void,
+  ) => {
+    const selectedValues = e.target.value;
     fieldChange(selectedValues);
   };
 
@@ -192,7 +199,7 @@ export default function ModalEditProduct({ product }: TEdit) {
           });
         }
         mutate({
-          id: product?.id ?? "",
+          id: product!.id,
           name: values.name,
           desc: values.desc,
           stock: values.stock,
@@ -206,7 +213,7 @@ export default function ModalEditProduct({ product }: TEdit) {
         });
       } else {
         mutate({
-          id: product?.id ?? "",
+          id: product!.id,
           name: values.name,
           desc: values.desc,
           stock: values.stock,
@@ -363,11 +370,43 @@ export default function ModalEditProduct({ product }: TEdit) {
                         <FormItem>
                           <FormLabel>Subcategory</FormLabel>
                           <FormControl>
-                            <Input
-                              labelPlacement="outside"
-                              placeholder="T-shrit,Shoes, ETc"
+                            <Select
                               {...field}
-                            />
+                              size="sm"
+                              items={Subcategory}
+                              variant="bordered"
+                              isMultiline={true}
+                              label="Subcategory"
+                              labelPlacement="outside"
+                              aria-label="select"
+                              selectedKeys={[field.value]}
+                              onChange={(e) =>
+                                handleOnchange(e, field.onChange)
+                              }
+                              selectionMode="single"
+                              placeholder="Select a Subcategory"
+                              classNames={{
+                                base: "max-w-full",
+                                trigger: "min-h-unit-12 py-2",
+                              }}
+                              renderValue={(items: SelectedItems<Cate>) => {
+                                return (
+                                  <div className="flex flex-wrap gap-2">
+                                    {items.map((item) => (
+                                      <Chip key={item.key} color="primary">
+                                        {item.data?.title}
+                                      </Chip>
+                                    ))}
+                                  </div>
+                                );
+                              }}
+                            >
+                              {(e) => (
+                                <SelectItem key={e.title} textValue={e.title}>
+                                  {e.title}
+                                </SelectItem>
+                              )}
+                            </Select>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -384,16 +423,17 @@ export default function ModalEditProduct({ product }: TEdit) {
                               {...field}
                               size="sm"
                               items={Categories}
-                              labelPlacement="outside"
                               variant="bordered"
                               isMultiline={true}
-                              selectedKeys={field.value}
-                              aria-label="select category"
+                              label="Subcategory"
+                              labelPlacement="outside"
+                              aria-label="select"
+                              selectedKeys={[field.value]}
                               onChange={(e) =>
-                                handleSelectionChange(e, field.onChange)
+                                handleOnchange(e, field.onChange)
                               }
                               selectionMode="single"
-                              placeholder="Select a category"
+                              placeholder="Select a Subcategory"
                               classNames={{
                                 base: "max-w-full",
                                 trigger: "min-h-unit-12 py-2",
@@ -402,7 +442,7 @@ export default function ModalEditProduct({ product }: TEdit) {
                                 return (
                                   <div className="flex flex-wrap gap-2">
                                     {items.map((item) => (
-                                      <Chip color="primary" key={item.key}>
+                                      <Chip key={item.key} color="primary">
                                         {item.data?.title}
                                       </Chip>
                                     ))}
@@ -417,7 +457,6 @@ export default function ModalEditProduct({ product }: TEdit) {
                               )}
                             </Select>
                           </FormControl>
-
                           <FormMessage />
                         </FormItem>
                       )}

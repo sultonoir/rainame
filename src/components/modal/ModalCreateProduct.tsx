@@ -20,7 +20,7 @@ import { PlusCircleIcon, XIcon } from "lucide-react";
 import { z } from "zod";
 import { useForm, Controller, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Categories, Colors, Sizes } from "@/lib/utils";
+import { Categories, Colors, Sizes, Subcategory } from "@/lib/utils";
 import { useUploadThing } from "@/lib/uploadthing";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
@@ -36,15 +36,11 @@ const productSchema = z.object({
   }),
   discount: z.number().max(100).optional().nullable(),
   subcategory: z.string(),
-  imageUrl: z.array(z.string()).min(1, {
-    message: "form has not been filled out",
-  }),
+  imageUrl: z.array(z.string()),
   color: z.array(z.string()).min(1, {
     message: "form has not been filled out",
   }),
-  category: z.array(z.string()).min(1, {
-    message: "form has not been filled out",
-  }),
+  category: z.string(),
   size: z.array(z.string()).min(1, {
     message: "form has not been filled out",
   }),
@@ -83,10 +79,10 @@ export default function ModalCreateProduct() {
       price: 1,
       stock: 1,
       discount: undefined,
-      subcategory: "",
+      subcategory: "Hat",
       imageUrl: [],
       color: [],
-      category: [],
+      category: "Man",
       size: [],
     },
   });
@@ -127,10 +123,18 @@ export default function ModalCreateProduct() {
     fieldChange(selectedValues);
   };
 
+  //handle select string
+  const handleOnchange = (
+    e: React.ChangeEvent<HTMLSelectElement>,
+    fieldChange: (value: string) => void,
+  ) => {
+    const selectedValues = e.target.value;
+    fieldChange(selectedValues);
+  };
+
   // handle render image
   const handleImage = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-
     if (e.target.files && e.target.files.length > 0) {
       const newFiles = Array.from(e.target.files);
       const uniqueFiles: File[] = [];
@@ -303,43 +307,69 @@ export default function ModalCreateProduct() {
                     )}
                   />
                   <Controller
-                    name="subcategory"
-                    control={control}
-                    render={({ field }) => (
-                      <>
-                        <Input
-                          variant="flat"
-                          labelPlacement="outside"
-                          type="Name"
-                          placeholder="T-shrit,Shoes,ETC..."
-                          label="Product type"
-                          {...field}
-                        />
-                        {errors.subcategory && (
-                          <p className="-mt-3 ml-2 text-small text-danger">{`${errors.subcategory.message}`}</p>
-                        )}
-                      </>
-                    )}
-                  />
-                  <Controller
                     name="category"
                     control={control}
                     render={({ field }) => (
                       <>
                         <Select
                           {...field}
+                          size="sm"
                           items={Categories}
                           variant="bordered"
                           isMultiline={true}
                           label="Categories"
                           labelPlacement="outside"
                           aria-label="select"
-                          selectedKeys={field.value}
-                          onChange={(e) =>
-                            handleSelectionChange(e, field.onChange)
-                          }
+                          selectedKeys={[field.value]}
+                          onChange={(e) => handleOnchange(e, field.onChange)}
                           selectionMode="single"
                           placeholder="Select a category"
+                          classNames={{
+                            base: "max-w-full",
+                            trigger: "min-h-unit-12 py-2",
+                          }}
+                          renderValue={(items: SelectedItems<Cate>) => {
+                            return (
+                              <div className="flex flex-wrap gap-2">
+                                {items.map((item) => (
+                                  <Chip key={item.key} color="primary">
+                                    {item.data?.title}
+                                  </Chip>
+                                ))}
+                              </div>
+                            );
+                          }}
+                        >
+                          {(e) => (
+                            <SelectItem key={e.title} textValue={e.title}>
+                              {e.title}
+                            </SelectItem>
+                          )}
+                        </Select>
+                        {errors.category && (
+                          <p className="-mt-3 ml-2 text-small text-danger">{`${errors.category.message}`}</p>
+                        )}
+                      </>
+                    )}
+                  />
+                  <Controller
+                    name="subcategory"
+                    control={control}
+                    render={({ field }) => (
+                      <>
+                        <Select
+                          {...field}
+                          size="sm"
+                          items={Subcategory}
+                          variant="bordered"
+                          isMultiline={true}
+                          label="Subcategory"
+                          labelPlacement="outside"
+                          aria-label="select"
+                          selectedKeys={[field.value]}
+                          onChange={(e) => handleOnchange(e, field.onChange)}
+                          selectionMode="single"
+                          placeholder="Select a Subcategory"
                           classNames={{
                             base: "max-w-full",
                             trigger: "min-h-unit-12 py-2",
@@ -503,8 +533,8 @@ export default function ModalCreateProduct() {
                           onChange={(e) => handleImage(e)}
                           className="file:mr-4 file:rounded-md file:border-0 file:bg-primary file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:cursor-pointer hover:file:bg-primary/80"
                         />
-                        {errors.name && (
-                          <p className="-mt-3 ml-2 text-small text-danger">{`${errors.name.message}`}</p>
+                        {errors.imageUrl && (
+                          <p className="-mt-3 ml-2 text-small text-danger">{`${errors.imageUrl.message}`}</p>
                         )}
                       </div>
                     )}

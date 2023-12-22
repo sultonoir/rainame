@@ -3,24 +3,14 @@
 import FormChangePass from "@/components/form/FormChangePass";
 import FormUpdateAdmin from "@/components/form/FormUpdateAdmin";
 import ModalUploadImage from "@/components/modal/ModalUploadImage";
-import { api } from "@/trpc/react";
-import { Button, Spinner } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
+import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import React, { useState } from "react";
 
 const Page = () => {
-  const { data: admin, isLoading } = api.admin.getAdmin.useQuery();
+  const { data: admin } = useSession();
   const [active, setActive] = useState("Profile");
-
-  if (isLoading) {
-    return (
-      <main className="relative">
-        <div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-          <Spinner />
-        </div>
-      </main>
-    );
-  }
 
   if (!admin) redirect("/admin");
 
@@ -57,7 +47,7 @@ const Page = () => {
           {active === "Profile" && (
             <>
               <div className="flex w-full justify-center">
-                <ModalUploadImage imageUrl={admin.image ?? ""} />
+                <ModalUploadImage imageUrl={admin.user.image ?? ""} />
               </div>
               <FormUpdateAdmin admin={admin} />
             </>

@@ -32,7 +32,7 @@ export const apiAdmin = createTRPCRouter({
         });
       }
 
-      await ctx.db.store.create({
+      await ctx.db.user.create({
         data: {
           email,
           hashedPassword,
@@ -41,7 +41,7 @@ export const apiAdmin = createTRPCRouter({
     }),
   getAdmin: protectedProcedure.query(async ({ ctx }) => {
     const id = ctx.session.user.id;
-    const admin = await ctx.db.store.findUnique({
+    const admin = await ctx.db.user.findUnique({
       where: {
         id,
       },
@@ -62,7 +62,7 @@ export const apiAdmin = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { name, currentPassword, imageUrl } = input;
       const id = ctx.session.user.id;
-      const admin = await ctx.db.store.findUnique({
+      const admin = await ctx.db.user.findUnique({
         where: {
           id,
         },
@@ -72,7 +72,7 @@ export const apiAdmin = createTRPCRouter({
         throw new TRPCError({ code: "NOT_FOUND", message: "Admin not found" });
       }
       if (imageUrl) {
-        await ctx.db.store.update({
+        await ctx.db.user.update({
           where: {
             id,
           },
@@ -82,7 +82,7 @@ export const apiAdmin = createTRPCRouter({
         });
       }
       if (name) {
-        await ctx.db.store.update({
+        await ctx.db.user.update({
           where: {
             id,
           },
@@ -93,7 +93,7 @@ export const apiAdmin = createTRPCRouter({
       }
 
       if (currentPassword) {
-        await ctx.db.store.update({
+        await ctx.db.user.update({
           where: {
             id,
           },
@@ -113,7 +113,7 @@ export const apiAdmin = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { email, password } = input;
       const hashedPassword = await bcrypt.hash(password, 10);
-      const admin = await ctx.db.store.findUnique({
+      const admin = await ctx.db.user.findUnique({
         where: {
           email,
         },
@@ -121,7 +121,7 @@ export const apiAdmin = createTRPCRouter({
       if (!admin) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Admin not found" });
       }
-      await ctx.db.store.update({
+      await ctx.db.user.update({
         where: {
           email,
         },

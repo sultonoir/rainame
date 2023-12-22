@@ -12,7 +12,6 @@ import {
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import React from "react";
-import { ThemeSwitcher } from "../shared/ThemeSwithcer";
 import { signOut } from "next-auth/react";
 
 const AsideAdmin = () => {
@@ -62,7 +61,7 @@ const AsideAdmin = () => {
           Rainame
         </Link>
         <p className="text-small text-default-400">OVERVIEW</p>
-        <ul className="flex h-full w-full grow flex-col gap-8">
+        <ul className="flex h-full w-full grow flex-col gap-4">
           {navadmin.map((item) => (
             <li key={item.path}>
               <Link color="foreground" className="flex gap-2" href={item.path}>
@@ -95,7 +94,6 @@ const AsideAdmin = () => {
             <LogOut />
             Logout
           </button>
-          <ThemeSwitcher />
         </div>
       </section>
     </aside>

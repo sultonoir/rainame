@@ -6,9 +6,8 @@ import { Button, Input } from "@nextui-org/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
-import { type Session } from "next-auth";
-
-const updateAdmin = z
+import useToggleAuth from "@/hooks/useToggleAuth";
+const signupSchema = z
   .object({
     email: z.string().email(),
     password: z.string().min(6, {
@@ -21,40 +20,41 @@ const updateAdmin = z
     path: ["confirmPassword"],
   });
 
-type UpdateAdmin = z.infer<typeof updateAdmin>;
-type TFromUpdateAdmin = {
-  admin?: Session | undefined | null;
-};
-const FormChangePass = ({ admin }: TFromUpdateAdmin) => {
+type SignupSchema = z.infer<typeof signupSchema>;
+
+const FormForgotPass = () => {
   const {
     control,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     handleSubmit,
     reset,
-  } = useForm<UpdateAdmin>({
-    resolver: zodResolver(updateAdmin),
+  } = useForm<SignupSchema>({
+    resolver: zodResolver(signupSchema),
     defaultValues: {
-      email: admin?.user.email ?? "",
+      email: "",
       password: "",
       confirmPassword: "",
     },
   });
 
-  //change pass
-
-  const { mutate } = api.admin.updateAdmin.useMutation({
+  //create user
+  const toggle = useToggleAuth();
+  const createUser = api.user.forgotPass.useMutation({
     onSuccess: () => {
-      toast.success("Password has change");
+      toast.success("account created");
       reset();
+      toggle.onSignin();
     },
     onError: (e) => {
       toast.error(e.message);
+      reset();
     },
   });
 
-  const onSubmit: SubmitHandler<UpdateAdmin> = (data) => {
-    mutate({
-      currentPassword: data.password,
+  const onSubmit: SubmitHandler<SignupSchema> = (data) => {
+    createUser.mutate({
+      email: data.email,
+      password: data.password,
     });
   };
   return (
@@ -68,7 +68,6 @@ const FormChangePass = ({ admin }: TFromUpdateAdmin) => {
         render={({ field }) => (
           <>
             <Input
-              isDisabled
               variant="flat"
               size="sm"
               labelPlacement="outside"
@@ -123,11 +122,17 @@ const FormChangePass = ({ admin }: TFromUpdateAdmin) => {
           </>
         )}
       />
-      <Button type="submit" color="primary" size="sm">
-        Change password
+      <Button
+        type="submit"
+        isLoading={isSubmitting}
+        variant="solid"
+        color="primary"
+        size="sm"
+      >
+        Sumbit
       </Button>
     </form>
   );
 };
 
-export default FormChangePass;
+export default FormForgotPass;

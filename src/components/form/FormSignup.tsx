@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import useToggleAuth from "@/hooks/useToggleAuth";
 const signupSchema = z
   .object({
+    name: z.string(),
     email: z.string().email(),
     password: z.string().min(6, {
       message: "Password must be at least 6 characters",
@@ -22,44 +23,29 @@ const signupSchema = z
 
 type SignupSchema = z.infer<typeof signupSchema>;
 
-type TSignup = {
-  user?: boolean;
-};
-
-const Signup = ({ user }: TSignup) => {
+const FormSignup = () => {
   const {
     control,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     handleSubmit,
     reset,
   } = useForm<SignupSchema>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
       confirmPassword: "",
     },
   });
 
-  //create admin
-  const createAdmin = api.admin.createAdmin.useMutation({
-    onSuccess: () => {
-      toast.success("account created");
-      reset();
-    },
-    onError: (e) => {
-      toast.error(e.message);
-      reset();
-    },
-  });
-
   //create user
   const toggle = useToggleAuth();
-  const createUser = api.user.createUser.useMutation({
+  const { mutateAsync } = api.user.createUser.useMutation({
     onSuccess: () => {
       toast.success("account created");
       reset();
-      toggle.onToggle(toggle.signin);
+      toggle.onSignin();
     },
     onError: (e) => {
       toast.error(e.message);
@@ -67,24 +53,38 @@ const Signup = ({ user }: TSignup) => {
     },
   });
 
-  const onSubmit: SubmitHandler<SignupSchema> = (data) => {
-    if (user) {
-      createUser.mutate({
-        email: data.email,
-        password: data.password,
-      });
-    } else {
-      createAdmin.mutate({
-        email: data.email,
-        password: data.password,
-      });
-    }
+  const onSubmit: SubmitHandler<SignupSchema> = async (data) => {
+    await mutateAsync({
+      email: data.email,
+      password: data.password,
+      name: data.name,
+    });
   };
   return (
     <form
       className="grid w-full grid-cols-1 gap-3"
       onSubmit={handleSubmit(onSubmit)}
     >
+      <Controller
+        name="name"
+        control={control}
+        render={({ field }) => (
+          <>
+            <Input
+              variant="flat"
+              size="sm"
+              labelPlacement="outside"
+              type="text"
+              placeholder="Enter your name"
+              label="Name"
+              {...field}
+            />
+            {errors.name && (
+              <p className="-mt-3 ml-2 text-small text-danger">{`${errors.name.message}`}</p>
+            )}
+          </>
+        )}
+      />
       <Controller
         name="email"
         control={control}
@@ -145,11 +145,17 @@ const Signup = ({ user }: TSignup) => {
           </>
         )}
       />
-      <Button type="submit" className="w-full bg-white text-black" size="sm">
+      <Button
+        type="submit"
+        isLoading={isSubmitting}
+        variant="solid"
+        color="primary"
+        size="sm"
+      >
         Signup
       </Button>
     </form>
   );
 };
 
-export default Signup;
+export default FormSignup;

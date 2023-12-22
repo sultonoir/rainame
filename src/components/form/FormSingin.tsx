@@ -15,11 +15,8 @@ const signupSchema = z.object({
 });
 
 type SignupSchema = z.infer<typeof signupSchema>;
-type TSignin = {
-  auth: string;
-};
 
-const Signin = ({ auth }: TSignin) => {
+const FormSignin = () => {
   const {
     control,
     formState: { errors, isSubmitting },
@@ -36,7 +33,7 @@ const Signin = ({ auth }: TSignin) => {
   const router = useRouter();
 
   const onSubmit: SubmitHandler<SignupSchema> = async (data) => {
-    await signIn(auth, {
+    await signIn("signin", {
       email: data.email,
       password: data.password,
       redirect: false,
@@ -112,4 +109,4 @@ const Signin = ({ auth }: TSignin) => {
   );
 };
 
-export default Signin;
+export default FormSignin;

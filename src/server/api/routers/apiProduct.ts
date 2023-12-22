@@ -21,15 +21,11 @@ export const apiProduct = createTRPCRouter({
         }),
         discount: z.number().max(100).optional().nullable(),
         subcategory: z.string(),
-        imageUrl: z.array(z.string()).min(1, {
-          message: "form has not been filled out",
-        }),
+        imageUrl: z.array(z.string()),
         color: z.array(z.string()).min(1, {
           message: "form has not been filled out",
         }),
-        category: z.array(z.string()).min(1, {
-          message: "form has not been filled out",
-        }),
+        category: z.string(),
         size: z.array(z.string()).min(1, {
           message: "form has not been filled out",
         }),
@@ -49,14 +45,14 @@ export const apiProduct = createTRPCRouter({
         size,
       } = input;
 
-      const storeId = ctx.session.user.id;
+      const userId = ctx.session.user.id;
       const path = name.replaceAll(/[^a-zA-Z0-9]/g, "-");
-      if (!storeId) {
+      if (!userId) {
         throw new TRPCError({ code: "UNAUTHORIZED", message: "please login" });
       }
       await ctx.db.products.create({
         data: {
-          storeId,
+          userId,
           name,
           desc,
           price,
@@ -75,6 +71,9 @@ export const apiProduct = createTRPCRouter({
     const products = await ctx.db.products.findMany({
       orderBy: {
         createdAt: "asc",
+      },
+      include: {
+        rattings: true,
       },
     });
     return products;
@@ -96,10 +95,17 @@ export const apiProduct = createTRPCRouter({
   deleteByid: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
+      const admin = ctx.session.user.role;
+      if (admin !== "admin") {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "You must be an admin to delete a product",
+        });
+      }
       await ctx.db.products.delete({
         where: {
           id: input.id,
-          storeId: ctx.session.user.id,
+          userId: ctx.session.user.id,
         },
       });
     }),
@@ -123,9 +129,7 @@ export const apiProduct = createTRPCRouter({
         color: z.array(z.string()).min(1, {
           message: "form has not been filled out",
         }),
-        category: z.array(z.string()).min(1, {
-          message: "form has not been filled out",
-        }),
+        category: z.string(),
         size: z.array(z.string()).min(1, {
           message: "form has not been filled out",
         }),
@@ -149,10 +153,17 @@ export const apiProduct = createTRPCRouter({
       ),
     )
     .mutation(async ({ ctx, input }) => {
+      const admin = ctx.session.user.role;
+      if (admin !== "admin") {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "You must be an admin to delete a product",
+        });
+      }
       await ctx.db.products.deleteMany({
         where: {
           id: { in: input.map((item) => item.id) },
-          storeId: ctx.session.user.id,
+          userId: ctx.session.user.id,
         },
       });
     }),

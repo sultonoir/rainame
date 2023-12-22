@@ -1,8 +1,7 @@
 "use client";
 import React from "react";
-import AuthHeaders from "./AuthHeaders";
-import Signin from "./Singin";
 import Image from "next/image";
+import FormSignin from "../form/FormSingin";
 
 const AuthAdmin = () => {
   return (
@@ -18,8 +17,10 @@ const AuthAdmin = () => {
       </section>
       <section className="flex h-[100dvh] flex-1 flex-col items-center justify-center gap-4 p-4">
         <section className="w-full max-w-md">
-          <AuthHeaders title="Welcome admin" />
-          <Signin auth="admin" />
+          <h1 className="w-full text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
+            Wellcome back admin
+          </h1>
+          <FormSignin />
         </section>
       </section>
     </main>

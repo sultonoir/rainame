@@ -37,39 +37,27 @@ model Session {
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+enum UserRole{
+  admin
+  user
+}
+
 model User{
   id                String    @id @default(cuid())
   name              String?
   email             String      @unique
   image             String?
   hashedPassword    String?
+  role              UserRole    @default(user)
   emailVerified     DateTime?
-  partners          Boolean     @default(false)
   payment           Payment[]
   rattings          Rattings[]
-  followers         String[]
   accounts          Account[]
   session           Session[]
   notify            Notify[]
+  product           Products[]
   createdAt         DateTime @default(now())
   updatedAt         DateTime @default(now())
-}
-
-
-
-model Store{
-  id                String    @id @default(cuid())
-  email             String      @unique
-  name              String?
-  hashedPassword    String?
-  image             String?
-  desc              String?
-  hasnotify         Boolean     @default(false)     
-  products          Products[]
-  rattings          Rattings[]
-  notify            Notify[]
-  createdAt         DateTime    @default(now())
-  updatedAt         DateTime    @default(now())
 }
 
 
@@ -85,12 +73,12 @@ model Products{
   stock             Int
   selling           Int?
   size              String[]
-  category          String[]
+  category          String
   color             String[]
   createdAt         DateTime @default(now())
   updatedAt         DateTime @default(now())
-  storeId           String      
-  store             Store @relation(fields: [storeId],references: [id],onDelete: Cascade)
+  userId            String      
+  store             User @relation(fields: [userId],references: [id],onDelete: Cascade)
   payment           Payment[]
   rattings          Rattings[]
 }
@@ -125,8 +113,6 @@ model Rattings {
   user              User        @relation(fields: [userId],references: [id],onDelete: Cascade)
   productId         String      
   products          Products    @relation(fields: [productId],references: [id],onDelete: Cascade)
-  storeId           String      
-  store             Store @relation(fields: [storeId],references: [id],onDelete: Cascade)
 }
 
 model Notify {
@@ -140,8 +126,6 @@ model Notify {
   userId            String      
   user              User        @relation(fields: [userId],references: [id],onDelete: Cascade)
   productId         String      
-  storeId           String      
-  store             Store @relation(fields: [storeId],references: [id],onDelete: Cascade)
 }
 
 model Banner {

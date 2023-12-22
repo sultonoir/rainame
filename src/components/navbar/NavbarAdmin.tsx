@@ -9,16 +9,17 @@ import {
   NavbarItem,
 } from "@nextui-org/react";
 import { SearchIcon } from "lucide-react";
-import { api } from "@/trpc/react";
 import NotifyAdmin from "../notify/NotifyAdmin";
+import { useSession } from "next-auth/react";
+import { ThemeSwitcher } from "../shared/ThemeSwithcer";
 
 export default function NavbarAdmin() {
-  const { data } = api.admin.getAdmin.useQuery();
+  const { data } = useSession();
   return (
     <Navbar
       isBordered
       classNames={{
-        wrapper: "max-w-[1800px] pr-2 pl-0",
+        wrapper: "pr-2 pl-0 max-w-full",
       }}
     >
       <NavbarContent as="div" className="hidden w-full gap-4 sm:flex">
@@ -31,15 +32,16 @@ export default function NavbarAdmin() {
         />
       </NavbarContent>
       <NavbarContent as="div" justify="end">
-        <NavbarItem className="border-r-2 border-default-300 px-2">
+        <NavbarItem className="flex gap-2 border-r-2 border-default-300 px-2">
+          <ThemeSwitcher />
           <NotifyAdmin />
         </NavbarItem>
         <Avatar
           isBordered
           className="transition-transform"
           color="primary"
-          src={data?.image ?? ""}
-          alt={data?.name ?? ""}
+          src={data?.user.image ?? ""}
+          alt={data?.user.name ?? ""}
           size="sm"
         />
       </NavbarContent>
