@@ -8,7 +8,7 @@ const HomeCategory = () => {
       <div className="flex justify-between">
         <p className="text-2xl font-semibold">Category</p>
       </div>
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-5">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5">
         <Button
           as={Link}
           href="/"

@@ -1,54 +1,18 @@
 "use client";
+
 import { type Rattings, type Products } from "@prisma/client";
 import React from "react";
-import {
-  Card,
-  CardBody,
-  Image,
-  CardFooter,
-  Link,
-  Button,
-} from "@nextui-org/react";
+import { Card, CardBody, Image, CardFooter, Link } from "@nextui-org/react";
 import { Star } from "lucide-react";
 import NextImage from "next/image";
 import { calculateTotalPrice } from "@/lib/utils";
-
-type Home = {
-  products: Array<
-    Products & {
-      rattings: Rattings[];
-    }
-  >;
-};
-
-const HomeNewArrival = ({ products }: Home) => {
-  return (
-    <section className="my-10 flex flex-col gap-5">
-      <div className="flex justify-between">
-        <p className="text-2xl font-semibold">New Arrival</p>
-        <Button as={Link} href="/products" variant="light" color="primary">
-          Show more
-        </Button>
-      </div>
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-5">
-        {products?.map((product) => (
-          <Products
-            key={product.id}
-            product={product}
-            rattings={product.rattings}
-          />
-        ))}
-      </div>
-    </section>
-  );
-};
 
 type TProducts = {
   product: Products;
   rattings: Rattings[];
 };
 
-const Products = ({ product, rattings }: TProducts) => {
+const CardProducts = ({ product, rattings }: TProducts) => {
   let totalRating = 0;
   let jumlahRatings = 0;
 
@@ -71,7 +35,12 @@ const Products = ({ product, rattings }: TProducts) => {
     discount: product.discount,
   });
   return (
-    <Card as={Link} href={`/product/${product.path}`} shadow="sm" isPressable>
+    <Card
+      as={Link}
+      href={`/product/${product.category}/${product.subcategory}/${product.path}`}
+      shadow="sm"
+      isPressable
+    >
       <CardBody className="relative overflow-visible p-0">
         {product.discount && product.discount > 0 && (
           <div className="absolute right-2.5 top-2.5 z-20 rounded-lg bg-danger px-2 py-1 text-small text-white">
@@ -120,4 +89,4 @@ const Products = ({ product, rattings }: TProducts) => {
   );
 };
 
-export default HomeNewArrival;
+export default CardProducts;
