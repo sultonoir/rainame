@@ -10,16 +10,17 @@ import SearchInput from "./SearchInput";
 import ModalAuth from "../modal/ModalAuth";
 import { Link } from "@nextui-org/link";
 import Image from "next/image";
-import { Button } from "@nextui-org/react";
+import { useSession } from "next-auth/react";
 import { ThemeSwitcher } from "../shared/ThemeSwithcer";
-import { signOut, useSession } from "next-auth/react";
+import Profile from "../shared/Profile";
+import NotifyUser from "../notify/NotifyUser";
+import Cart from "../shared/Cart";
 
 export default function NavbarUi() {
   const { data: user } = useSession();
 
   return (
     <Navbar
-      isBordered
       classNames={{
         wrapper: "container mx-auto px-8 max-w-[1400px]",
       }}
@@ -39,21 +40,18 @@ export default function NavbarUi() {
         <SearchInput />
       </NavbarContent>
       <NavbarContent justify="end">
-        <NavbarItem>
+        <NavbarItem as="div" className="flex gap-2">
           <ThemeSwitcher />
         </NavbarItem>
         <NavbarItem className="hidden lg:flex">
           {!user ? (
             <ModalAuth />
           ) : (
-            <Button
-              variant="solid"
-              color="primary"
-              size="sm"
-              onPress={() => signOut()}
-            >
-              Logout
-            </Button>
+            <NavbarItem as="div" className="flex gap-2">
+              <Cart />
+              <NotifyUser />
+              <Profile />
+            </NavbarItem>
           )}
         </NavbarItem>
       </NavbarContent>

@@ -56,7 +56,6 @@ const CardProducts = ({ product, rattings }: TProducts) => {
             width={400}
             height={400}
             alt={product?.name}
-            fallbackSrc="/fallback.png"
             className="aspect-square"
           />
         </div>

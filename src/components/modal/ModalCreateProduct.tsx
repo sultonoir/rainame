@@ -9,7 +9,6 @@ import {
   Button,
   useDisclosure,
   Input,
-  Textarea,
   Select,
   type SelectedItems,
   Chip,
@@ -24,6 +23,7 @@ import { Categories, Colors, Sizes, Subcategory } from "@/lib/utils";
 import { useUploadThing } from "@/lib/uploadthing";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
+import Editor from "../shared/Editor";
 
 const productSchema = z.object({
   name: z.string().min(2, {
@@ -222,18 +222,10 @@ export default function ModalCreateProduct() {
                     name="desc"
                     control={control}
                     render={({ field }) => (
-                      <>
-                        <Textarea
-                          variant="flat"
-                          labelPlacement="outside"
-                          placeholder="Product name"
-                          label="Description"
-                          {...field}
-                        />
-                        {errors.desc && (
-                          <p className="-mt-3 ml-2 text-small text-danger">{`${errors.desc.message}`}</p>
-                        )}
-                      </>
+                      <div className="flex w-full flex-col">
+                        <p>Desc</p>
+                        <Editor {...field} />
+                      </div>
                     )}
                   />
                   <Controller

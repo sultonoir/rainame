@@ -30,11 +30,11 @@ model Account {
 }
 
 model Session {
-    id           String   @id @default(uuid())
-    sessionToken String   @unique
-    userId       String
-    expires      DateTime
-    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    id                 String   @id @default(uuid())
+    sessionToken       String   @unique
+    userId             String
+    expires            DateTime
+    user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum UserRole{
@@ -50,15 +50,20 @@ model User{
   hashedPassword    String?
   role              UserRole    @default(user)
   emailVerified     DateTime?
+  hasNotify         Boolean     @default(false)
   payment           Payment[]
   rattings          Rattings[]
   accounts          Account[]
   session           Session[]
   notify            Notify[]
   product           Products[]
+  cart              String[]
   createdAt         DateTime @default(now())
   updatedAt         DateTime @default(now())
+
+  @@index([id,email])
 }
+
 
 
 model Products{
@@ -68,7 +73,7 @@ model Products{
   desc              String      @db.String
   imageUrl          String[]
   price             Int
-  discount          Int?
+  discount          Float?
   subcategory       String
   stock             Int
   selling           Int?
@@ -79,30 +84,41 @@ model Products{
   updatedAt         DateTime @default(now())
   userId            String      
   store             User @relation(fields: [userId],references: [id],onDelete: Cascade)
-  payment           Payment[]
   rattings          Rattings[]
+
+  @@index([id,userId])
 }
 
 
-model Payment {
+model DataPayment{
   id                String    @id @default(cuid())
-  totalPrice        Int
+  totalPrice        Float
   totalProduct      Int
   color             String?
   size              String?
+  productId         String
+  paymentId         String  
+  payment           Payment   @relation(fields: [paymentId],references: [id])
+
+  @@index([id])
+}
+
+model Payment {
+  id                String    @id @default(cuid())
+  dataPayment       DataPayment[]
   status            String      @default("pending")
   name              String
   createdAt         DateTime    @default(now())
   updatedAt         DateTime    @default(now())
   userId            String      
   user              User @relation(fields: [userId],references: [id],onDelete: Cascade)
-  productId         String    
-  products          Products  @relation(fields: [productId],references: [id],onDelete: Cascade)
   rattings          Rattings[]
+
+  @@index([id,userId])
 }
 
 model Rattings {
-  id            String    @id @default(cuid())
+  id                String    @id @default(cuid())
   value             Int
   comment           String?     @db.String
   createdAt         DateTime    @default(now())
@@ -113,10 +129,12 @@ model Rattings {
   user              User        @relation(fields: [userId],references: [id],onDelete: Cascade)
   productId         String      
   products          Products    @relation(fields: [productId],references: [id],onDelete: Cascade)
+
+  @@index([userId,productId,paymentId])
 }
 
 model Notify {
-  id            String    @id @default(cuid())
+  id                String    @id @default(cuid())
   value             Int
   comment           String?     @db.String
   createdAt         DateTime    @default(now())
@@ -126,19 +144,21 @@ model Notify {
   userId            String      
   user              User        @relation(fields: [userId],references: [id],onDelete: Cascade)
   productId         String      
+
+  @@index([id,userId])
 }
 
 model Banner {
-  id            String    @id @default(cuid())
+  id                String    @id @default(cuid())
   imageUrl          String
   thumbnail         String
   pathname          String
 }
 
 model VerificationToken {
-    identifier String
-    token      String   @unique
-    expires    DateTime
+    identifier      String
+    token           String   @unique
+    expires         DateTime
 
     @@unique([identifier, token])
 }

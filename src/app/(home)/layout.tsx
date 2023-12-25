@@ -5,7 +5,7 @@ const layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <NavbarUi />
-      {children}
+      <main className="container mt-2">{children}</main>
     </>
   );
 };

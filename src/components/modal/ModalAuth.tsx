@@ -7,7 +7,6 @@ import {
   ModalBody,
   ModalFooter,
   Button,
-  useDisclosure,
 } from "@nextui-org/react";
 import AuthHeaders from "../authadmin/AuthHeaders";
 import useToggleAuth from "@/hooks/useToggleAuth";
@@ -15,16 +14,17 @@ import { signIn } from "next-auth/react";
 import FormSignin from "../form/FormSingin";
 import FormSignup from "../form/FormSignup";
 import FormForgotPass from "../form/FormForgotPass";
+import useModal from "@/hooks/useModal";
 
 export default function ModalAuth() {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { isOpen, onOpen, onClose } = useModal();
   const toggle = useToggleAuth();
   return (
     <>
       <Button onPress={onOpen} variant="solid" color="primary" size="sm">
         Login
       </Button>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+      <Modal isOpen={isOpen} onOpenChange={onClose}>
         <ModalContent>
           <ModalHeader className="flex flex-col">
             <AuthHeaders title="Welcome to Rainame" />

@@ -17,8 +17,8 @@ type THome = {
 
 const HomeClient = ({ products }: THome) => {
   return (
-    <main className="container">
-      <section className="relative mt-2 h-[30dvh] overflow-hidden rounded-2xl">
+    <>
+      <section className=" relative my-10 h-[30dvh] overflow-hidden rounded-2xl">
         <div className="absolute inset-0 z-10 h-full w-full bg-content1 opacity-40"></div>
         <Image src="/Logo.png" alt="logo" fill className="object-cover" />
       </section>
@@ -27,17 +27,21 @@ const HomeClient = ({ products }: THome) => {
       <section className="my-10 flex flex-col gap-5">
         <div className="flex justify-between">
           <p className="text-2xl font-semibold">New Arrival</p>
-          <Button as={Link} href="/products" variant="light" color="primary">
+          <Button as={Link} href="/product" variant="light" color="primary">
             Show more
           </Button>
         </div>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5">
           {products.map((product) => (
-            <CardProducts product={product} rattings={product.rattings} />
+            <CardProducts
+              key={product.id}
+              product={product}
+              rattings={product.rattings}
+            />
           ))}
         </div>
       </section>
-    </main>
+    </>
   );
 };
 

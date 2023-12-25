@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { z } from "zod";
 
 import {
@@ -6,6 +10,8 @@ import {
   publicProcedure,
 } from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
+import { stripe } from "@/lib/stripe";
+import { absoluteUrl } from "@/lib/utils";
 
 export const apiProduct = createTRPCRouter({
   createProduct: protectedProcedure
@@ -70,7 +76,7 @@ export const apiProduct = createTRPCRouter({
   getAllProduct: publicProcedure.query(async ({ ctx }) => {
     const products = await ctx.db.products.findMany({
       orderBy: {
-        createdAt: "asc",
+        createdAt: "desc",
       },
       include: {
         rattings: true,
@@ -166,5 +172,134 @@ export const apiProduct = createTRPCRouter({
           userId: ctx.session.user.id,
         },
       });
+    }),
+  getProductBycategory: publicProcedure
+    .input(
+      z.object({
+        category: z.string(),
+        subcategory: z.string().optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const products = await ctx.db.products.findMany({
+        where: {
+          OR: [
+            {
+              category: {
+                equals: input.category,
+              },
+              subcategory: {
+                equals: input.subcategory,
+              },
+            },
+            {
+              category: {
+                equals: input.subcategory,
+              },
+              subcategory: {
+                equals: input.category,
+              },
+            },
+          ],
+        },
+        include: {
+          rattings: true,
+        },
+      });
+
+      return products;
+    }),
+  getProductByName: publicProcedure
+    .input(
+      z.object({
+        path: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const product = await ctx.db.products.findUnique({
+        where: {
+          path: input.path,
+        },
+        include: {
+          rattings: true,
+        },
+      });
+      if (!product) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "product not found",
+        });
+      }
+      return product;
+    }),
+  productPayment: protectedProcedure
+    .input(
+      z.object({
+        totalPrice: z.number(),
+        totalProduct: z.number(),
+        name: z.string(),
+        color: z.string(),
+        productId: z.string(),
+        size: z.string().optional(),
+        path: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { productId, totalPrice, totalProduct, path, color, name } = input;
+      const successUrl = absoluteUrl("/");
+      const cancelUrl = absoluteUrl(path);
+      const userId = ctx.session.user.id;
+      const admin = ctx.session.user.role;
+
+      if (admin === "admin") {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "admin can't buy this",
+        });
+      }
+
+      const product = await ctx.db.products.findUnique({
+        where: {
+          id: productId,
+        },
+      });
+
+      if (!product) {
+        return null;
+      }
+
+      const payment = await stripe.checkout.sessions.create({
+        line_items: [
+          {
+            price_data: {
+              currency: "USD",
+              product_data: {
+                name: product.name,
+                images: product.imageUrl,
+              },
+              unit_amount: totalPrice * 100,
+            },
+            quantity: totalProduct,
+          },
+        ],
+        metadata: {
+          userId,
+          productId,
+          totalPrice,
+          totalProduct,
+          color,
+          name,
+        },
+        mode: "payment",
+        success_url: successUrl,
+        cancel_url: cancelUrl,
+      });
+      if (!payment) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "error create payment",
+        });
+      }
+      return payment.url;
     }),
 });

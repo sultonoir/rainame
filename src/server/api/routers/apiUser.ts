@@ -86,4 +86,15 @@ export const apiUser = createTRPCRouter({
         },
       });
     }),
+  getCart: protectedProcedure.query(async ({ ctx }) => {
+    const user = await ctx.db.user.findUnique({
+      where: {
+        id: ctx.session.user.id,
+      },
+    });
+
+    if (!user) {
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
+  }),
 });

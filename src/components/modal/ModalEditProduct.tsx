@@ -8,7 +8,6 @@ import {
   ModalFooter,
   Button,
   Input,
-  Textarea,
   Select,
   type SelectedItems,
   Chip,
@@ -34,6 +33,7 @@ import { useUploadThing } from "@/lib/uploadthing";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
 import { type Products } from "@prisma/client";
+import Editor from "../shared/Editor";
 
 const productSchema = z.object({
   name: z.string().min(2, {
@@ -209,12 +209,14 @@ export default function ModalEditProduct({ product }: TEdit) {
           category: values.category,
           size: values.size,
           price: values.price,
+          discount: values.discount,
           path,
         });
       } else {
         mutate({
           id: product!.id,
           name: values.name,
+          discount: values.discount,
           desc: values.desc,
           stock: values.stock,
           subcategory: values.subcategory,
@@ -283,7 +285,7 @@ export default function ModalEditProduct({ product }: TEdit) {
                         <FormItem>
                           <FormLabel>Description</FormLabel>
                           <FormControl>
-                            <Textarea labelPlacement="outside" {...field} />
+                            <Editor {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
