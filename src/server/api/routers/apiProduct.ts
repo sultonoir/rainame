@@ -226,4 +226,57 @@ export const apiProduct = createTRPCRouter({
       }
       return product;
     }),
+  getSearch: publicProcedure
+    .input(
+      z.object({
+        name: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      if (input.name === "") {
+        return undefined;
+      }
+      const products = await ctx.db.products.findMany({
+        where: {
+          name: {
+            contains: input.name,
+            mode: "insensitive",
+          },
+        },
+      });
+      return products;
+    }),
+  filterProduct: publicProcedure
+    .input(
+      z.object({
+        min: z.string().optional(),
+        max: z.string().optional(),
+        category: z.string().optional(),
+        name: z.string().optional(),
+        colors: z.string().optional(),
+        size: z.string().optional(),
+        page: z.string().optional(),
+        take: z.string().optional(),
+        discount: z.string().optional(),
+        hot: z.string().optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      if (input.name === "") {
+        return undefined;
+      }
+      const product = await ctx.db.products.findMany({
+        where: {
+          OR: [
+            {
+              name: {
+                contains: input.name,
+                mode: "insensitive",
+              },
+            },
+          ],
+        },
+      });
+      return product;
+    }),
 });
