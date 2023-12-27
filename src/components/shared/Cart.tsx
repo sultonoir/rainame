@@ -39,7 +39,7 @@ const Cart = () => {
           {data && data.length > 0 && (
             <motion.div
               key={data.length}
-              className="absolute right-[4px] top-[2px] z-50 flex h-2 w-2 items-center justify-center rounded-full bg-primary p-2 text-xs"
+              className="absolute right-[4px] top-[2px] z-50 flex h-2 w-2 items-center justify-center rounded-full bg-primary p-2 text-xs text-white"
               initial={{ opacity: 0, translateY: -10 }}
               animate={{ opacity: 1, translateY: 0 }}
               transition={{
