@@ -57,7 +57,7 @@ model User{
   session           Session[]
   notify            Notify[]
   product           Products[]
-  cart              String[]
+  cart              Cart[]
   createdAt         DateTime @default(now())
   updatedAt         DateTime @default(now())
 
@@ -85,20 +85,32 @@ model Products{
   userId            String      
   store             User @relation(fields: [userId],references: [id],onDelete: Cascade)
   rattings          Rattings[]
+  cart              Cart[]
 
-  @@index([id,userId])
+  @@index([id,userId,path])
 }
 
+model Cart{
+  id                String    @id @default(cuid())
+  productId         String
+  products          Products    @relation(fields: [productId],references: [id],onDelete: Cascade)
+  userId            String      
+  user              User @relation(fields: [userId],references: [id],onDelete: Cascade)
+  @@index([userId,id])
+}
 
 model DataPayment{
   id                String    @id @default(cuid())
+  name              String
   totalPrice        Float
   totalProduct      Int
+  imageUrl          String[]
   color             String?
   size              String?
   productId         String
-  paymentId         String  
-  payment           Payment   @relation(fields: [paymentId],references: [id])
+  paymentId         String
+  cartId            String?
+  payment           Payment   @relation(fields: [paymentId],references: [id],onDelete: Cascade)
 
   @@index([id])
 }
@@ -107,13 +119,11 @@ model Payment {
   id                String    @id @default(cuid())
   dataPayment       DataPayment[]
   status            String      @default("pending")
-  name              String
   createdAt         DateTime    @default(now())
   updatedAt         DateTime    @default(now())
   userId            String      
   user              User @relation(fields: [userId],references: [id],onDelete: Cascade)
   rattings          Rattings[]
-
   @@index([id,userId])
 }
 

@@ -18,7 +18,7 @@ type THome = {
 const HomeClient = ({ products }: THome) => {
   return (
     <>
-      <section className=" relative my-10 h-[30dvh] overflow-hidden rounded-2xl">
+      <section className=" relative my-10 h-[calc(100dvh-130px)] overflow-hidden rounded-2xl">
         <div className="absolute inset-0 z-10 h-full w-full bg-content1 opacity-40"></div>
         <Image src="/Logo.png" alt="logo" fill className="object-cover" />
       </section>

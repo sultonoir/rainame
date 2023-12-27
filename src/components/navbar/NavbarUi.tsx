@@ -47,7 +47,7 @@ export default function NavbarUi() {
           {!user ? (
             <ModalAuth />
           ) : (
-            <NavbarItem as="div" className="flex gap-2">
+            <NavbarItem as="div" className="flex items-center gap-2">
               <Cart />
               <NotifyUser />
               <Profile />

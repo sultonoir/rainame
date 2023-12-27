@@ -1,7 +1,6 @@
 "use client";
 
 import useModal from "@/hooks/useModal";
-import { calculateTotalPrice } from "@/lib/utils";
 import { api } from "@/trpc/react";
 import { Button, Card, CardBody, CardFooter, Input } from "@nextui-org/react";
 import { type Products } from "@prisma/client";
@@ -57,7 +56,7 @@ const ProductPayment = ({ product, color, size }: Props) => {
   const router = useRouter();
   const path = usePathname();
   const result = totalPrice();
-  const { mutate, isLoading } = api.product.productPayment.useMutation({
+  const { mutate, isLoading } = api.cart.productPayment.useMutation({
     onSuccess: (e) => {
       router.push(e!);
     },
@@ -68,12 +67,6 @@ const ProductPayment = ({ product, color, size }: Props) => {
   const discount = result.discountedPrice;
   const price = result.total;
 
-  const amount = calculateTotalPrice({
-    price: product.price,
-    discount: product.discount,
-  });
-
-  const amountPrice = amount.discountedPrice;
   const { data } = useSession();
   const { onOpen } = useModal();
 
@@ -90,14 +83,16 @@ const ProductPayment = ({ product, color, size }: Props) => {
       name: product.name,
       color,
       size,
-      totalPrice: amountPrice,
+      totalPrice: product.discount ? discount : price,
       totalProduct: count,
     });
   };
 
   //handle add to cart
+  const ctx = api.useUtils();
   const cart = api.cart.addToCart.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
+      await ctx.cart.getCart.refetch();
       toast.success("success add to cart");
     },
     onError(error) {
@@ -110,9 +105,6 @@ const ProductPayment = ({ product, color, size }: Props) => {
     }
     cart.mutate({
       productId: product.id,
-      name: product.name,
-      totalPrice: price,
-      totalProduct: count,
     });
   };
 
