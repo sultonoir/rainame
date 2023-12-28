@@ -1,7 +1,7 @@
 "use client";
 import { calculateTotalPrice } from "@/lib/utils";
 import { api } from "@/trpc/react";
-import { Button, Image, Input, Link, Spinner } from "@nextui-org/react";
+import { Image, Input, Link, Spinner } from "@nextui-org/react";
 import { SearchIcon } from "lucide-react";
 
 import React from "react";
@@ -69,13 +69,14 @@ const SearchInput = () => {
                       });
                       return (
                         <Link
-                          href={`/product/${item.category}/${item.subcategory}/${item.path}`}
+                          href={`/product/${item.path}`}
                           key={item.id}
                           className="flex flex-row items-center gap-4 rounded-lg p-2 hover:bg-content2"
                         >
                           <Image
                             width={40}
                             height={40}
+                            radius="sm"
                             src={item.imageUrl.at(0)}
                             className="aspect-square object-cover"
                           />
@@ -85,8 +86,8 @@ const SearchInput = () => {
                             </Link>
                             <p className="font-semibold text-foreground">
                               {item.discount && item.discount > 0 && (
-                                <span className="mr-2 text-default-300">
-                                  {item.price}
+                                <span className="mr-2 text-default-300 line-through">
+                                  ${item.price}
                                 </span>
                               )}
                               ${result.discountedPrice}

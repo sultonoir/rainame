@@ -97,8 +97,6 @@ const Page = () => {
     payment.mutate({ path, data });
   };
 
-  console.log(data);
-
   return (
     <section className="relative flex flex-row gap-5">
       <div className="flex grow flex-col gap-2">
@@ -108,7 +106,7 @@ const Page = () => {
             color="primary"
             onChange={handleSelectionAll}
             className="ml-2.5"
-            isSelected={selected.length === data?.length}
+            isSelected={selected.length === data?.length && selected.length > 0}
           />
           <p className="cursor-pointer font-semibold">Select all</p>
         </label>
@@ -121,7 +119,7 @@ const Page = () => {
         ))}
       </div>
       <div className="relative w-[400px]">
-        <div className="sticky top-24 rounded-lg bg-content1 p-5">
+        <div className="sticky top-28 rounded-lg border border-default-300 bg-content1 p-5">
           <p className="text-lg font-semibold">Shopping summary</p>
           <div className="my-3 flex flex-col">
             <div className="flex justify-between">

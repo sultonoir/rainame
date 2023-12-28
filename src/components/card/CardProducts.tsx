@@ -35,12 +35,7 @@ const CardProducts = ({ product, rattings }: TProducts) => {
     discount: product.discount,
   });
   return (
-    <Card
-      as={Link}
-      href={`/product/${product.category}/${product.subcategory}/${product.path}`}
-      shadow="sm"
-      isPressable
-    >
+    <Card as={Link} href={`/product/${product.path}`} shadow="sm" isPressable>
       <CardBody className="relative overflow-visible p-0">
         {product.discount && product.discount > 0 && (
           <div className="absolute right-2.5 top-2.5 z-20 rounded-lg bg-danger px-2 py-1 text-small text-white">

@@ -100,7 +100,7 @@ const Cart = () => {
                         variant="light"
                         radius="none"
                         onClick={onClose}
-                        href={`/product/${item.products.category}/${item.products.subcategory}/${item.products.path}`}
+                        href={`/product/${item.products.path}`}
                         key={item.id}
                         className="mt-2 p-2"
                       >

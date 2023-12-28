@@ -70,6 +70,7 @@ const ProductPayment = ({ product, color, size }: Props) => {
   const { data } = useSession();
   const { onOpen } = useModal();
 
+  //handle add payment
   const handlePayment = () => {
     if (!data) {
       return onOpen();

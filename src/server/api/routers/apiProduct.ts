@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { z } from "zod";
 
 import {
@@ -252,7 +255,7 @@ export const apiProduct = createTRPCRouter({
         min: z.string().optional(),
         max: z.string().optional(),
         category: z.string().optional(),
-        name: z.string().optional(),
+        subcategory: z.string().optional(),
         colors: z.string().optional(),
         size: z.string().optional(),
         page: z.string().optional(),
@@ -262,21 +265,66 @@ export const apiProduct = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
-      if (input.name === "") {
-        return undefined;
+      const where: any = {};
+      if (input.colors) {
+        where.color = {
+          has: input.colors,
+        };
       }
-      const product = await ctx.db.products.findMany({
-        where: {
-          OR: [
-            {
-              name: {
-                contains: input.name,
-                mode: "insensitive",
-              },
-            },
-          ],
+      if (input.min && input.max) {
+        const minNumber = parseFloat(input.min);
+        const maxNumber = parseFloat(input.max);
+
+        if (!isNaN(minNumber)) {
+          where.price = {
+            gte: minNumber,
+            lte: maxNumber,
+          };
+        }
+      }
+      if (input.category) {
+        where.category = input.category;
+      }
+      if (input.subcategory) {
+        where.subcategory = {
+          contains: input.subcategory,
+        };
+      }
+
+      if (input.size) {
+        where.size = {
+          has: input.size,
+        };
+      }
+
+      if (input.discount === "true") {
+        where.discount = {
+          gte: 1,
+        };
+      }
+
+      if (input.hot === "true") {
+        where.selling = {
+          gte: 10,
+        };
+      }
+
+      const page = input.page ? parseFloat(input.page) : parseFloat("1");
+      const take = input.take ? parseFloat(input.take) : 36;
+      const skip = (page - 1) * take;
+
+      const products = await ctx.db.products.findMany({
+        where,
+        include: {
+          rattings: true,
         },
+        orderBy: {
+          createdAt: "desc",
+        },
+        skip,
+        take,
       });
-      return product;
+
+      return products;
     }),
 });

@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 "use client";
 
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   Button,
   Card,
@@ -12,15 +15,18 @@ import {
   SelectItem,
 } from "@nextui-org/react";
 import { Categories, Colors, Sizes, Subcategory } from "@/lib/utils";
-import { setCookies } from "@/lib/actions";
+import { usePathname, useRouter } from "next/navigation";
+import qs from "query-string";
+import { toast } from "sonner";
 
 const FormFilterProducts = () => {
   const [values, setValues] = useState({
-    min: "10",
-    max: "100",
-    category: "man",
-    colors: "black",
-    size: "s",
+    min: "",
+    max: "",
+    category: "",
+    subcategory: "",
+    colors: "",
+    size: "",
     discount: false,
     hot: false,
   });
@@ -45,16 +51,53 @@ const FormFilterProducts = () => {
     });
   };
 
-  //handle click
-  const handleClick = async () => {
-    await setCookies({
-      name: "jajang",
-      value: "panjaitan",
-    });
-  };
+  //handle searh filter
+  const router = useRouter();
+  const pathName = usePathname();
+  const handleClick = useCallback(() => {
+    try {
+      const updateQuery: any = {};
+
+      if (values.category !== "") {
+        updateQuery.category = values.category;
+      }
+      if (values.subcategory !== "") {
+        updateQuery.subcategory = values.subcategory;
+      }
+      if (values.min !== "") {
+        updateQuery.min = values.min;
+      }
+      if (values.max !== "") {
+        updateQuery.max = values.max;
+      }
+      if (values.colors !== "") {
+        updateQuery.colors = values.colors;
+      }
+      if (values.size !== "") {
+        updateQuery.size = values.size;
+      }
+      if (values.discount !== false) {
+        updateQuery.discount = values.discount;
+      }
+      if (values.hot !== false) {
+        updateQuery.hot = values.hot;
+      }
+
+      const url = qs.stringifyUrl(
+        {
+          url: pathName,
+          query: updateQuery,
+        },
+        { skipNull: true },
+      );
+      router.push(url);
+    } catch (error) {
+      toast.error(error as string);
+    }
+  }, [router, values]);
 
   return (
-    <section className="relative w-full lg:w-fit">
+    <section className="relative w-full max-w-xs">
       <div className="sticky top-24">
         <Card>
           <CardBody className="flex flex-col gap-2">
@@ -87,7 +130,7 @@ const FormFilterProducts = () => {
               variant="bordered"
               size="sm"
               placeholder="Select colors"
-              className="w-full lg:max-w-xs"
+              className="w-full"
               onChange={(e) => handleSelectionChange(e, "colors")}
             >
               {Colors.map((color) => (
@@ -102,7 +145,6 @@ const FormFilterProducts = () => {
               variant="bordered"
               size="sm"
               placeholder="Select type product"
-              className="max-w-xs"
               onChange={(e) => handleSelectionChange(e, "category")}
             >
               {Categories.map((item) => (
@@ -117,8 +159,7 @@ const FormFilterProducts = () => {
               variant="bordered"
               size="sm"
               placeholder="Select category"
-              className="max-w-xs"
-              onChange={(e) => handleSelectionChange(e, "category")}
+              onChange={(e) => handleSelectionChange(e, "subcategory")}
             >
               {Subcategory.map((item) => (
                 <SelectItem key={item.title} value={item.title}>
@@ -132,7 +173,6 @@ const FormFilterProducts = () => {
               variant="bordered"
               size="sm"
               placeholder="Select size"
-              className="max-w-xs"
               onChange={(e) => handleSelectionChange(e, "size")}
             >
               {Sizes.map((item) => (
@@ -143,7 +183,7 @@ const FormFilterProducts = () => {
             </Select>
             <div className="flex flex-row gap-2">
               <Checkbox
-                color="danger"
+                color="primary"
                 isSelected={values.discount === true}
                 onChange={() => {
                   setValues({
@@ -156,7 +196,7 @@ const FormFilterProducts = () => {
             </div>
             <div className="flex flex-row gap-2">
               <Checkbox
-                color="danger"
+                color="primary"
                 isSelected={values.hot === true}
                 onChange={() => {
                   setValues({
@@ -172,7 +212,7 @@ const FormFilterProducts = () => {
             <Button
               className="w-full"
               size="sm"
-              color="danger"
+              color="primary"
               onClick={handleClick}
             >
               Submit

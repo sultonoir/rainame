@@ -52,17 +52,7 @@ const NameClient = ({ product }: TName) => {
       <div className="flex flex-col">
         <Breadcrumbs>
           <BreadcrumbItem href="/product">product</BreadcrumbItem>
-          <BreadcrumbItem href={`/product/${product.category}`}>
-            {product.category}
-          </BreadcrumbItem>
-          <BreadcrumbItem
-            href={`/product/${product.category}/${product.subcategory}`}
-          >
-            {product.subcategory}
-          </BreadcrumbItem>
-          <BreadcrumbItem
-            href={`/product/${product.category}/${product.subcategory}/${product.path}`}
-          >
+          <BreadcrumbItem href={`/product/${product.path}`}>
             {product.name}
           </BreadcrumbItem>
         </Breadcrumbs>

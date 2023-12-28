@@ -59,7 +59,7 @@ const CardCart = ({ product, id }: Props) => {
         base: cn(
           "inline-flex max-w-none w-full bg-content1 m-0",
           "hover:bg-content2 items-center justify-start",
-          "cursor-pointer rounded-lg gap-2 p-4 border-2 border-transparent",
+          "cursor-pointer rounded-lg gap-2 p-4 border border-default-300",
           {
             "border-primary": selected.some((item) => item.cartId === id),
           },
@@ -89,7 +89,7 @@ const CardCart = ({ product, id }: Props) => {
             description={<p>${discountedPrice}</p>}
             name={
               <Link
-                href={`/product/${product.category}/${product.subcategory}/${product.path}`}
+                href={`/product/${product.path}`}
                 color="foreground"
                 size="sm"
               >
@@ -124,8 +124,6 @@ const CardCart = ({ product, id }: Props) => {
           </div>
           <div className="flex flex-col">
             <p className="ml-2 text-sm">Size</p>
-            <p className="ml-2 text-sm">{id}</p>
-            <p className="ml-2 text-sm">{selectedProduct?.cartId}</p>
             <div className="flex flex-row flex-wrap gap-2">
               {product.size.map((item) => (
                 <Button
@@ -195,7 +193,7 @@ const CardCart = ({ product, id }: Props) => {
           <Button
             isLoading={handleDelete.isLoading}
             fullWidth
-            variant="light"
+            variant="flat"
             color="primary"
             onClick={() =>
               handleDelete.mutate({

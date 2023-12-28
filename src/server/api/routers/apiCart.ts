@@ -14,9 +14,9 @@ export const apiCart = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const admin = ctx.session.user.role;
-      const cart = await ctx.db.cart.findFirst({
+      const cart = await ctx.db.cart.findMany({
         where: {
-          productId: input.productId,
+          userId: ctx.session.user.id,
         },
       });
       if (admin === "admin") {
@@ -25,13 +25,12 @@ export const apiCart = createTRPCRouter({
           message: "admin cant do this",
         });
       }
-      if (cart?.productId === input.productId) {
+      if (cart.some((item) => item.productId === input.productId)) {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "product is already in the cart",
         });
       }
-
       await ctx.db.cart.create({
         data: {
           userId: ctx.session.user.id,
@@ -75,12 +74,22 @@ export const apiCart = createTRPCRouter({
         name: z.string(),
         color: z.string(),
         productId: z.string(),
-        size: z.string().optional(),
+        size: z.string(),
         path: z.string(),
+        imageUrl: z.array(z.string()),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const { productId, totalPrice, totalProduct, path, color, name } = input;
+      const {
+        productId,
+        totalPrice,
+        totalProduct,
+        path,
+        color,
+        name,
+        size,
+        imageUrl,
+      } = input;
       const successUrl = absoluteUrl("/");
       const cancelUrl = absoluteUrl(path);
       const userId = ctx.session.user.id;
@@ -93,24 +102,32 @@ export const apiCart = createTRPCRouter({
         });
       }
 
-      const product = await ctx.db.products.findUnique({
-        where: {
-          id: productId,
+      const payment = await ctx.db.payment.create({
+        data: {
+          dataPayment: {
+            create: {
+              productId,
+              color,
+              totalProduct,
+              totalPrice,
+              size,
+              imageUrl,
+              name,
+            },
+          },
+          userId,
         },
       });
 
-      if (!product) {
-        return null;
-      }
-
-      const payment = await stripe.checkout.sessions.create({
+      const paymentId = payment.id;
+      const paymentSession = await stripe.checkout.sessions.create({
         line_items: [
           {
             price_data: {
               currency: "USD",
               product_data: {
-                name: product.name,
-                images: product.imageUrl,
+                name: input.name,
+                images: input.imageUrl,
               },
               unit_amount: totalPrice * 100,
             },
@@ -119,23 +136,19 @@ export const apiCart = createTRPCRouter({
         ],
         metadata: {
           userId,
-          productId,
-          totalPrice,
-          totalProduct,
-          color,
-          name,
+          paymentId,
         },
         mode: "payment",
         success_url: successUrl,
         cancel_url: cancelUrl,
       });
-      if (!payment) {
+      if (!paymentSession) {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "error create payment",
         });
       }
-      return payment.url;
+      return paymentSession.url;
     }),
   cartPayment: protectedProcedure
     .input(
@@ -197,4 +210,16 @@ export const apiCart = createTRPCRouter({
       }
       return sessionPayment.url;
     }),
+  deleteStock: protectedProcedure.query(async ({ ctx }) => {
+    const payment = await ctx.db.payment.findFirst({
+      where: {
+        id: "",
+      },
+      include: {
+        dataPayment: true,
+      },
+    });
+
+    return payment;
+  }),
 });
