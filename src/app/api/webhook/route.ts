@@ -30,7 +30,7 @@ export async function POST(req: Request) {
 
   const session = event.data.object as Stripe.Checkout.Session;
 
-  if (event.type === "checkout.session.async_payment_failed") {
+  if (event.type === "checkout.session.expired") {
     const paymentId = session?.metadata?.paymentId ?? "";
     const userId = session?.metadata?.userId;
     try {
@@ -66,6 +66,17 @@ export async function POST(req: Request) {
         if (!payment) {
           throw new Error("error");
         }
+
+        //change status
+
+        await db.dataPayment.updateMany({
+          where: {
+            paymentId: payment.id,
+          },
+          data: {
+            status: "success",
+          },
+        });
 
         // Delete items from the cart associated with the payment
         if (

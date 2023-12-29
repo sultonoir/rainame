@@ -8,6 +8,7 @@ import { api } from "@/trpc/react";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
 import { type Session } from "next-auth";
+import { useRouter } from "next/navigation";
 
 const updateAdmin = z.object({
   email: z.string().email().optional(),
@@ -38,11 +39,11 @@ const FormUpdateAdmin = ({ admin }: Tadmin) => {
 
   const { update, data: user } = useSession();
 
-  //update data admin
-  const ctx = api.useUtils();
-  const { mutate, isLoading } = api.admin.updateAdmin.useMutation({
+  //update data name
+  const router = useRouter();
+  const { mutate, isLoading } = api.user.updateUser.useMutation({
     onSuccess: () => {
-      void ctx.admin.getAdmin.invalidate();
+      router.refresh();
       const name = getValues("name");
       toast.success("Data updated");
       reset({
@@ -63,7 +64,7 @@ const FormUpdateAdmin = ({ admin }: Tadmin) => {
 
   return (
     <form
-      className="grid w-full grid-cols-1 gap-3"
+      className="grid h-fit w-full max-w-xs grid-cols-1 gap-5"
       onSubmit={handleSubmit(onSubmit)}
     >
       <Controller

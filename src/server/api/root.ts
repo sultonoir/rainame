@@ -1,8 +1,8 @@
 import { createTRPCRouter } from "@/server/api/trpc";
-import { apiAdmin } from "./routers/apiAdmin";
 import { apiUser } from "./routers/apiUser";
 import { apiProduct } from "./routers/apiProduct";
 import { apiCart } from "./routers/apiCart";
+import { apiRating } from "./routers/apiRating";
 
 /**
  * This is the primary router for your server.
@@ -10,7 +10,7 @@ import { apiCart } from "./routers/apiCart";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  admin: apiAdmin,
+  rating: apiRating,
   user: apiUser,
   product: apiProduct,
   cart: apiCart,

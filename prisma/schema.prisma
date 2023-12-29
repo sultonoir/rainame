@@ -105,6 +105,7 @@ model DataPayment{
   totalPrice        Float
   totalProduct      Int
   imageUrl          String[]
+  status            String      @default("pending")
   color             String?
   size              String?
   productId         String
@@ -118,7 +119,6 @@ model DataPayment{
 model Payment {
   id                String    @id @default(cuid())
   dataPayment       DataPayment[]
-  status            String      @default("pending")
   createdAt         DateTime    @default(now())
   updatedAt         DateTime    @default(now())
   userId            String      

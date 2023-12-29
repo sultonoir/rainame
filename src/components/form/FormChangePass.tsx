@@ -41,8 +41,7 @@ const FormChangePass = ({ admin }: TFromUpdateAdmin) => {
   });
 
   //change pass
-
-  const { mutate } = api.admin.updateAdmin.useMutation({
+  const { mutate } = api.user.updateUser.useMutation({
     onSuccess: () => {
       toast.success("Password has change");
       reset();

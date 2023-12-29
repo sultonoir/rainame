@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import { CameraIcon } from "lucide-react";
 import { api } from "@/trpc/react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 interface Props {
   imageUrl: string;
@@ -65,11 +66,11 @@ export default function ModalUploadImage({ imageUrl }: Props) {
     }
   };
 
-  //mutate change image admin
-  const ctx = api.useUtils();
-  const { mutate } = api.admin.updateAdmin.useMutation({
-    onSuccess: async () => {
-      await ctx.admin.getAdmin.invalidate();
+  //mutate change image user
+  const router = useRouter();
+  const { mutate } = api.user.updateUser.useMutation({
+    onSuccess: () => {
+      router.refresh();
       toast.success("Image has change");
       onClose();
       setImage("");
@@ -125,10 +126,10 @@ export default function ModalUploadImage({ imageUrl }: Props) {
     <>
       <Button
         onClick={onOpen}
-        className={`group relative h-[100px]  w-[100px] cursor-pointer rounded-full p-0`}
+        className="group relative h-fit overflow-hidden p-0"
       >
-        <div className="absolute z-50 flex h-[100px] w-[100px] items-center justify-center rounded-full bg-default-100/30 opacity-0 backdrop-blur-[1px] transition-all group-hover:opacity-100">
-          <div className="flex flex-col items-center justify-center text-xs">
+        <div className="absolute z-50 flex h-full w-full  items-center justify-center bg-default-100/30 opacity-0 backdrop-blur-[1px] transition-all group-hover:opacity-100">
+          <div className="flex flex-col items-center justify-center text-medium">
             <CameraIcon size={20} />
             Change image
           </div>
@@ -136,9 +137,9 @@ export default function ModalUploadImage({ imageUrl }: Props) {
         <Image
           src={imageUrl || "/Logo.png"}
           alt="profile image"
-          width={100}
-          height={100}
-          radius="full"
+          width={500}
+          height={500}
+          radius="sm"
         />
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="2xl">

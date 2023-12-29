@@ -41,6 +41,58 @@ export const apiUser = createTRPCRouter({
         },
       });
     }),
+  updateUser: protectedProcedure
+    .input(
+      z.object({
+        name: z.string().optional(),
+        currentPassword: z.string().optional(),
+        imageUrl: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { name, currentPassword, imageUrl } = input;
+      const id = ctx.session.user.id;
+      const user = await ctx.db.user.findUnique({
+        where: {
+          id,
+        },
+      });
+
+      if (!user) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "user not found" });
+      }
+      if (imageUrl) {
+        await ctx.db.user.update({
+          where: {
+            id,
+          },
+          data: {
+            image: imageUrl,
+          },
+        });
+      }
+      if (name) {
+        await ctx.db.user.update({
+          where: {
+            id,
+          },
+          data: {
+            name,
+          },
+        });
+      }
+
+      if (currentPassword) {
+        await ctx.db.user.update({
+          where: {
+            id,
+          },
+          data: {
+            hashedPassword: currentPassword,
+          },
+        });
+      }
+    }),
   getUser: protectedProcedure.query(async ({ ctx }) => {
     const id = ctx.session.user.id;
     const user = await ctx.db.user.findUnique({
@@ -86,15 +138,29 @@ export const apiUser = createTRPCRouter({
         },
       });
     }),
-  getCart: protectedProcedure.query(async ({ ctx }) => {
+  getNotify: protectedProcedure.query(async ({ ctx }) => {
     const user = await ctx.db.user.findUnique({
       where: {
         id: ctx.session.user.id,
+      },
+      include: {
+        notify: true,
       },
     });
 
     if (!user) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
+    return user;
+  }),
+  readsNotify: protectedProcedure.mutation(async ({ ctx }) => {
+    await ctx.db.notify.updateMany({
+      where: {
+        userId: ctx.session.user.id,
+      },
+      data: {
+        reads: true,
+      },
+    });
   }),
 });

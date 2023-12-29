@@ -210,9 +210,16 @@ export const apiCart = createTRPCRouter({
       }
       return sessionPayment.url;
     }),
-  testHit: protectedProcedure.query(async () => {
-    const num = 1;
-    const count = 1 + num;
-    return count;
+  getPaymentByUser: protectedProcedure.mutation(async ({ ctx }) => {
+    const payments = await ctx.db.payment.findMany({
+      where: {
+        userId: ctx.session.user.id,
+      },
+      include: {
+        dataPayment: true,
+      },
+    });
+
+    return payments;
   }),
 });
