@@ -86,6 +86,7 @@ const ProductPayment = ({ product, color, size }: Props) => {
       size,
       totalPrice: product.discount ? discount : price,
       totalProduct: count,
+      imageUrl: product.imageUrl,
     });
   };
 

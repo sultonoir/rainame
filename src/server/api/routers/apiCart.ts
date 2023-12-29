@@ -210,16 +210,9 @@ export const apiCart = createTRPCRouter({
       }
       return sessionPayment.url;
     }),
-  deleteStock: protectedProcedure.query(async ({ ctx }) => {
-    const payment = await ctx.db.payment.findFirst({
-      where: {
-        id: "",
-      },
-      include: {
-        dataPayment: true,
-      },
-    });
-
-    return payment;
+  testHit: protectedProcedure.query(async () => {
+    const num = 1;
+    const count = 1 + num;
+    return count;
   }),
 });

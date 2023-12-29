@@ -11,17 +11,12 @@ const SearchInput = () => {
   const [name, setName] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const handleSearch = useDebouncedCallback((term: string) => {
-    if (name === "") {
-      setName("");
-      setOpen(false);
-    }
-    setOpen(true);
     setName(term);
+    setOpen(true);
   }, 300);
 
   React.useEffect(() => {
     const closeDropdown = () => {
-      console.log("hallo");
       setOpen(false);
     };
 
@@ -32,6 +27,7 @@ const SearchInput = () => {
   const { data, isLoading } = api.product.getSearch.useQuery({
     name,
   });
+
   return (
     <div className="relative w-full">
       <Input
@@ -48,7 +44,7 @@ const SearchInput = () => {
         }
       />
       {open && name !== "" && (
-        <div className="absolute top-11 flex max-h-[40dvh] w-full flex-col gap-2 overflow-auto rounded-lg bg-content1 p-4">
+        <div className="absolute top-11 flex max-h-[40dvh] w-full flex-col gap-2 overflow-auto rounded-lg bg-content2 p-4">
           <>
             {isLoading ? (
               <div className="flex items-center justify-center">
@@ -71,7 +67,7 @@ const SearchInput = () => {
                         <Link
                           href={`/product/${item.path}`}
                           key={item.id}
-                          className="flex flex-row items-center gap-4 rounded-lg p-2 hover:bg-content2"
+                          className="flex flex-row items-center gap-4 rounded-lg p-2 hover:bg-content3"
                         >
                           <Image
                             width={40}
@@ -81,9 +77,9 @@ const SearchInput = () => {
                             className="aspect-square object-cover"
                           />
                           <div className="flex flex-col">
-                            <Link className="text-small text-default-500">
+                            <p className="text-small text-default-500">
                               {item.name}
-                            </Link>
+                            </p>
                             <p className="font-semibold text-foreground">
                               {item.discount && item.discount > 0 && (
                                 <span className="mr-2 text-default-300 line-through">

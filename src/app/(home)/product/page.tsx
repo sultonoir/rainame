@@ -24,7 +24,7 @@ const Page = async ({ searchParams }: HomeProps) => {
         <FormFilterProducts />
         {products.length === 0 ? (
           <div className="flex w-full items-center justify-center text-2xl font-semibold">
-            Not product found
+            Product not found
           </div>
         ) : (
           <div className="flex flex-col gap-4">

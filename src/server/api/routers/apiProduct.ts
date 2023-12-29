@@ -237,7 +237,7 @@ export const apiProduct = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       if (input.name === "") {
-        return undefined;
+        return null;
       }
       const products = await ctx.db.products.findMany({
         where: {

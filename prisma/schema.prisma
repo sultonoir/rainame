@@ -76,7 +76,7 @@ model Products{
   discount          Float?
   subcategory       String
   stock             Int
-  selling           Int?
+  selling           Int         @default(0)
   size              String[]
   category          String
   color             String[]
@@ -123,7 +123,7 @@ model Payment {
   updatedAt         DateTime    @default(now())
   userId            String      
   user              User @relation(fields: [userId],references: [id],onDelete: Cascade)
-  rattings          Rattings[]
+  
   @@index([id,userId])
 }
 
@@ -133,27 +133,23 @@ model Rattings {
   comment           String?     @db.String
   createdAt         DateTime    @default(now())
   updatedAt         DateTime    @default(now())
-  paymentId         String      
-  Payment           Payment     @relation(fields: [paymentId],references: [id])
   userId            String      
   user              User        @relation(fields: [userId],references: [id],onDelete: Cascade)
   productId         String      
   products          Products    @relation(fields: [productId],references: [id],onDelete: Cascade)
 
-  @@index([userId,productId,paymentId])
+  @@index([userId,productId])
 }
 
 model Notify {
-  id                String    @id @default(cuid())
-  value             Int
-  comment           String?     @db.String
-  createdAt         DateTime    @default(now())
-  updatedAt         DateTime    @default(now())
+  id                String       @id @default(cuid())
+  comment           String       @db.String
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @default(now())
   paymentId         String
-  reads             Boolean     @default(false)      
-  userId            String      
-  user              User        @relation(fields: [userId],references: [id],onDelete: Cascade)
-  productId         String      
+  reads             Boolean      @default(false)      
+  userId            String?      
+  user              User?        @relation(fields: [userId],references: [id],onDelete: Cascade)      
 
   @@index([id,userId])
 }
@@ -161,8 +157,7 @@ model Notify {
 model Banner {
   id                String    @id @default(cuid())
   imageUrl          String
-  thumbnail         String
-  pathname          String
+  pathname          String?
 }
 
 model VerificationToken {
