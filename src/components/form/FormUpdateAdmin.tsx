@@ -64,7 +64,7 @@ const FormUpdateAdmin = ({ admin }: Tadmin) => {
 
   return (
     <form
-      className="grid h-fit w-full max-w-xs grid-cols-1 gap-5"
+      className="grid h-fit w-full grid-cols-1 gap-5 sm:max-w-xs"
       onSubmit={handleSubmit(onSubmit)}
     >
       <Controller

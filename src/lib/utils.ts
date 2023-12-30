@@ -146,6 +146,11 @@ const columns = [
   { name: "SIZE", uid: "size" },
   { name: "ACTIONS", uid: "actions" },
 ];
+const columnsRatings = [
+  { name: "ID", uid: "id", sortable: true },
+  { name: "VALUE", uid: "value", sortable: true },
+  { name: "COMMENT", uid: "comment" },
+];
 
 const statusOptions = [
   { name: "Active", uid: "active" },
@@ -159,7 +164,7 @@ const category = [
   { name: "Vacation", uid: "vacation" },
 ];
 
-export { columns, statusOptions, category };
+export { columns, statusOptions, category, columnsRatings };
 
 export const createImage = async (url: string): Promise<HTMLImageElement> =>
   await new Promise((resolve, reject) => {

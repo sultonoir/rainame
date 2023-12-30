@@ -1,50 +1,39 @@
-"use client";
 import {
-  Button,
-  Chip,
   Image,
   Input,
-  Link,
   Pagination,
   Select,
   SelectItem,
 } from "@nextui-org/react";
-import { type DataPayment, type Payment } from "@prisma/client";
-import { SearchIcon } from "lucide-react";
+import { type Rattings, type Products } from "@prisma/client";
+import { SearchIcon, StarIcon } from "lucide-react";
 import React from "react";
-import ModalRating from "../modal/ModalRating";
 
 type Props = {
-  payments: Array<
-    Payment & {
-      dataPayment: DataPayment[];
+  ratings: Array<
+    Rattings & {
+      products: Products;
     }
   >;
 };
 
-const TableOrderUser = ({ payments }: Props) => {
+const TableRatingUser = ({ ratings }: Props) => {
   const [filterValue, setFilterValue] = React.useState("");
   const [page, setPage] = React.useState(1);
   const [rowsPerPage, setRowsPerPage] = React.useState(15);
   const hasSearchFilter = Boolean(filterValue);
 
   const filteredItems = React.useMemo(() => {
-    let filteredproducts: DataPayment[] = []; // Initialize with an empty array
+    let filteredproducts = [...ratings]; // Initialize with an empty array
 
     if (hasSearchFilter) {
-      filteredproducts = payments.flatMap((item) =>
-        item.dataPayment.filter((data) =>
-          data.name.toLowerCase().includes(filterValue.toLowerCase()),
-        ),
-      );
-    } else {
-      filteredproducts = payments.flatMap((item) =>
-        item.dataPayment.filter((data) => data),
+      filteredproducts = ratings.filter((item) =>
+        item.products.name.toLowerCase().includes(filterValue.toLowerCase()),
       );
     }
 
     return filteredproducts;
-  }, [payments, filterValue]);
+  }, [ratings, filterValue]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -76,7 +65,6 @@ const TableOrderUser = ({ payments }: Props) => {
     },
     [],
   );
-
   return (
     <div className="flex w-full flex-col gap-5">
       <div className="flex items-center justify-between">
@@ -117,56 +105,23 @@ const TableOrderUser = ({ payments }: Props) => {
           key={item.id}
           className="rounded-medium border border-default-300 bg-content1 p-3"
         >
-          <div className="flex flex-col items-center gap-5 sm:flex-row">
+          <div className="flex flex-row items-center gap-5">
             <Image
-              src={item.imageUrl.at(0)}
-              alt={item.name}
+              src={item.products.imageUrl.at(0)}
+              alt={item.products.name}
               width={100}
               height={100}
               radius="sm"
               className="aspect-square object-cover"
             />
-            <div className="flex w-full flex-col border-default-300 sm:border-r-2">
-              <div className="flex max-w-[240px] items-center justify-between gap-10">
-                <p className="text-medium font-semibold">{item.name}</p>
-                <Chip
-                  size="sm"
-                  variant="flat"
-                  color={item.status === "success" ? "success" : "default"}
-                >
-                  {item.status}
-                </Chip>
-              </div>
-              <div className="flex max-w-[240px] items-center justify-between gap-10">
-                <p className="text-small text-default-500">Color : </p>
-                <p>{item.color}</p>
-              </div>
-              <div className="flex max-w-[240px] items-center justify-between gap-10">
-                <p className="text-small text-default-500">Size : </p>
-                <p>{item.size}</p>
-              </div>
-              <div className="flex max-w-[240px] items-center justify-between gap-10">
-                <p className="text-small text-default-500">Total product : </p>
-                <p>{item.totalProduct}</p>
-              </div>
+            <div className="flex w-full flex-col">
+              <p className="text-medium font-semibold">{item.products.name}</p>
+              <p className="inline-flex">
+                {item.value}{" "}
+                <StarIcon className="fill-yellow-400 stroke-default-100 stroke-1" />
+              </p>
+              <p>{`"${item.comment}"`}</p>
             </div>
-            <div className="flex flex-col items-center justify-center sm:w-[200px] sm:pr-10">
-              <p>Total Price</p>
-              <p className="text-lg font-semibold">${item.totalPrice}</p>
-            </div>
-          </div>
-          <div className="mt-2 flex w-full items-center justify-center  gap-5 sm:justify-end">
-            <Button
-              as={Link}
-              href={`/product/${item.name.replaceAll(/[^a-zA-Z0-9]/g, "-")}`}
-              size="sm"
-              color="primary"
-            >
-              buy again
-            </Button>
-            {item.status === "success" && (
-              <ModalRating productId={item.productId} />
-            )}
           </div>
         </div>
       ))}
@@ -190,4 +145,4 @@ const TableOrderUser = ({ payments }: Props) => {
   );
 };
 
-export default TableOrderUser;
+export default TableRatingUser;

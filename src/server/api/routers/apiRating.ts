@@ -23,4 +23,16 @@ export const apiRating = createTRPCRouter({
         },
       });
     }),
+  getRatingByUser: protectedProcedure.mutation(async ({ ctx }) => {
+    const ratings = await ctx.db.rattings.findMany({
+      where: {
+        userId: ctx.session.user.id,
+      },
+      include: {
+        products: true,
+      },
+    });
+
+    return ratings;
+  }),
 });
