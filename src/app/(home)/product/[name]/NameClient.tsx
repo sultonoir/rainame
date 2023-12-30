@@ -1,16 +1,21 @@
 "use client";
+import Ratings from "@/components/ratings/Ratings";
 import { Preview } from "@/components/shared/Preview";
 import ProductImage from "@/components/shared/ProductImage";
 import ProductPayment from "@/components/shared/ProductPayment";
 import { calculateTotalPrice } from "@/lib/utils";
 import { BreadcrumbItem, Breadcrumbs, Button } from "@nextui-org/react";
-import { type Products, type Rattings } from "@prisma/client";
+import { type User, type Products, type Rattings } from "@prisma/client";
 import { Star } from "lucide-react";
 import React, { useState } from "react";
 
 type TName = {
   product: Products & {
-    rattings: Rattings[];
+    rattings: Array<
+      Rattings & {
+        user: User;
+      }
+    >;
   };
 };
 
@@ -46,10 +51,10 @@ const NameClient = ({ product }: TName) => {
   const discount = result.discountedPrice;
   return (
     <section className="grid grid-cols-1 gap-10 lg:grid-cols-3">
-      <div className="relative">
+      <div className="relative col-span-1">
         <ProductImage product={product} />
       </div>
-      <div className="flex flex-col">
+      <div className="col-span-1 flex flex-col">
         <Breadcrumbs>
           <BreadcrumbItem href="/product">product</BreadcrumbItem>
           <BreadcrumbItem href={`/product/${product.path}`}>
@@ -155,12 +160,16 @@ const NameClient = ({ product }: TName) => {
           )}
         </div>
       </div>
-      <div className="relative">
+
+      <div className="relative row-span-2">
         <ProductPayment
           product={product}
           color={selectColor}
           size={selectSize}
         />
+      </div>
+      <div className="col-span-1 row-span-1 h-fit p-2 sm:col-span-2">
+        <Ratings rattings={product.rattings} />
       </div>
     </section>
   );

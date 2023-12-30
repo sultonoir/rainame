@@ -8,7 +8,7 @@ export async function generateMetadata({
 }: {
   params: { name: string };
 }): Promise<Metadata> {
-  const product = await api.product.getProductByName.query({
+  const product = await api.product.getProductMeta.query({
     path: params.name,
   });
 

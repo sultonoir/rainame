@@ -218,7 +218,34 @@ export const apiProduct = createTRPCRouter({
           path: input.path,
         },
         include: {
-          rattings: true,
+          rattings: {
+            include: {
+              user: true,
+            },
+            orderBy: {
+              createdAt: "desc",
+            },
+          },
+        },
+      });
+      if (!product) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "product not found",
+        });
+      }
+      return product;
+    }),
+  getProductMeta: publicProcedure
+    .input(
+      z.object({
+        path: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const product = await ctx.db.products.findUnique({
+        where: {
+          path: input.path,
         },
       });
       if (!product) {
