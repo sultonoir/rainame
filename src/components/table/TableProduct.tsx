@@ -19,6 +19,7 @@ import {
   SelectItem,
   User,
   Chip,
+  Link,
 } from "@nextui-org/react";
 
 import { capitalize, columns } from "@/lib/utils";
@@ -158,7 +159,11 @@ export default function TableProduct({ products }: TProduct) {
               classNames={{ description: "truncate max-w-[200px]" }}
               avatarProps={{ radius: "full", src: product.imageUrl.at(0) }}
               description={product.desc}
-              name={cellValue}
+              name={
+                <Link href={`/product/${product.path}`} color="foreground">
+                  {cellValue}
+                </Link>
+              }
             />
           );
         case "price":

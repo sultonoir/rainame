@@ -72,7 +72,7 @@ model Products{
   path              String      @unique
   desc              String      @db.String
   imageUrl          String[]
-  price             Int
+  price             Float
   discount          Float?
   subcategory       String
   stock             Int
@@ -86,7 +86,6 @@ model Products{
   store             User @relation(fields: [userId],references: [id],onDelete: Cascade)
   rattings          Rattings[]
   cart              Cart[]
-
   @@index([id,userId,path])
 }
 
@@ -154,10 +153,11 @@ model Notify {
   @@index([id,userId])
 }
 
-model Banner {
+model Promo {
   id                String    @id @default(cuid())
   imageUrl          String
-  pathname          String?
+  name              String    @unique
+  productId         String[] 
 }
 
 model VerificationToken {

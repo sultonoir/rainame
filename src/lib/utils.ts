@@ -29,6 +29,9 @@ export const Subcategory = [
 
 export const Sizes = [
   {
+    name: "One size",
+  },
+  {
     name: "S",
   },
   {
@@ -139,7 +142,8 @@ const columns = [
   { name: "NAME", uid: "name", sortable: true },
   { name: "PRICE", uid: "price", sortable: true },
   { name: "STOCK", uid: "stock", sortable: true },
-  { name: "DISCOUNT", uid: "discount" },
+  { name: "DISCOUNT", uid: "discount", sortable: true },
+  { name: "SELLING", uid: "selling", sortable: true },
   { name: "CATEGORY", uid: "category", sortable: true },
   { name: "SUBCATEGORY", uid: "subcategory", sortable: true },
   { name: "COLOR", uid: "color" },

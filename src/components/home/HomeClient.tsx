@@ -1,11 +1,11 @@
 "use client";
 
 import { type Products, type Rattings } from "@prisma/client";
-import Image from "next/image";
 import React from "react";
 import HomeCategory from "./HomeCategory";
 import { Button, Link } from "@nextui-org/react";
 import CardProducts from "../card/CardProducts";
+import HomeBentoGrid from "./HomeBentoGrid";
 
 type THome = {
   products: Array<
@@ -18,10 +18,7 @@ type THome = {
 const HomeClient = ({ products }: THome) => {
   return (
     <>
-      <section className=" relative my-10 h-[calc(100dvh-130px)] overflow-hidden rounded-2xl">
-        <div className="absolute inset-0 z-10 h-full w-full bg-content1 opacity-40"></div>
-        <Image src="/Logo.png" alt="logo" fill className="object-cover" />
-      </section>
+      <HomeBentoGrid products={products} />
       {/* home category */}
       <HomeCategory />
       <section className="my-10 flex flex-col gap-5">

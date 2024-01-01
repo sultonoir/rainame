@@ -2,6 +2,7 @@
 
 import { Link } from "@nextui-org/react";
 import {
+  BadgeDollarSign,
   Banknote,
   BookIcon,
   LayoutDashboard,
@@ -37,6 +38,11 @@ const AsideAdmin = () => {
       path: "/admin/rattings",
       icons: StarIcon,
     },
+    {
+      title: "Promo",
+      path: "/admin/promo",
+      icons: BadgeDollarSign,
+    },
   ];
   const handleLogout = async () => {
     await signOut({
@@ -45,7 +51,7 @@ const AsideAdmin = () => {
     });
   };
   return (
-    <aside className="flex h-[100dvh] w-fit flex-col bg-content1 px-5 pt-2">
+    <aside className="sticky left-0 top-0 z-20 flex  h-[100dvh] w-fit flex-col bg-content1 px-5 pt-2">
       <nav className="flex w-full flex-col gap-2">
         <Link
           href="/admin"

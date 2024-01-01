@@ -1,5 +1,6 @@
 import CardProducts from "@/components/card/CardProducts";
 import FormFilterProducts from "@/components/form/FormFilterProducts";
+import PaginationUi from "@/components/shared/PaginationUi";
 import { api } from "@/trpc/server";
 import React from "react";
 
@@ -19,29 +20,27 @@ const Page = async ({ searchParams }: HomeProps) => {
   const products = await api.product.filterProduct.query(searchParams);
 
   return (
-    <>
-      <section className="flex flex-col gap-4 lg:flex-row">
-        <FormFilterProducts />
-        {products.length === 0 ? (
-          <div className="flex w-full items-center justify-center text-2xl font-semibold">
-            Product not found
+    <section className="flex flex-col gap-4 lg:flex-row">
+      <FormFilterProducts />
+      {products.length === 0 ? (
+        <div className="flex w-full items-center justify-center text-2xl font-semibold">
+          Product not found
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-between gap-4">
+          <div className="grid h-fit grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5">
+            {products.map((product) => (
+              <CardProducts
+                key={product.id}
+                product={product}
+                rattings={product.rattings}
+              />
+            ))}
           </div>
-        ) : (
-          <div className="flex flex-col gap-4">
-            <div className="grid h-fit grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5">
-              {products.map((product) => (
-                <CardProducts
-                  key={product.id}
-                  product={product}
-                  rattings={product.rattings}
-                />
-              ))}
-            </div>
-            <button className="mt-auto bg-primary">hallo</button>
-          </div>
-        )}
-      </section>
-    </>
+          <PaginationUi products={products} />
+        </div>
+      )}
+    </section>
   );
 };
 

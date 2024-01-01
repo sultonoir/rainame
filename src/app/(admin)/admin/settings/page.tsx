@@ -46,10 +46,10 @@ const Page = () => {
         <div className="mt-2 w-full">
           {active === "Profile" && (
             <>
-              <div className="flex w-full justify-center">
+              <div className="flex w-full justify-center gap-5">
                 <ModalUploadImage imageUrl={admin.user.image ?? ""} />
+                <FormUpdateAdmin admin={admin} />
               </div>
-              <FormUpdateAdmin admin={admin} />
             </>
           )}
           {active === "Password" && <FormChangePass admin={admin} />}

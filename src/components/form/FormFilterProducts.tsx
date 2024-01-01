@@ -130,7 +130,8 @@ const FormFilterProducts = () => {
               variant="bordered"
               size="sm"
               placeholder="Select colors"
-              className="w-full"
+              selectedKeys={[values.colors]}
+              className="max-w-xs"
               onChange={(e) => handleSelectionChange(e, "colors")}
             >
               {Colors.map((color) => (
@@ -145,6 +146,7 @@ const FormFilterProducts = () => {
               variant="bordered"
               size="sm"
               placeholder="Select type product"
+              selectedKeys={[values.category]}
               onChange={(e) => handleSelectionChange(e, "category")}
             >
               {Categories.map((item) => (
@@ -158,6 +160,7 @@ const FormFilterProducts = () => {
               labelPlacement="outside"
               variant="bordered"
               size="sm"
+              selectedKeys={[values.subcategory]}
               placeholder="Select category"
               onChange={(e) => handleSelectionChange(e, "subcategory")}
             >
@@ -172,6 +175,7 @@ const FormFilterProducts = () => {
               labelPlacement="outside"
               variant="bordered"
               size="sm"
+              selectedKeys={[values.size]}
               placeholder="Select size"
               onChange={(e) => handleSelectionChange(e, "size")}
             >
@@ -208,14 +212,27 @@ const FormFilterProducts = () => {
               Hot sale
             </div>
           </CardBody>
-          <CardFooter>
-            <Button
-              className="w-full"
-              size="sm"
-              color="primary"
-              onClick={handleClick}
-            >
+          <CardFooter className="gap-2">
+            <Button fullWidth size="sm" color="primary" onClick={handleClick}>
               Submit
+            </Button>
+            <Button
+              size="sm"
+              variant="flat"
+              onClick={() =>
+                setValues({
+                  min: "",
+                  max: "",
+                  category: "",
+                  subcategory: "",
+                  colors: "",
+                  size: "",
+                  discount: false,
+                  hot: false,
+                })
+              }
+            >
+              Clear filter
             </Button>
           </CardFooter>
         </Card>

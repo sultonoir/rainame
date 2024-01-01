@@ -34,14 +34,16 @@ const CardProducts = ({ product, rattings }: TProducts) => {
     price: product.price,
     discount: product.discount,
   });
+
   return (
     <Card as={Link} href={`/product/${product.path}`} shadow="sm" isPressable>
       <CardBody className="relative overflow-visible p-0">
-        {product.discount && product.discount > 0 && (
+        {product.discount! > 0 && (
           <div className="absolute right-2.5 top-2.5 z-20 rounded-lg bg-danger px-2 py-1 text-small text-white">
             {product.discount}% off
           </div>
         )}
+
         <div className="w-full overflow-hidden p-2">
           <Image
             isZoomed

@@ -262,7 +262,7 @@ export const apiProduct = createTRPCRouter({
         name: z.string(),
       }),
     )
-    .query(async ({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       if (input.name === "") {
         return null;
       }
@@ -336,8 +336,8 @@ export const apiProduct = createTRPCRouter({
         };
       }
 
-      const page = input.page ? parseFloat(input.page) : parseFloat("1");
-      const take = input.take ? parseFloat(input.take) : 36;
+      const page = input.page ? parseFloat(input.page) : 1;
+      const take = input.take ? parseFloat(input.take) : 50;
       const skip = (page - 1) * take;
 
       const products = await ctx.db.products.findMany({

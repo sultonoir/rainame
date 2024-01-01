@@ -78,7 +78,6 @@ type TEdit = {
 export default function ModalEditProduct({ product }: TEdit) {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [files, setFiles] = useState<File[]>([]);
-  const [isLoading, setisLoading] = useState(false);
 
   const form = useForm<ProductSchema>({
     resolver: zodResolver(productSchema),
@@ -189,49 +188,42 @@ export default function ModalEditProduct({ product }: TEdit) {
   // handle Submit
   const onSubmit: SubmitHandler<ProductSchema> = async (values) => {
     const path = values.name.replaceAll(/[^a-zA-Z0-9]/g, "-");
-    setisLoading(true);
-    try {
-      if (files.length > 0) {
-        const imageUpload = await startUpload(files);
-        if (imageUpload) {
-          imageUpload.map((image) => {
-            values.imageUrl.push(image.url);
-          });
-        }
-        mutate({
-          id: product!.id,
-          name: values.name,
-          desc: values.desc,
-          stock: values.stock,
-          subcategory: values.subcategory,
-          imageUrl: values.imageUrl,
-          color: values.color,
-          category: values.category,
-          size: values.size,
-          price: values.price,
-          discount: values.discount,
-          path,
-        });
-      } else {
-        mutate({
-          id: product!.id,
-          name: values.name,
-          discount: values.discount,
-          desc: values.desc,
-          stock: values.stock,
-          subcategory: values.subcategory,
-          imageUrl: values.imageUrl,
-          color: values.color,
-          category: values.category,
-          size: values.size,
-          price: values.price,
-          path,
+    if (files.length > 0) {
+      const imageUpload = await startUpload(files);
+      if (imageUpload) {
+        imageUpload.map((image) => {
+          values.imageUrl.push(image.url);
         });
       }
-    } catch (error) {
-      toast.error(error as string);
-    } finally {
-      setisLoading(false);
+      mutate({
+        id: product!.id,
+        name: values.name,
+        desc: values.desc,
+        stock: values.stock,
+        subcategory: values.subcategory,
+        imageUrl: values.imageUrl,
+        color: values.color,
+        category: values.category,
+        size: values.size,
+        price: values.price,
+        discount: values.discount,
+        path,
+      });
+    } else {
+      mutate({
+        id: product!.id,
+        name: values.name,
+        discount: values.discount,
+        desc: values.desc,
+        stock: values.stock,
+        subcategory: values.subcategory,
+        imageUrl: values.imageUrl,
+        color: values.color,
+        category: values.category,
+        size: values.size,
+        price: values.price,
+        path,
+      });
     }
   };
 
@@ -250,12 +242,10 @@ export default function ModalEditProduct({ product }: TEdit) {
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         size="5xl"
-        scrollBehavior="inside"
+        scrollBehavior="outside"
       >
         <ModalContent>
-          <ModalHeader className="flex flex-col gap-1">
-            Edit product
-          </ModalHeader>
+          <ModalHeader>Edit product</ModalHeader>
           <ModalBody>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -632,7 +622,11 @@ export default function ModalEditProduct({ product }: TEdit) {
                   </div>
                 </div>
                 <ModalFooter>
-                  <Button color="primary" type="submit" isLoading={isLoading}>
+                  <Button
+                    color="primary"
+                    type="submit"
+                    isLoading={form.formState.isSubmitting}
+                  >
                     Submit
                   </Button>
                 </ModalFooter>

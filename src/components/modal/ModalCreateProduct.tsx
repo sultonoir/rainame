@@ -189,12 +189,10 @@ export default function ModalCreateProduct() {
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         size="5xl"
-        scrollBehavior="inside"
+        scrollBehavior="outside"
       >
         <ModalContent>
-          <ModalHeader className="flex flex-col gap-1">
-            Create product
-          </ModalHeader>
+          <ModalHeader>Create product</ModalHeader>
           <ModalBody>
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="grid grid-cols-2 gap-5">
