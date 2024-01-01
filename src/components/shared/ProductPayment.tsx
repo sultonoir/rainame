@@ -46,10 +46,8 @@ const ProductPayment = ({ product, color, size }: Props) => {
       const discountAmount = (total * discount) / 100;
       discountedPrice = total - discountAmount;
     }
-    return {
-      total,
-      discountedPrice,
-    };
+    discountedPrice = parseFloat(discountedPrice.toFixed(2));
+    return discountedPrice;
   };
 
   //* mutate addchart
@@ -64,8 +62,7 @@ const ProductPayment = ({ product, color, size }: Props) => {
       toast.error(e.message);
     },
   });
-  const discount = result.discountedPrice;
-  const price = result.total;
+  const discountPrice = result;
 
   const { data } = useSession();
   const { onOpen } = useModal();
@@ -84,7 +81,7 @@ const ProductPayment = ({ product, color, size }: Props) => {
       name: product.name,
       color,
       size,
-      totalPrice: product.discount ? discount : price,
+      totalPrice: discountPrice,
       totalProduct: count,
       imageUrl: product.imageUrl,
     });
@@ -168,16 +165,18 @@ const ProductPayment = ({ product, color, size }: Props) => {
             <div className="flex w-full justify-between text-start text-medium font-semibold">
               <p>Total</p>
               <div className="flex gap-2">
-                <p className="text-foreground-200 line-through">${price}</p>
+                <p className="text-foreground-200 line-through">
+                  ${discountPrice}
+                </p>
                 <p className="w-full text-start text-medium font-semibold">
-                  ${discount}
+                  ${discountPrice}
                 </p>
               </div>
             </div>
           ) : (
             <div className="flex w-full justify-between text-start text-medium font-semibold">
               <p>Total</p>
-              <span>${price}</span>
+              <span>${discountPrice}</span>
             </div>
           )}
         </CardBody>

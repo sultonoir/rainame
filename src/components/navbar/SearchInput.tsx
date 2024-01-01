@@ -8,11 +8,14 @@ import React from "react";
 import { useDebouncedCallback } from "use-debounce";
 
 const SearchInput = () => {
-  const [name, setName] = React.useState("");
   const [open, setOpen] = React.useState(false);
+  const [name, setName] = React.useState("");
   const handleSearch = useDebouncedCallback((term: string) => {
-    setName(term);
     setOpen(true);
+    mutate({
+      name: term,
+    });
+    setName(term);
   }, 300);
 
   React.useEffect(() => {
@@ -24,9 +27,7 @@ const SearchInput = () => {
     return () => document.removeEventListener("click", closeDropdown);
   }, []);
 
-  const { data, isLoading } = api.product.getSearch.useQuery({
-    name,
-  });
+  const { data, isLoading, mutate } = api.product.getSearch.useMutation({});
 
   return (
     <div className="relative w-full">
@@ -37,7 +38,8 @@ const SearchInput = () => {
         radius="lg"
         variant="flat"
         labelPlacement="outside"
-        endContent={
+        onClear={() => setName("")}
+        startContent={
           <div className="bg-transparent" aria-hidden="true">
             <SearchIcon />
           </div>

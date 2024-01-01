@@ -278,6 +278,7 @@ export const calculateTotalPrice = ({ price, discount }: PropsCall) => {
     const discountAmount = (price * discount) / 100;
     discountedPrice = price - discountAmount;
   }
+  discountedPrice = parseFloat(discountedPrice.toFixed(2));
   return {
     price,
     discountedPrice,
