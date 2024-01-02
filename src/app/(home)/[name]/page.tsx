@@ -120,7 +120,7 @@ const Page = () => {
           ) : (
             <>
               {!payments.data ? (
-                <div className="flex h-[400px] items-center justify-center">
+                <div className="flex min-h-screen items-center justify-center">
                   Order not found
                 </div>
               ) : (

@@ -172,7 +172,10 @@ const TableOrderUser = ({ payments }: Props) => {
       ))}
       {items.length < 1 && (
         <div className="flex flex-col items-center justify-center rounded-medium border border-default-400 bg-content1 p-3">
-          <p className="text-lg font-semibold">Ratings not found</p>
+          <p className="text-lg font-semibold">Order not found</p>
+          <Button as={Link} href="/product" size="sm" color="primary">
+            See more Product
+          </Button>
         </div>
       )}
       <div className="flex items-center justify-center px-2 py-2">
