@@ -354,7 +354,7 @@ export const apiProduct = createTRPCRouter({
         }
         const products = await ctx.db.products.findMany({
           where: {
-            id: { in: promo.productId.map((item) => item) },
+            promoId: promo.id,
           },
           include: {
             rattings: true,

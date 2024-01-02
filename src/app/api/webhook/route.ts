@@ -74,7 +74,7 @@ export async function POST(req: Request) {
             paymentId: payment.id,
           },
           data: {
-            status: "success",
+            status: "paid",
           },
         });
 

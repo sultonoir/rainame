@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import {
   getServerSession,
@@ -10,7 +12,7 @@ import bcrypt from "bcryptjs";
 import { env } from "@/env";
 import { db } from "@/server/db";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { type UserRole } from "@prisma/client";
+import { type User, type UserRole } from "@prisma/client";
 import "next-auth/jwt";
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -36,6 +38,7 @@ declare module "next-auth" {
 declare module "next-auth/jwt" {
   interface JWT {
     id: string;
+    name: string | null;
     role: UserRole;
   }
 }
@@ -54,32 +57,29 @@ export const authOptions: NextAuthOptions = {
         session.user.email = token.email;
         session.user.image = token.picture;
         session.user.role = token.role;
+        session.user.name = token.name;
       }
       return session;
     },
-    async jwt({ token, user, trigger }) {
-      const dbuser = await db.user.findUnique({
-        where: {
-          email: token.email ?? "",
-        },
-      });
+    jwt({ token, user, trigger, session }) {
+      const u = user as unknown as User;
 
-      if (!dbuser) {
-        token.id = user.id;
-        return token;
-      }
-      if (trigger === "update" && dbuser) {
+      if (trigger === "update" && session) {
         // Note, that `session` can be any arbitrary object, remember to validate it!
-        token.name = dbuser.name;
-        token.picture = dbuser.image;
+        token.name = session.name;
+        token.picture = session.image;
       }
-      return {
-        id: dbuser.id,
-        name: dbuser.name,
-        email: dbuser.email,
-        picture: dbuser.image,
-        role: dbuser.role,
-      };
+      if (user) {
+        return {
+          ...token,
+          id: u.id,
+          email: u.email,
+          name: u.name,
+          picture: u.image,
+          role: u.role,
+        };
+      }
+      return token;
     },
   },
   session: {

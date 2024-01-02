@@ -67,7 +67,7 @@ const AsideAdmin = () => {
           Rainame
         </Link>
         <p className="text-small text-default-400">OVERVIEW</p>
-        <ul className="flex h-full w-full grow flex-col gap-4">
+        <ul className="flex h-full w-full grow flex-col gap-8">
           {navadmin.map((item) => (
             <li key={item.path}>
               <Link color="foreground" className="flex gap-2" href={item.path}>
