@@ -12,6 +12,10 @@ import { BellIcon, BellRing } from "lucide-react";
 import { api } from "@/trpc/react";
 import { motion } from "framer-motion";
 const NotifyUser = () => {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const onClose = () => {
+    setIsOpen(!isOpen);
+  };
   const { data } = api.user.getNotify.useQuery();
 
   //handle notification has reads
@@ -28,7 +32,12 @@ const NotifyUser = () => {
   //filter data notification has reads
   const reads = data?.notify.filter((item) => item.reads === false);
   return (
-    <Popover placement="bottom" showArrow>
+    <Popover
+      placement="bottom"
+      showArrow
+      isOpen={isOpen}
+      onOpenChange={(open) => setIsOpen(open)}
+    >
       <PopoverTrigger>
         {reads && reads.length > 0 ? (
           <Button
@@ -78,26 +87,41 @@ const NotifyUser = () => {
               Mark all read
             </Button>
           </div>
-          <div className="flex h-fit max-h-[300px] flex-col gap-1 overflow-y-auto">
-            {data?.notify.map((item) => (
-              <Button
-                as={Link}
-                href={`/${data.name}?options=Order`}
-                key={item.id}
-                className={cn(
-                  "mt-2 flex h-fit w-full flex-col items-start justify-start overflow-hidden rounded-small bg-primary-50 p-2 hover:bg-content2",
-                  {
-                    "bg-transparent": item.reads === true,
-                  },
-                )}
-              >
-                <p className="text-medium font-semibold">Payment success</p>
-                <p className="-mt-2 w-full truncate text-small text-default-500">
-                  {item.comment}
-                </p>
-              </Button>
-            ))}
-          </div>
+          {!data ? (
+            <p>Error</p>
+          ) : (
+            <>
+              {data.notify.length < 1 ? (
+                <div className="mt-2 flex flex-col items-center gap-2">
+                  <p className="text-xl font-bold">No notification</p>
+                </div>
+              ) : (
+                <div className="flex h-fit max-h-[300px] flex-col gap-1 overflow-y-auto">
+                  {data?.notify.map((item) => (
+                    <Button
+                      as={Link}
+                      onClick={onClose}
+                      href={`/${data.name}?options=Order`}
+                      key={item.id}
+                      className={cn(
+                        "mt-2 flex h-fit w-full flex-col items-start justify-start overflow-hidden rounded-small bg-primary-50 p-2 hover:bg-content2",
+                        {
+                          "bg-transparent": item.reads === true,
+                        },
+                      )}
+                    >
+                      <p className="text-medium font-semibold">
+                        Payment success
+                      </p>
+                      <p className="-mt-2 w-full truncate text-small text-default-500">
+                        {item.comment}
+                      </p>
+                    </Button>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
         </div>
       </PopoverContent>
     </Popover>
