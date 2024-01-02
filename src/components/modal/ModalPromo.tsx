@@ -60,6 +60,7 @@ const productSchema = z.object({
       createdAt: z.date(),
       updatedAt: z.date(),
       userId: z.string(),
+      promoId: z.string().nullable(),
     }),
   ),
 });
@@ -197,7 +198,7 @@ const ModalPromo = () => {
       <Modal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
-        size="2xl"
+        size="4xl"
         scrollBehavior="outside"
       >
         <ModalContent>
@@ -338,7 +339,7 @@ const ModalPromo = () => {
                                             <User
                                               key={item.id}
                                               name={item.name}
-                                              className="w-full cursor-pointer justify-start bg-default p-2 hover:opacity-80"
+                                              className="w-full cursor-pointer justify-start bg-content2 p-2 hover:opacity-80"
                                               avatarProps={{
                                                 src: item.imageUrl.at(0),
                                               }}
@@ -348,6 +349,13 @@ const ModalPromo = () => {
                                                   formProduct: field.value,
                                                   fieldChange: field.onChange,
                                                 })
+                                              }
+                                              description={
+                                                <>
+                                                  {item.discount! > 0 ? (
+                                                    <p>{item.discount}%</p>
+                                                  ) : null}
+                                                </>
                                               }
                                             />
                                           ))}
