@@ -64,7 +64,7 @@ const CardProducts = ({ product, rattings }: TProducts) => {
         <div className="flex w-full justify-between">
           {product.discount && product.discount > 0 ? (
             <div className="w-full text-start text-medium font-semibold">
-              <span className="text-foreground-200 line-through">
+              <span className="text-default-500 line-through">
                 ${result.price}
               </span>{" "}
               ${result.discountedPrice}

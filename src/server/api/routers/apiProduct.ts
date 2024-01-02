@@ -289,6 +289,7 @@ export const apiProduct = createTRPCRouter({
         take: z.string().optional(),
         discount: z.string().optional(),
         hot: z.string().optional(),
+        promo: z.string().optional(),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -334,6 +335,36 @@ export const apiProduct = createTRPCRouter({
         where.selling = {
           gte: 10,
         };
+      }
+
+      if (input.promo) {
+        console.log(input.promo);
+        const name = decodeURIComponent(input.promo);
+        const promo = await ctx.db.promo.findUnique({
+          where: {
+            name,
+          },
+        });
+
+        if (!promo) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Promo not found",
+          });
+        }
+        const products = await ctx.db.products.findMany({
+          where: {
+            id: { in: promo.productId.map((item) => item) },
+          },
+          include: {
+            rattings: true,
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        });
+
+        return products;
       }
 
       const page = input.page ? parseFloat(input.page) : 1;

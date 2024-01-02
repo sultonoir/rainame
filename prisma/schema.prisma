@@ -86,6 +86,8 @@ model Products{
   store             User @relation(fields: [userId],references: [id],onDelete: Cascade)
   rattings          Rattings[]
   cart              Cart[]
+  promoId           String?     
+  promo             Promo?    @relation(fields: [promoId],references: [id],onDelete: Cascade)
   @@index([id,userId,path])
 }
 
@@ -157,7 +159,7 @@ model Promo {
   id                String    @id @default(cuid())
   imageUrl          String
   name              String    @unique
-  productId         String[] 
+  products          Products[] 
 }
 
 model VerificationToken {

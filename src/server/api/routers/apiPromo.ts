@@ -40,24 +40,36 @@ export const apiPromo = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const id = input.products.map((item) => item.id);
-      await ctx.db.promo.create({
+      const promo = await ctx.db.promo.create({
         data: {
           name: input.name,
           imageUrl: input.imageUrl,
-          productId: id,
         },
       });
       await ctx.db.products.updateMany({
         where: {
-          id: { in: input.products.map((item) => item.id) },
+          id: { in: id },
         },
         data: {
           discount: input.discount,
+          promoId: promo.id,
         },
       });
     }),
   getPromo: publicProcedure.query(async ({ ctx }) => {
     const promo = await ctx.db.promo.findMany();
+    return promo;
+  }),
+  getPromoAndProduct: publicProcedure.query(async ({ ctx }) => {
+    const promo = await ctx.db.promo.findMany({
+      include: {
+        products: {
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
+      },
+    });
     return promo;
   }),
   deletePromo: protectedProcedure
@@ -67,7 +79,7 @@ export const apiPromo = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const promo = await ctx.db.promo.findMany({
+      const promo = await ctx.db.promo.findUnique({
         where: {
           id: input.id,
         },
@@ -79,14 +91,14 @@ export const apiPromo = createTRPCRouter({
 
       await ctx.db.products.updateMany({
         where: {
-          id: { in: promo.map((item) => item.id) },
+          promoId: promo.id,
         },
         data: {
-          discount: 0,
+          discount: null,
         },
       });
 
-      await ctx.db.promo.deleteMany({
+      await ctx.db.promo.delete({
         where: {
           id: input.id,
         },

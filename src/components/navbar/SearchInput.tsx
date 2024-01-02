@@ -38,7 +38,6 @@ const SearchInput = () => {
         radius="lg"
         variant="flat"
         labelPlacement="outside"
-        onClear={() => setName("")}
         startContent={
           <div className="bg-transparent" aria-hidden="true">
             <SearchIcon />
@@ -54,46 +53,50 @@ const SearchInput = () => {
               </div>
             ) : (
               <>
-                {data?.length === 0 ? (
-                  <div className="flex items-center justify-center">
-                    Product not found
-                  </div>
-                ) : (
+                {!data ? null : (
                   <>
-                    {data?.map((item) => {
-                      const result = calculateTotalPrice({
-                        discount: item.discount,
-                        price: item.price,
-                      });
-                      return (
-                        <Link
-                          href={`/product/${item.path}`}
-                          key={item.id}
-                          className="flex flex-row items-center gap-4 rounded-lg p-2 hover:bg-content3"
-                        >
-                          <Image
-                            width={40}
-                            height={40}
-                            radius="sm"
-                            src={item.imageUrl.at(0)}
-                            className="aspect-square object-cover"
-                          />
-                          <div className="flex flex-col">
-                            <p className="text-small text-default-500">
-                              {item.name}
-                            </p>
-                            <p className="font-semibold text-foreground">
-                              {item.discount && item.discount > 0 && (
-                                <span className="mr-2 text-default-300 line-through">
-                                  ${item.price}
-                                </span>
-                              )}
-                              ${result.discountedPrice}
-                            </p>
-                          </div>
-                        </Link>
-                      );
-                    })}
+                    {data.length === 0 ? (
+                      <div className="flex items-center justify-center">
+                        Product not found
+                      </div>
+                    ) : (
+                      <>
+                        {data.map((item) => {
+                          const result = calculateTotalPrice({
+                            discount: item.discount,
+                            price: item.price,
+                          });
+                          return (
+                            <Link
+                              href={`/product/${item.path}`}
+                              key={item.id}
+                              className="flex flex-row items-center gap-4 rounded-lg p-2 hover:bg-content3"
+                            >
+                              <Image
+                                width={40}
+                                height={40}
+                                radius="sm"
+                                src={item.imageUrl.at(0)}
+                                className="aspect-square object-cover"
+                              />
+                              <div className="flex flex-col">
+                                <p className="text-small font-semibold text-default-500">
+                                  {item.name}
+                                </p>
+                                <p className="font-semibold text-foreground">
+                                  {item.discount && item.discount > 0 && (
+                                    <span className="mr-2 text-default-500 line-through">
+                                      ${item.price}
+                                    </span>
+                                  )}
+                                  ${result.discountedPrice}
+                                </p>
+                              </div>
+                            </Link>
+                          );
+                        })}
+                      </>
+                    )}
                   </>
                 )}
               </>
