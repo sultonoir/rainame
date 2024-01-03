@@ -40,14 +40,18 @@ const ProductPayment = ({ product, color, size }: Props) => {
     const price = product.price;
     const amount = count;
     const discount = product.discount;
-    const total = price * amount;
+    let total = price * amount;
     let discountedPrice = total;
     if (discount && discount > 0) {
       const discountAmount = (total * discount) / 100;
       discountedPrice = total - discountAmount;
     }
+    total = parseFloat(total.toFixed(2));
     discountedPrice = parseFloat(discountedPrice.toFixed(2));
-    return discountedPrice;
+    return {
+      total,
+      discountedPrice,
+    };
   };
 
   //* mutate addchart
@@ -62,7 +66,8 @@ const ProductPayment = ({ product, color, size }: Props) => {
       toast.error(e.message);
     },
   });
-  const discountPrice = result;
+  const discount = result.discountedPrice;
+  const price = result.total;
 
   const { data } = useSession();
   const { onOpen } = useModal();
@@ -81,7 +86,7 @@ const ProductPayment = ({ product, color, size }: Props) => {
       name: product.name,
       color,
       size,
-      totalPrice: discountPrice,
+      totalPrice: product.discount ? discount : price,
       totalProduct: count,
       imageUrl: product.imageUrl,
     });
@@ -165,18 +170,16 @@ const ProductPayment = ({ product, color, size }: Props) => {
             <div className="flex w-full justify-between text-start text-medium font-semibold">
               <p>Total</p>
               <div className="flex gap-2">
-                <p className="text-foreground-200 line-through">
-                  ${discountPrice}
-                </p>
+                <p className="text-foreground-200 line-through">${price}</p>
                 <p className="w-full text-start text-medium font-semibold">
-                  ${discountPrice}
+                  ${discount}
                 </p>
               </div>
             </div>
           ) : (
             <div className="flex w-full justify-between text-start text-medium font-semibold">
               <p>Total</p>
-              <span>${discountPrice}</span>
+              <span>${price}</span>
             </div>
           )}
         </CardBody>

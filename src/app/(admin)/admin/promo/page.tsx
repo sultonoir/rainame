@@ -18,7 +18,7 @@ const Page = () => {
     },
   });
   return (
-    <section className="mt-2 flex w-full flex-col gap-5">
+    <section className="my-2 flex w-full flex-col gap-5">
       <ModalPromo />
       <div className="mt-2 grid grid-cols-2 gap-5">
         {data?.map((item) => (

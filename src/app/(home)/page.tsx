@@ -11,7 +11,10 @@ const page = async () => {
   const promo = await api.promo.getPromoAndProduct.query();
   const discountProduct = products
     .filter((item) => item.discount! > 0)
-    .slice(0, 5);
+    .slice(0, 6);
+  const manProducts = products
+    .filter((item) => item.category === "Man")
+    .slice(0, 6);
   return (
     <>
       <HomeBentoGrid promo={promo} />
@@ -24,8 +27,28 @@ const page = async () => {
             Show more
           </Button>
         </div>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5">
-          {products.slice(0, 5).map((product) => (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
+          {products.slice(0, 6).map((product) => (
+            <CardProducts
+              key={product.id}
+              product={product}
+              rattings={product.rattings}
+            />
+          ))}
+        </div>
+        <div className="flex justify-between">
+          <p className="text-2xl font-semibold">Shop men</p>
+          <Button
+            as={Link}
+            href="/product?category=Man"
+            variant="light"
+            color="primary"
+          >
+            Show more
+          </Button>
+        </div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
+          {manProducts.map((product) => (
             <CardProducts
               key={product.id}
               product={product}
@@ -44,7 +67,7 @@ const page = async () => {
             Show more
           </Button>
         </div>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
           {discountProduct.map((product) => (
             <CardProducts
               key={product.id}

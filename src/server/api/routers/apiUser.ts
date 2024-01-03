@@ -93,6 +93,18 @@ export const apiUser = createTRPCRouter({
         });
       }
     }),
+  getMetaUser: protectedProcedure.query(async ({ ctx }) => {
+    const id = ctx.session.user.id;
+    const user = await ctx.db.user.findUnique({
+      where: {
+        id,
+      },
+    });
+    if (!user) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Admin not found" });
+    }
+    return user;
+  }),
   getUser: protectedProcedure.query(async ({ ctx }) => {
     const id = ctx.session.user.id;
     const user = await ctx.db.user.findUnique({

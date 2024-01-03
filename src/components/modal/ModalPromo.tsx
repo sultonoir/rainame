@@ -126,7 +126,13 @@ const ModalPromo = () => {
   };
 
   //handle search products
-  const products = api.product.getSearch.useMutation();
+  const [select, setSelect] = React.useState<Products[] | null>([]);
+  const products = api.product.getSearch.useMutation({
+    onSuccess(data) {
+      setSelect(data);
+    },
+  });
+
   const handleSearch = useDebouncedCallback((term: string) => {
     products.mutate({
       name: term,
@@ -134,6 +140,7 @@ const ModalPromo = () => {
   }, 300);
 
   //handle select product
+
   const handleSelect = ({
     product,
     fieldChange,
@@ -141,8 +148,12 @@ const ModalPromo = () => {
   }: SelectProduct) => {
     const uniqueFiles: Products[] = [];
     const isDuplicate = formProduct.some((item) => item.id === product.id);
+
     if (!isDuplicate) {
       uniqueFiles.push(product);
+      const updateSelect = [...(select ?? [])];
+      const updatedList = updateSelect.filter((item) => item.id !== product.id);
+      setSelect(updatedList);
     }
     fieldChange([...formProduct, ...uniqueFiles]);
   };
@@ -258,7 +269,7 @@ const ModalPromo = () => {
                           name="imageUrl"
                           render={({ field }) => (
                             <FormItem className="flex flex-col items-center gap-4">
-                              <FormLabel className="h-full w-full">
+                              <FormLabel className="h-full w-full cursor-pointer">
                                 {field.value ? (
                                   <Image
                                     removeWrapper
@@ -326,16 +337,16 @@ const ModalPromo = () => {
                                   startContent={<SearchIcon />}
                                   onChange={(e) => handleSearch(e.target.value)}
                                 />
-                                <div className="flex flex-col items-center justify-center gap-1 overflow-auto">
-                                  {products.data ? (
+                                <div className="flex max-h-[377px] flex-col gap-1 overflow-auto">
+                                  {select ? (
                                     <>
-                                      {products.data.length < 1 ? (
+                                      {select.length < 1 ? (
                                         <p className="text-center text-lg font-semibold">
                                           Product not found
                                         </p>
                                       ) : (
                                         <>
-                                          {products.data.map((item) => (
+                                          {select?.map((item) => (
                                             <User
                                               key={item.id}
                                               name={item.name}
