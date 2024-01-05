@@ -3,11 +3,11 @@
 import FormChangePass from "@/components/form/FormChangePass";
 import FormUpdateAdmin from "@/components/form/FormUpdateAdmin";
 import ModalUploadImage from "@/components/modal/ModalUploadImage";
+import ScrollToTop from "@/components/shared/ScrollToTop";
 import TableOrderUser from "@/components/table/TableOrderUser";
 import TableRatingUser from "@/components/table/TableRatingUser";
 import { api } from "@/trpc/react";
 import { Button, Spinner, User } from "@nextui-org/react";
-import { ChevronUp } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { redirect, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
@@ -65,14 +65,6 @@ const ClientPage = () => {
         setActive(title);
         break;
     }
-  };
-
-  // handle going to top
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth", // This creates a smooth scrolling effect
-    });
   };
 
   return (
@@ -153,16 +145,7 @@ const ClientPage = () => {
           )}
         </>
       )}
-      <Button
-        isIconOnly
-        color="primary"
-        variant="flat"
-        radius="full"
-        className="fixed bottom-1 right-1 sm:hidden"
-        onClick={scrollToTop}
-      >
-        <ChevronUp />
-      </Button>
+      <ScrollToTop />
     </section>
   );
 };

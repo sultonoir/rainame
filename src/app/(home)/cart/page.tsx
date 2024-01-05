@@ -24,7 +24,8 @@ const Page = () => {
     if (countPrice === 0) {
       return 0;
     }
-    return totalPrice;
+    const tot = parseFloat(totalPrice.toFixed(2));
+    return tot;
   };
 
   const isSeletedPrice = callculatePrice();
@@ -98,7 +99,7 @@ const Page = () => {
   };
 
   return (
-    <section className="relative flex flex-row gap-5">
+    <section className="relative flex min-h-screen flex-col gap-5 lg:flex-row">
       <div className="flex grow flex-col gap-2">
         <label className="flex items-center gap-2 pb-2">
           <Checkbox
@@ -118,29 +119,28 @@ const Page = () => {
           />
         ))}
       </div>
-      <div className="relative w-[400px]">
-        <div className="sticky top-28 rounded-lg border border-default-300 bg-content1 p-5">
-          <p className="text-lg font-semibold">Shopping summary</p>
-          <div className="my-3 flex flex-col">
-            <div className="flex justify-between">
-              <p className="text-large opacity-80">Total Price</p>
-              <p className="">${isSeletedPrice}</p>
-            </div>
-            <div className="flex justify-between">
-              <p className="text-large opacity-80">Total Product</p>
-              <p className="">{isSeletedProduct}</p>
-            </div>
+
+      <div className="sticky bottom-0 h-fit w-full rounded-lg border border-default-300 bg-content1 p-5 lg:top-0 lg:max-w-xs">
+        <p className="text-lg font-semibold">Shopping summary</p>
+        <div className="my-3 flex flex-col">
+          <div className="flex justify-between">
+            <p className="text-large opacity-80">Total Price</p>
+            <p className="">${isSeletedPrice}</p>
           </div>
-          <Button
-            fullWidth
-            size="sm"
-            color="primary"
-            isLoading={payment.isLoading}
-            onClick={handlePayment}
-          >
-            Paynow
-          </Button>
+          <div className="flex justify-between">
+            <p className="text-large opacity-80">Total Product</p>
+            <p className="">{isSeletedProduct}</p>
+          </div>
         </div>
+        <Button
+          fullWidth
+          size="sm"
+          color="primary"
+          isLoading={payment.isLoading}
+          onClick={handlePayment}
+        >
+          Paynow
+        </Button>
       </div>
     </section>
   );

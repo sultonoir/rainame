@@ -1,5 +1,6 @@
 import CardProducts from "@/components/card/CardProducts";
 import FormFilterProducts from "@/components/form/FormFilterProducts";
+import ModalFilter from "@/components/modal/ModalFilter";
 import PaginationUi from "@/components/shared/PaginationUi";
 import { api } from "@/trpc/server";
 import React from "react";
@@ -28,7 +29,7 @@ const Page = async ({ searchParams }: HomeProps) => {
         </div>
       ) : (
         <div className="flex flex-col items-center justify-between gap-4">
-          <div className="grid h-fit grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5">
+          <div className="grid h-fit grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
             {products.map((product) => (
               <CardProducts
                 key={product.id}
@@ -40,6 +41,7 @@ const Page = async ({ searchParams }: HomeProps) => {
           <PaginationUi products={products} />
         </div>
       )}
+      <ModalFilter />
     </section>
   );
 };

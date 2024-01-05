@@ -33,6 +33,7 @@ const CardCart = ({ product, id }: Props) => {
       const discountAmount = (total * discount) / 100;
       discountedPrice = total - discountAmount;
     }
+    discountedPrice = parseFloat(discountedPrice.toFixed(2));
     return {
       total,
       discountedPrice,
@@ -81,7 +82,7 @@ const CardCart = ({ product, id }: Props) => {
         })
       }
     >
-      <div className="flex  w-full items-center justify-between gap-2">
+      <div className="flex w-full flex-col items-center justify-between gap-2 lg:flex-row">
         <div className="flex flex-col justify-center gap-2">
           <User
             classNames={{ base: "justify-start" }}
@@ -99,7 +100,7 @@ const CardCart = ({ product, id }: Props) => {
           />
           <div className="flex flex-col">
             <p className="ml-2 text-sm">Color</p>
-            <div className="flex flex-row gap-2">
+            <div className="flex flex-row flex-wrap gap-2">
               {product.color.map((item) => (
                 <Button
                   key={item}
@@ -146,7 +147,7 @@ const CardCart = ({ product, id }: Props) => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col items-end gap-1">
+        <div className="flex flex-col items-center gap-1 lg:items-end">
           <div className="flex flex-row items-center justify-center gap-1">
             <Button
               isIconOnly
