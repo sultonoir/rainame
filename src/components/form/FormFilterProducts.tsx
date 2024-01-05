@@ -97,8 +97,8 @@ const FormFilterProducts = () => {
   }, [router, values]);
 
   return (
-    <section className="relative w-full max-w-xs">
-      <div className="sticky top-24">
+    <section className="relative hidden w-full max-w-xs lg:flex">
+      <div className="sticky top-[73px]">
         <Card>
           <CardBody className="flex flex-col gap-2">
             <div className="flex flex-row gap-x-4">

@@ -4,23 +4,26 @@ import HomeCategory from "@/components/home/HomeCategory";
 import { api } from "@/trpc/server";
 import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
+import Image from "next/image";
 import React from "react";
 
 const page = async () => {
   const products = await api.product.filterProduct.query({});
   const promo = await api.promo.getPromoAndProduct.query();
-  const discountProduct = products
-    .filter((item) => item.discount! > 0)
-    .slice(0, 6);
+  const women = products
+    .filter((item) => item.category === "Women")
+    .slice(6, 12);
   const manProducts = products
     .filter((item) => item.category === "Man")
     .slice(0, 6);
+  const promoForWoment = promo.find(
+    (item) => item.name === "Women's shopping time",
+  );
   return (
     <>
       <HomeBentoGrid promo={promo} />
-      {/* home category */}
-      <HomeCategory />
-      <section className="my-10 flex flex-col gap-5">
+
+      <section className="my-10 flex flex-col justify-items-center gap-5">
         <div className="flex justify-between">
           <p className="text-2xl font-semibold">New Arrival</p>
           <Button as={Link} href="/product" variant="light" color="primary">
@@ -36,6 +39,7 @@ const page = async () => {
             />
           ))}
         </div>
+        <HomeCategory />
         <div className="flex justify-between">
           <p className="text-2xl font-semibold">Shop men</p>
           <Button
@@ -57,24 +61,53 @@ const page = async () => {
           ))}
         </div>
         <div className="flex justify-between">
-          <p className="text-2xl font-semibold">Discount</p>
+          <p className="text-2xl font-semibold">For women</p>
           <Button
             as={Link}
-            href="/product?discount=true"
+            href="/product?category=Women"
             variant="light"
             color="primary"
           >
             Show more
           </Button>
         </div>
+        <Button
+          as={Link}
+          href="/product?category=Women"
+          className="relative grid h-[500px] grid-cols-1 grid-rows-[500px] overflow-hidden rounded-large"
+        >
+          <Image
+            fill
+            src={promoForWoment?.imageUrl ?? ""}
+            alt={promoForWoment?.name ?? "image"}
+            className="object-cover"
+          />
+        </Button>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
-          {discountProduct.map((product) => (
+          {women.reverse().map((product) => (
             <CardProducts
               key={product.id}
               product={product}
               rattings={product.rattings}
             />
           ))}
+        </div>
+        <div className="flex w-full justify-center gap-2">
+          <Button
+            size="md"
+            color="primary"
+            as={Link}
+            href="/test"
+            className="w-full max-w-xs"
+          >
+            View more
+          </Button>
+          <a
+            href="/test"
+            className="w-full max-w-xs rounded-large bg-danger px-2 py-1"
+          >
+            View more
+          </a>
         </div>
       </section>
     </>

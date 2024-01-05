@@ -15,6 +15,8 @@ import { ThemeSwitcher } from "../shared/ThemeSwithcer";
 import Profile from "../shared/Profile";
 import NotifyUser from "../notify/NotifyUser";
 import Cart from "../shared/Cart";
+import ModalSearch from "../modal/ModalSearch";
+import ModalAuthMobile from "../modal/ModalAuthMobile";
 
 export default function NavbarUi() {
   const { data: user } = useSession();
@@ -22,7 +24,7 @@ export default function NavbarUi() {
   return (
     <Navbar
       classNames={{
-        wrapper: "container mx-auto px-8 max-w-[1400px]",
+        wrapper: "px-3 lg:px-6 max-w-[1400px]",
       }}
     >
       <NavbarBrand>
@@ -36,16 +38,20 @@ export default function NavbarUi() {
           Rainame
         </Link>
       </NavbarBrand>
-      <NavbarContent className="hidden grow gap-4 sm:flex" justify="center">
+      <NavbarContent className="hidden grow lg:flex" justify="center">
         <SearchInput />
       </NavbarContent>
-      <NavbarContent justify="end">
-        <NavbarItem as="div" className="flex gap-2">
+      <NavbarContent justify="end" className="gap-0">
+        <ModalSearch />
+        <NavbarItem as="div" className="hidden lg:flex">
           <ThemeSwitcher />
         </NavbarItem>
-        <NavbarItem className="hidden lg:flex">
+        <NavbarItem>
           {!user ? (
-            <ModalAuth />
+            <div className="flex flex-row">
+              <ModalAuth />
+              <ModalAuthMobile />
+            </div>
           ) : (
             <NavbarItem as="div" className="flex items-center gap-2">
               <Cart />

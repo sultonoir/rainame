@@ -37,7 +37,7 @@ const HomeBentoGrid = ({ promo }: Props) => {
 
   const cellFour = promo.at(1);
 
-  const cellFive = promo.at(1)?.products.at(5);
+  const cellFive = promo.at(0)?.products.at(2);
 
   const cellSix = promo.at(1)?.products.at(2);
 
@@ -64,8 +64,12 @@ const HomeBentoGrid = ({ promo }: Props) => {
         </Card>
 
         {/* cell 2 */}
-        <Card className="col-span-1 overflow-hidden sm:col-span-3 sm:row-start-2 sm:row-end-5">
-          <CardBody className="flex flex-col gap-2">
+        <Card
+          as={Link}
+          href={`/product/${cellTwo?.path}`}
+          className="col-span-1 overflow-hidden sm:col-span-3 sm:row-start-2 sm:row-end-5"
+        >
+          <CardBody className="flex h-fit flex-col overflow-visible">
             <p className="truncate text-lg text-default-400">{cellTwo?.name}</p>
             <p className="inline-flex gap-2 text-2xl font-semibold">
               <span className="text-default line-through">
@@ -73,17 +77,18 @@ const HomeBentoGrid = ({ promo }: Props) => {
               </span>
               ${priceTwo.discountedPrice}
             </p>
+          </CardBody>
+          <CardFooter className="relative h-full">
             <Image
+              removeWrapper
               as={NextImage}
               loading="eager"
-              width={400}
-              height={400}
-              src={cellTwo?.imageUrl.at(0) ?? ""}
               alt={cellTwo?.name ?? "image"}
-              radius="sm"
-              className="aspect-square object-cover"
+              fill
+              src={cellTwo?.imageUrl.at(0)}
+              className="object-cover"
             />
-          </CardBody>
+          </CardFooter>
         </Card>
 
         {/* cell 3 promo image aspect-video */}

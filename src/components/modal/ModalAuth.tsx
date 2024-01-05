@@ -21,10 +21,16 @@ export default function ModalAuth() {
   const toggle = useToggleAuth();
   return (
     <>
-      <Button onPress={onOpen} variant="solid" color="primary" size="sm">
+      <Button
+        onPress={onOpen}
+        variant="solid"
+        color="primary"
+        size="sm"
+        className="hidden lg:flex"
+      >
         Login
       </Button>
-      <Modal isOpen={isOpen} onOpenChange={onClose}>
+      <Modal isOpen={isOpen} onOpenChange={onClose} placement="center">
         <ModalContent>
           <ModalHeader className="flex flex-col">
             <AuthHeaders title="Welcome to Rainame" />

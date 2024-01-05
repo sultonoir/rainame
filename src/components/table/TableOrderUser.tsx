@@ -164,7 +164,7 @@ const TableOrderUser = ({ payments }: Props) => {
             >
               buy again
             </Button>
-            {item.status === "success" && (
+            {item.status === "accepted" && (
               <ModalRating productId={item.productId} />
             )}
           </div>
