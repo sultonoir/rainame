@@ -21,7 +21,7 @@ const page = async () => {
   );
   return (
     <>
-      <HomeBentoGrid promo={promo} />
+      <HomeBentoGrid slides={promo} />
 
       <section className="my-10 flex flex-col justify-items-center gap-5">
         <div className="flex justify-between">
