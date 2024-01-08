@@ -9,7 +9,7 @@ import React from "react";
 
 const page = async () => {
   const products = await api.product.filterProduct.query({});
-  const promo = await api.promo.getPromoAndProduct.query();
+  const promo = await api.promo.getPromo.query();
   const women = products
     .filter((item) => item.category === "Women")
     .slice(6, 12);
@@ -21,7 +21,7 @@ const page = async () => {
   );
   return (
     <>
-      <HomeBentoGrid promo={promo} />
+      <HomeBentoGrid slides={promo} />
 
       <section className="my-10 flex flex-col justify-items-center gap-5">
         <div className="flex justify-between">
