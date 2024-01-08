@@ -1,82 +1,211 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { type Promo } from "@prisma/client";
-import Image from "next/image";
-import Link from "next/link";
-export default function Carousel({
-  autoSlide = false,
-  autoSlideInterval = 3000,
-  slides,
-}: {
-  autoSlide?: boolean;
-  autoSlideInterval?: number;
-  slides: Promo[];
-}) {
-  const [curr, setCurr] = useState(0);
+import {
+  Image,
+  Card,
+  CardBody,
+  CardFooter,
+  Link,
+  Button,
+} from "@nextui-org/react";
+import { type Promo, type Products } from "@prisma/client";
+import { ArrowUpRight } from "lucide-react";
+import React from "react";
+type Props = {
+  promo: Array<
+    Promo & {
+      products: Products[];
+    }
+  >;
+};
+import NextImage from "next/image";
+import { calculateTotalPrice } from "@/lib/utils";
 
-  const prev = () =>
-    setCurr((curr) => (curr === 0 ? slides.length - 1 : curr - 1));
-  const next = () =>
-    setCurr((curr) => (curr === slides.length - 1 ? 0 : curr + 1));
+const HomeBentoGrid = ({ promo }: Props) => {
+  const cellOne = promo.at(0)?.products.at(0);
+  const PriceOne = calculateTotalPrice({
+    price: cellOne?.price ?? 0,
+    discount: cellOne?.discount ?? 0,
+  });
 
-  useEffect(() => {
-    if (!autoSlide) return;
-    const slideInterval = setInterval(next, autoSlideInterval);
-    return () => clearInterval(slideInterval);
-  }, [autoSlide, autoSlideInterval]);
+  const cellTwo = promo.at(1)?.products.at(1);
+  const priceTwo = calculateTotalPrice({
+    price: cellTwo?.price ?? 0,
+    discount: cellTwo?.discount ?? 0,
+  });
+  const cellThree = promo.at(0);
+
+  const cellFour = promo.at(1);
+
+  const cellFive = promo.at(0)?.products.at(2);
+
+  const cellSix = promo.at(1)?.products.at(2);
 
   return (
-    <div className="relative overflow-hidden rounded-large">
-      <div className="flex">
-        {slides.map((item, index) => (
-          <Link
-            href={`/product?promo=${item.name}`}
-            key={item.id}
-            className={`ease relative h-[200px] duration-1000 lg:h-[500px] ${
-              index === curr ? "w-full" : "w-0"
-            }`}
-            style={{
-              transitionProperty: "all",
-            }}
-          >
+    <>
+      <section className="relative mb-10  hidden h-[calc(100dvh-100px)] grid-cols-1 gap-5 overflow-hidden p-2 sm:grid-cols-12 sm:grid-rows-6 lg:grid">
+        {/* cell 1 */}
+        <Card className="col-span-1 rounded-2xl bg-content1 p-2 shadow-small sm:col-span-3 sm:row-start-1">
+          <CardBody className="flex-col overflow-visible">
+            <p className="truncate">{cellOne?.name}</p>
+            <p className="inline-flex gap-2 text-lg font-semibold">
+              <span className="text-default line-through">
+                ${PriceOne.price}
+              </span>
+              ${PriceOne.discountedPrice}
+            </p>
+          </CardBody>
+          <CardFooter>
+            <Link color="primary" as={Link} href={`/product/${cellOne?.path}`}>
+              View details
+              <ArrowUpRight />
+            </Link>
+          </CardFooter>
+        </Card>
+
+        {/* cell 2 */}
+        <Card
+          as={Link}
+          href={`/product/${cellTwo?.path}`}
+          className="col-span-1 overflow-hidden sm:col-span-3 sm:row-start-2 sm:row-end-5"
+        >
+          <CardBody className="flex h-fit flex-col overflow-visible">
+            <p className="truncate text-lg text-default-400">{cellTwo?.name}</p>
+            <p className="inline-flex gap-2 text-2xl font-semibold">
+              <span className="text-default line-through">
+                ${priceTwo.price}
+              </span>
+              ${priceTwo.discountedPrice}
+            </p>
+          </CardBody>
+          <CardFooter className="relative h-full">
             <Image
-              alt={item?.name ?? "image"}
+              removeWrapper
+              as={NextImage}
+              loading="eager"
+              alt={cellTwo?.name ?? "image"}
               fill
-              objectFit="cover"
-              src={item.imageUrl}
-              priority
-              placeholder="blur"
-              blurDataURL="www"
+              src={cellTwo?.imageUrl.at(0)}
+              className="object-cover"
             />
-          </Link>
-        ))}
-      </div>
-      <button
-        onClick={prev}
-        className="absolute top-1/2 -translate-y-1/2 rounded-full  bg-white/80 p-2 text-gray-800 shadow hover:bg-white"
-      >
-        <ChevronLeft size={40} />
-      </button>
-      <button
-        onClick={next}
-        className="absolute right-0 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 text-gray-800 shadow hover:bg-white"
-      >
-        <ChevronRight size={40} />
-      </button>
-      <div className="absolute bottom-4 left-0 right-0 flex justify-center">
-        {slides.map((_, i) => (
+          </CardFooter>
+        </Card>
+
+        {/* cell 3 promo image aspect-video */}
+        <Card
+          className="col-span-1 sm:col-span-9 sm:row-start-5 sm:row-end-7"
+          as={Link}
+          href={`/product?promo=${cellThree?.name}`}
+        >
+          <CardBody>
+            <Image
+              removeWrapper
+              as={NextImage}
+              alt={cellThree?.name ?? "image"}
+              loading="eager"
+              fill
+              src={cellThree?.imageUrl}
+              className="aspect-video h-full object-cover"
+            />
+          </CardBody>
+        </Card>
+        {/*  cell 4 promo image square */}
+        <Card
+          as={Link}
+          href={`/product?promo=${cellFour?.name}`}
+          className="col-span-1 rounded-2xl sm:col-span-6 sm:row-start-1 sm:row-end-5"
+        >
+          <CardBody className="overflow-hidden">
+            <Image
+              removeWrapper
+              as={NextImage}
+              loading="eager"
+              fill
+              alt={cellFour?.name ?? "Image"}
+              src={cellFour?.imageUrl}
+              className="h-full object-cover"
+            />
+          </CardBody>
+        </Card>
+
+        {/* cell 5 product promo */}
+        <Card className="col-span-1 sm:col-span-3 sm:row-start-1 sm:row-end-5">
+          <CardBody>
+            <Image
+              removeWrapper
+              as={NextImage}
+              loading="eager"
+              alt={cellFive?.name ?? "image"}
+              fill
+              src={cellFive?.imageUrl.at(0)}
+              className="object-cover"
+            />
+          </CardBody>
+          <CardFooter className="gap-2">
+            <Button
+              as={Link}
+              href={`/product/${cellFive?.path}`}
+              color="primary"
+              fullWidth
+              endContent={<ArrowUpRight />}
+            >
+              View details
+            </Button>
+            <Button
+              color="danger"
+              as={Link}
+              href={`/product/${cellFive?.path}`}
+            >
+              {cellFive?.discount}% off
+            </Button>
+          </CardFooter>
+        </Card>
+
+        {/* cell 6 product promo after aspect video */}
+        <Card
+          as={Link}
+          href={`/product/${cellSix?.path}`}
+          className="col-span-1 sm:col-span-3 sm:row-start-5 sm:row-end-7"
+        >
+          <CardBody>
+            <div className="absolute right-2.5 top-2.5 z-20 rounded-lg bg-danger px-2 py-1 text-small text-white">
+              {cellSix?.discount}% off
+            </div>
+            <Image
+              removeWrapper
+              as={NextImage}
+              loading="eager"
+              alt={cellSix?.name ?? "image six"}
+              fill
+              src={cellSix?.imageUrl.at(0)}
+              className="aspect-square object-cover"
+            />
+          </CardBody>
+        </Card>
+      </section>
+      <section className="flex gap-4 overflow-auto p-4 lg:hidden">
+        {promo.map((item) => (
           <div
-            key={i}
-            onClick={() => setCurr(i)}
-            className={`
-              mx-1 h-3 w-3 rounded-full bg-white transition-all
-              ${curr === i ? "p-2" : "bg-opacity-50"}
-            `}
-          />
+            key={item.id}
+            className="h-fit w-fit rounded-large bg-sky-500 p-4"
+          >
+            <div className="relative h-[200px] w-[400px]">
+              <Image
+                removeWrapper
+                radius="sm"
+                as={NextImage}
+                alt={cellThree?.name ?? "image"}
+                loading="eager"
+                fill
+                src={item.imageUrl}
+                className="aspect-video h-full object-cover"
+              />
+            </div>
+          </div>
         ))}
-      </div>
-    </div>
+      </section>
+    </>
   );
-}
+};
+
+export default HomeBentoGrid;
