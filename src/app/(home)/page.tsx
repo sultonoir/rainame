@@ -9,7 +9,7 @@ import React from "react";
 
 const page = async () => {
   const products = await api.product.filterProduct.query({});
-  const promo = await api.promo.getPromo.query();
+  const promo = await api.promo.getPromoAndProduct.query();
   const women = products
     .filter((item) => item.category === "Women")
     .slice(6, 12);

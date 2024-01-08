@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { getPlaiceholder } from "plaiceholder";
 
 import {
   createTRPCRouter,
@@ -59,23 +58,7 @@ export const apiPromo = createTRPCRouter({
     }),
   getPromo: publicProcedure.query(async ({ ctx }) => {
     const promo = await ctx.db.promo.findMany();
-    if (!promo) {
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "promo not found",
-      });
-    }
-
-    const newPromo = await Promise.all(
-      promo.map(async (item) => {
-        const res = await fetch(item.imageUrl);
-        const buffer = Buffer.from(await res.arrayBuffer());
-
-        const { base64 } = await getPlaiceholder(buffer);
-        return { ...item, base64 }; // Menggabungkan color ke dalam objek item
-      }),
-    );
-    return newPromo;
+    return promo;
   }),
   getPromoAndProduct: publicProcedure.query(async ({ ctx }) => {
     const promo = await ctx.db.promo.findMany({
@@ -87,7 +70,6 @@ export const apiPromo = createTRPCRouter({
         },
       },
     });
-
     return promo;
   }),
   deletePromo: protectedProcedure
