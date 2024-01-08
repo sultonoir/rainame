@@ -6,10 +6,10 @@ import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
 import Image from "next/image";
 import React from "react";
-import { getPlaiceholder } from "plaiceholder";
+
 const page = async () => {
   const products = await api.product.filterProduct.query({});
-  const promo = await api.promo.getPromo.query();
+  const promo = await api.promo.getPromoAndProduct.query();
   const women = products
     .filter((item) => item.category === "Women")
     .slice(6, 12);
@@ -19,20 +19,9 @@ const page = async () => {
   const promoForWoment = promo.find(
     (item) => item.name === "Women's shopping time",
   );
-
-  const newPromo = await Promise.all(
-    promo.map(async (item) => {
-      const res = await fetch(item.imageUrl);
-      const buffer = Buffer.from(await res.arrayBuffer());
-
-      const { base64 } = await getPlaiceholder(buffer);
-      return { ...item, base64 }; // Menggabungkan color ke dalam objek item
-    }),
-  );
-
   return (
     <>
-      <HomeBentoGrid slides={newPromo} />
+      <HomeBentoGrid promo={promo} />
 
       <section className="my-10 flex flex-col justify-items-center gap-5">
         <div className="flex justify-between">
