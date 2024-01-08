@@ -338,6 +338,7 @@ export const apiProduct = createTRPCRouter({
       }
 
       if (input.promo) {
+        console.log(input.promo);
         const name = decodeURIComponent(input.promo);
         const promo = await ctx.db.promo.findUnique({
           where: {
