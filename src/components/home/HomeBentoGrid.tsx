@@ -11,14 +11,16 @@ import "swiper/css/pagination";
 // import required modules
 import { Navigation, Pagination, Mousewheel, Keyboard } from "swiper/modules";
 import { Button } from "@nextui-org/react";
-import { type PromoBlur } from "@/lib/types";
+import { type Products, type Promo } from "@prisma/client";
 
 export default function Carousel({
   slides,
 }: {
-  autoSlide?: boolean;
-  autoSlideInterval?: number;
-  slides: PromoBlur[];
+  slides: Array<
+    Promo & {
+      products: Products[];
+    }
+  >;
 }) {
   return (
     <>
@@ -46,8 +48,7 @@ export default function Carousel({
                 src={item.imageUrl}
                 alt={item.name}
                 className="object-cover"
-                placeholder="blur"
-                blurDataURL={item.base64}
+               
               />
             </a>
           </SwiperSlide>
