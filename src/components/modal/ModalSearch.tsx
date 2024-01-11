@@ -3,6 +3,7 @@ import { Button } from "@nextui-org/react";
 import { SearchIcon } from "lucide-react";
 import React from "react";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 const ModalSearch = () => {
   const [open, setOpen] = React.useState(false);
@@ -11,10 +12,18 @@ const ModalSearch = () => {
     setOpen(false);
   };
 
+  //handle submit
+  const router = useRouter();
   const handleSubmit = () => {
+    if (values !== "") {
+      setValues("");
+      setOpen((open) => !open);
+      return router.push(`/product?search=${values}`);
+    }
     setValues("");
     setOpen((open) => !open);
   };
+  //handle keydown
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       event.preventDefault(); // Mencegah aksi default saat menekan tombol "Enter"
@@ -49,21 +58,19 @@ const ModalSearch = () => {
               console.log("world");
             }}
           >
-            <header
-              className="z-[2000] flex flex-initial flex-col px-6 py-4"
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-            >
+            <div className="relative w-full">
               <input
-                value={values}
                 onKeyDown={handleKeyDown}
+                value={values}
                 onChange={(e) => setValues(e.target.value)}
                 autoFocus
-                className="flex w-full rounded-full bg-content3 p-2 pl-5 outline-none"
+                className="flex w-full rounded-full bg-content1 p-2 pl-11 outline-none"
                 placeholder="Search...."
               />
-            </header>
+              <span className="absolute left-[10px] top-1/2 -translate-y-1/2 transform text-2xl">
+                <SearchIcon />
+              </span>
+            </div>
           </motion.section>
         </div>
       ) : null}
