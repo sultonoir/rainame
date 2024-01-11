@@ -1,6 +1,6 @@
 # # Build and Deploy a Full Stack E-Commerce App with an Admin Dashboard & CMS in 2024 | Next 14, Stripe
 
-[e-commerce](https://utfs.io/f/42b8d0a6-a5f4-4d45-8c27-d9f23b9c454a-xks0f9.png)
+![e-commerce](https://utfs.io/f/42b8d0a6-a5f4-4d45-8c27-d9f23b9c454a-xks0f9.png)
 
 This project is an e-commerce web implementation using a suite of modern technologies, including Next.js, Tailwind CSS, TRPC, Prisma, and NextAuth.
 
