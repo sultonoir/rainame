@@ -42,7 +42,7 @@ const Profile = () => {
           size="sm"
           color="primary"
           className="transition-transform"
-          src={user?.user.image ?? ""}
+          src={user?.user.image ?? "/Logo.png"}
         />
       </DropdownTrigger>
       <DropdownMenu aria-label="Profile Actions" variant="flat">
@@ -56,7 +56,7 @@ const Profile = () => {
                 <p className="max-w-[180px] truncate">{user?.user.email}</p>
               }
               avatarProps={{
-                src: user?.user.image ?? "",
+                src: user?.user.image ?? "/Logo.png",
               }}
             />
           </DropdownItem>

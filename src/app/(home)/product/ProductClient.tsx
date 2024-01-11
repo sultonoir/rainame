@@ -23,6 +23,12 @@ type Props = {
   >;
 };
 
+type Product = {
+  product: Products & {
+    rattings: Rattings[];
+  };
+};
+
 const ProductClient = ({ products }: Props) => {
   const [nameFilter, setNameFilter] = React.useState("");
   const [page, setPage] = React.useState(1);
@@ -78,10 +84,18 @@ const ProductClient = ({ products }: Props) => {
     }
 
     if (nameFilter === "Best rattings") {
+      const calculateAverageRating = ({ product }: Product) => {
+        const totalRating = product.rattings.reduce(
+          (total, current) => total + current.value,
+          0,
+        );
+        const averageRating = totalRating / product.rattings.length;
+        return averageRating;
+      };
       order = order.sort((a, b) => {
-        const ratingA = a.rattings[0]?.value ?? 0;
-        const ratingB = b.rattings[0]?.value ?? 0;
-        return ratingA - ratingB;
+        const averageRatingA = calculateAverageRating({ product: a });
+        const averageRatingB = calculateAverageRating({ product: b });
+        return averageRatingB - averageRatingA;
       });
     }
 
