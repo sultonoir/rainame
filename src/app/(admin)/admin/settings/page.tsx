@@ -52,7 +52,7 @@ const Page = () => {
               </div>
             </>
           )}
-          {active === "Password" && <FormChangePass admin={admin} />}
+          {active === "Password" && <FormChangePass />}
         </div>
       </section>
     </main>
