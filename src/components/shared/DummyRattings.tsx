@@ -1,28 +1,34 @@
 "use client";
 import { Card, CardBody, Checkbox, User, cn } from "@nextui-org/react";
-import { type User as Profile, type Rattings } from "@prisma/client";
 import { Star } from "lucide-react";
 import React, { useState } from "react";
-import DummyRattings from "../shared/DummyRattings";
 
-type Props = {
-  rattings: Array<
-    Rattings & {
-      user: Profile;
-    }
-  >;
-};
-
-const Ratings = ({ rattings }: Props) => {
+const DummyRattings = () => {
   const [value, setValue] = useState(5);
 
   const num = [1, 2, 3, 4, 5];
+  const lengthToCreate = 10;
+
+  const dumyRattings = Array.from({ length: lengthToCreate }, (_, index) => ({
+    id: (index + 1).toString(),
+    value: Math.floor(Math.random() * 5) + 1,
+    comment: "default comment",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    userId: "0000", // Ganti dengan userId default
+    user: {
+      id: "0000", // Ganti dengan userId default
+      image: undefined,
+      name: "Default User", // Ganti dengan nama default
+    },
+    productId: "0000", // Ganti dengan productId default
+  }));
 
   let totalRating = 0;
   let jumlahRatings = 0;
 
   // Iterasi melalui setiap objek rating
-  for (const rating of rattings) {
+  for (const rating of dumyRattings) {
     totalRating += rating.value;
     jumlahRatings++;
   }
@@ -36,13 +42,15 @@ const Ratings = ({ rattings }: Props) => {
   };
   const rataRata = rataRataRating();
 
-  const filteredRating = rattings.filter((item) => item.value === value);
+  const filteredRating = dumyRattings.filter((item) => item.value === value);
 
   return (
     <div className="my-10">
-      <p className="py-3 text-xl font-semibold">Rattings</p>
-      {rattings.length < 1 ? (
-        <DummyRattings />
+      <p className="py-3 text-xl font-semibold">Ratings</p>
+      {dumyRattings.length < 1 ? (
+        <div className="mt-10 h-full w-full">
+          <p className="text-center text-2xl font-semibold">No rating yet</p>
+        </div>
       ) : (
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="col-span-1">
@@ -56,7 +64,7 @@ const Ratings = ({ rattings }: Props) => {
                         size={50}
                       />
                       <p className="text-3xl">
-                        {rataRata.toFixed(1)} <span>/</span> <span>5</span>
+                        {rataRata} <span>/</span> <span>5</span>
                       </p>
                     </div>
                     {num.reverse().map((item) => (
@@ -97,7 +105,7 @@ const Ratings = ({ rattings }: Props) => {
                       name={item.user.name}
                       description={item.createdAt.toLocaleString()}
                       avatarProps={{
-                        src: item.user.image ?? "/Logo.png",
+                        src: "/Logo.png",
                       }}
                     />
                     <p className="inline-flex">
@@ -122,4 +130,4 @@ const Ratings = ({ rattings }: Props) => {
   );
 };
 
-export default Ratings;
+export default DummyRattings;

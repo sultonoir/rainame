@@ -1,8 +1,6 @@
 "use client";
 import {
   Button,
-  Chip,
-  Image,
   Input,
   Link,
   Pagination,
@@ -13,6 +11,7 @@ import { type DataPayment, type Payment } from "@prisma/client";
 import { SearchIcon } from "lucide-react";
 import React from "react";
 import ModalRating from "../modal/ModalRating";
+import CardItems from "../shared/CardItems";
 
 type Props = {
   payments: Array<
@@ -118,42 +117,16 @@ const TableOrderUser = ({ payments }: Props) => {
           className="rounded-medium border border-default-300 bg-content1 p-3"
         >
           <div className="flex flex-col items-center gap-5 sm:flex-row">
-            <Image
-              src={item.imageUrl.at(0)}
-              alt={item.name}
-              width={100}
-              height={100}
-              radius="sm"
-              className="aspect-square object-cover"
+            <CardItems
+              image={item.imageUrl.at(0)}
+              qti={item.totalProduct}
+              path={item.name.replaceAll(/[^a-zA-Z0-9]/g, "-")}
+              color={item.color}
+              name={item.name}
+              size={item.size}
+              status={item.status}
+              totalPrice={item.totalPrice}
             />
-            <div className="flex w-full flex-col border-default-300 sm:border-r-2">
-              <div className="flex max-w-[240px] items-center justify-between gap-10">
-                <p className="text-medium font-semibold">{item.name}</p>
-                <Chip
-                  size="sm"
-                  variant="flat"
-                  color={item.status === "success" ? "success" : "default"}
-                >
-                  {item.status}
-                </Chip>
-              </div>
-              <div className="flex max-w-[240px] items-center justify-between gap-10">
-                <p className="text-small text-default-500">Color : </p>
-                <p>{item.color}</p>
-              </div>
-              <div className="flex max-w-[240px] items-center justify-between gap-10">
-                <p className="text-small text-default-500">Size : </p>
-                <p>{item.size}</p>
-              </div>
-              <div className="flex max-w-[240px] items-center justify-between gap-10">
-                <p className="text-small text-default-500">Total product : </p>
-                <p>{item.totalProduct}</p>
-              </div>
-            </div>
-            <div className="flex flex-col items-center justify-center sm:w-[200px] sm:pr-10">
-              <p>Total Price</p>
-              <p className="text-lg font-semibold">${item.totalPrice}</p>
-            </div>
           </div>
           <div className="mt-2 flex w-full items-center justify-center  gap-5 sm:justify-end">
             <Button
@@ -164,7 +137,7 @@ const TableOrderUser = ({ payments }: Props) => {
             >
               buy again
             </Button>
-            {item.status === "accepted" && (
+            {item.status === "pending" && (
               <ModalRating productId={item.productId} />
             )}
           </div>

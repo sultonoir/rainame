@@ -48,7 +48,8 @@ export default function Carousel({
                 src={item.imageUrl}
                 alt={item.name}
                 className="object-cover"
-               
+                priority
+                loading="eager"
               />
             </a>
           </SwiperSlide>

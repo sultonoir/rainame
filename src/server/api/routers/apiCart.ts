@@ -181,17 +181,21 @@ export const apiCart = createTRPCRouter({
         },
       });
       const paymentId = payment.id;
-      const line_items = input.data.map((item) => ({
-        price_data: {
-          currency: "USD",
-          product_data: {
-            name: item.name,
-            images: item.imageUrl,
+      const line_items = input.data.map((item) => {
+        const res = item.totalPrice * 100;
+        return {
+          price_data: {
+            currency: "USD",
+            product_data: {
+              name: item.name,
+              images: item.imageUrl,
+            },
+            unit_amount: parseFloat(res.toFixed(2)),
           },
-          unit_amount: item.totalPrice * 100,
-        },
-        quantity: item.totalProduct,
-      }));
+          quantity: item.totalProduct,
+        };
+      });
+      console.log(line_items);
       const sessionPayment = await stripe.checkout.sessions.create({
         line_items,
         metadata: {
@@ -210,7 +214,7 @@ export const apiCart = createTRPCRouter({
       }
       return sessionPayment.url;
     }),
-  getPaymentByUser: protectedProcedure.mutation(async ({ ctx }) => {
+  getPaymentByUser: protectedProcedure.query(async ({ ctx }) => {
     const payments = await ctx.db.payment.findMany({
       where: {
         userId: ctx.session.user.id,

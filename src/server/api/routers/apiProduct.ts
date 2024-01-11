@@ -290,10 +290,17 @@ export const apiProduct = createTRPCRouter({
         discount: z.string().optional(),
         hot: z.string().optional(),
         promo: z.string().optional(),
+        search: z.string().optional(),
       }),
     )
     .query(async ({ ctx, input }) => {
       const where: any = {};
+      if (input.search) {
+        where.name = {
+          contains: input.search,
+          mode: "insensitive",
+        };
+      }
       if (input.colors) {
         where.color = {
           has: input.colors,

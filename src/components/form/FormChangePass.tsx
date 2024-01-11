@@ -6,7 +6,7 @@ import { Button, Input } from "@nextui-org/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
-import { type Session } from "next-auth";
+import { useSession } from "next-auth/react";
 
 const updateAdmin = z
   .object({
@@ -22,10 +22,9 @@ const updateAdmin = z
   });
 
 type UpdateAdmin = z.infer<typeof updateAdmin>;
-type TFromUpdateAdmin = {
-  admin?: Session | undefined | null;
-};
-const FormChangePass = ({ admin }: TFromUpdateAdmin) => {
+
+const FormChangePass = () => {
+  const { data: admin } = useSession();
   const {
     control,
     formState: { errors },
@@ -58,7 +57,7 @@ const FormChangePass = ({ admin }: TFromUpdateAdmin) => {
   };
   return (
     <form
-      className="grid w-full grid-cols-1 gap-3"
+      className="mx-auto flex w-full max-w-xs flex-col gap-3"
       onSubmit={handleSubmit(onSubmit)}
     >
       <Controller

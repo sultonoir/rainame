@@ -13,7 +13,7 @@ type Props = {
 
 const PaginationUi = ({ products }: Props) => {
   const [page, setPage] = React.useState(1);
-  const pages = Math.ceil(products.length / 50);
+  const pages = Math.ceil(products.length / 10);
   return (
     <Pagination
       isCompact

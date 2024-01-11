@@ -26,7 +26,7 @@ export default async function RootLayout({
         <SessionProvider session={session}>
           <TRPCReactProvider cookies={cookies().toString()}>
             <Providers>
-              <Toaster richColors position="bottom-left" />
+              <Toaster richColors position="top-right" closeButton />
               {children}
             </Providers>
           </TRPCReactProvider>

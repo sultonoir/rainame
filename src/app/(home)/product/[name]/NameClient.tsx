@@ -52,7 +52,7 @@ const NameClient = ({ product }: TName) => {
 
   const discount = result.discountedPrice;
   return (
-    <section className="relative">
+    <section className="container relative mt-2">
       <section className="grid grid-cols-1 gap-10 lg:grid-cols-3">
         <div className="relative col-span-1">
           <ProductImage product={product} />
@@ -102,7 +102,7 @@ const NameClient = ({ product }: TName) => {
               <span className="font-semibold text-default-400">
                 Choice color :
               </span>{" "}
-              {product.color.length}
+              {selectColor}
             </h2>
             <div className="flex w-full flex-row flex-wrap gap-2">
               {product?.color.map((e) => (
@@ -121,7 +121,12 @@ const NameClient = ({ product }: TName) => {
             </div>
             {product.size.length > 0 && (
               <>
-                <h2>Choice Size</h2>
+                <h2>
+                  <span className="font-semibold text-default-400">
+                    Choice size :
+                  </span>{" "}
+                  {selectSize}
+                </h2>
                 <div className="flex w-full flex-row flex-wrap gap-2">
                   {product.size.map((e) => (
                     <Button

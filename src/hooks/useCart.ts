@@ -1,5 +1,5 @@
 import { create } from "zustand";
-type Cart = {
+export type Cart = {
   productId: string;
   name: string;
   image: string[];

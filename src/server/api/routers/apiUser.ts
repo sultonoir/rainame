@@ -156,7 +156,11 @@ export const apiUser = createTRPCRouter({
         id: ctx.session.user.id,
       },
       include: {
-        notify: true,
+        notify: {
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
       },
     });
 

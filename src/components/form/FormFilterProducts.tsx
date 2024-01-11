@@ -4,17 +4,8 @@
 "use client";
 
 import React, { useCallback, useState } from "react";
-import {
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  Checkbox,
-  Input,
-  Select,
-  SelectItem,
-} from "@nextui-org/react";
-import { Categories, Colors, Sizes, Subcategory } from "@/lib/utils";
+import { Button, Checkbox, Input, Select, SelectItem } from "@nextui-org/react";
+import { Colors, Sizes, Subcategory } from "@/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
 import qs from "query-string";
 import { toast } from "sonner";
@@ -96,11 +87,54 @@ const FormFilterProducts = () => {
     }
   }, [router, values]);
 
+  const cat = [
+    {
+      Label: "All product",
+      value: "all",
+    },
+    {
+      Label: "Men",
+      value: "Man",
+    },
+    {
+      Label: "Women",
+      value: "Women",
+    },
+  ];
+
+  const handleSubmit = (value: string) => {
+    if (value === "all") {
+      setValues({
+        ...values,
+        category: value,
+      });
+      return router.push("/product");
+    }
+    setValues({
+      ...values,
+      category: value,
+    });
+    return router.push(`/product?category=${value}`);
+  };
+
   return (
-    <section className="relative hidden w-full max-w-xs lg:flex">
-      <div className="sticky top-[73px]">
-        <Card>
-          <CardBody className="flex flex-col gap-2">
+    <section className="pr-4 lg:w-1/3 xl:w-1/4">
+      <div className="sticky top-[73px] h-fit">
+        <div className="divide-y divide-slate-200 dark:divide-slate-700">
+          <div className="relative flex flex-col gap-4 pb-8">
+            <div className="flex flex-row items-center justify-between">
+              {cat.map((item) => (
+                <Button
+                  radius="full"
+                  color="primary"
+                  variant={values.category === item.value ? "solid" : "light"}
+                  key={item.Label}
+                  onClick={() => handleSubmit(item.value)}
+                >
+                  {item.Label}
+                </Button>
+              ))}
+            </div>
             <div className="flex flex-row gap-x-4">
               <Input
                 type="number"
@@ -130,28 +164,12 @@ const FormFilterProducts = () => {
               variant="bordered"
               size="sm"
               placeholder="Select colors"
-              selectedKeys={[values.colors]}
               className="max-w-xs"
               onChange={(e) => handleSelectionChange(e, "colors")}
             >
               {Colors.map((color) => (
                 <SelectItem key={color.name} value={color.name}>
                   {color.name}
-                </SelectItem>
-              ))}
-            </Select>
-            <Select
-              label="Type product"
-              labelPlacement="outside"
-              variant="bordered"
-              size="sm"
-              placeholder="Select type product"
-              selectedKeys={[values.category]}
-              onChange={(e) => handleSelectionChange(e, "category")}
-            >
-              {Categories.map((item) => (
-                <SelectItem key={item.title} value={item.title}>
-                  {item.title}
                 </SelectItem>
               ))}
             </Select>
@@ -211,31 +229,31 @@ const FormFilterProducts = () => {
               />
               Hot sale
             </div>
-          </CardBody>
-          <CardFooter className="gap-2">
-            <Button fullWidth size="sm" color="primary" onClick={handleClick}>
-              Submit
-            </Button>
-            <Button
-              size="sm"
-              variant="flat"
-              onClick={() =>
-                setValues({
-                  min: "",
-                  max: "",
-                  category: "",
-                  subcategory: "",
-                  colors: "",
-                  size: "",
-                  discount: false,
-                  hot: false,
-                })
-              }
-            >
-              Clear filter
-            </Button>
-          </CardFooter>
-        </Card>
+            <div className="flex gap-2">
+              <Button fullWidth size="sm" color="primary" onClick={handleClick}>
+                Submit
+              </Button>
+              <Button
+                size="sm"
+                variant="flat"
+                onClick={() =>
+                  setValues({
+                    min: "",
+                    max: "",
+                    category: "",
+                    subcategory: "",
+                    colors: "",
+                    size: "",
+                    discount: false,
+                    hot: false,
+                  })
+                }
+              >
+                Clear
+              </Button>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

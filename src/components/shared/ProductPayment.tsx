@@ -2,7 +2,14 @@
 
 import useModal from "@/hooks/useModal";
 import { api } from "@/trpc/react";
-import { Button, Card, CardBody, CardFooter, Input } from "@nextui-org/react";
+import {
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  Image,
+  Input,
+} from "@nextui-org/react";
 import { type Products } from "@prisma/client";
 import {
   BanknoteIcon,
@@ -96,8 +103,52 @@ const ProductPayment = ({ product, color, size }: Props) => {
   const ctx = api.useUtils();
   const cart = api.cart.addToCart.useMutation({
     onSuccess: async () => {
-      await ctx.cart.getCart.refetch();
-      toast.success("success add to cart");
+      await ctx.cart.getCart.invalidate();
+      toast(
+        <div className="flex h-fit max-h-[350px] w-[408px] flex-col">
+          <p className="border-b border-default-300 pb-3 text-xl font-semibold">
+            Add to cart
+          </p>
+          <div className="flex py-5 last:pb-0">
+            <div className="relative h-24 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-slate-100">
+              <Image src={product.imageUrl.at(0)} />
+              <a
+                href={`/product/${product.path}`}
+                className="absolute inset-0 z-10"
+              ></a>
+            </div>
+            <div className="ml-4 flex flex-1 flex-col">
+              <div>
+                <div className="flex justify-between">
+                  <div>
+                    <h3 className="pr-10 text-small font-medium">
+                      <a href={`/product/${product.path}`}>{product.name}</a>
+                    </h3>
+                    <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                      <span>{product.subcategory}</span>
+                      <span className="mx-2 h-4 border-l border-slate-200 dark:border-slate-700"></span>
+                      <span>{product.size.at(0)}</span>
+                    </p>
+                  </div>
+                  <div className="mt-0.5">
+                    <div className="flex flex-nowrap items-center whitespace-nowrap rounded-lg border-2 border-green-500 px-2 py-1 text-sm font-medium md:px-2.5 md:py-1.5 ">
+                      <span className="!leading-none text-green-500">
+                        ${result.discountedPrice}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-1 items-end justify-between text-sm">
+                <div className="text-gray-500 dark:text-slate-400">Qty 1</div>
+                <div className="flex">
+                  <button className="font-medium text-primary">remove</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>,
+      );
     },
     onError(error) {
       toast.error(error.message);
