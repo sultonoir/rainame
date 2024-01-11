@@ -1,4 +1,5 @@
 "use client";
+import CardProducts from "@/components/card/CardProducts";
 import ModalPayment from "@/components/modal/ModalPayment";
 import Ratings from "@/components/ratings/Ratings";
 import AddToCart from "@/components/shared/AddToCart";
@@ -6,6 +7,7 @@ import { Preview } from "@/components/shared/Preview";
 import ProductImage from "@/components/shared/ProductImage";
 import ProductPayment from "@/components/shared/ProductPayment";
 import { calculateTotalPrice } from "@/lib/utils";
+import { api } from "@/trpc/react";
 import { BreadcrumbItem, Breadcrumbs, Button } from "@nextui-org/react";
 import { type User, type Products, type Rattings } from "@prisma/client";
 import { Star } from "lucide-react";
@@ -51,6 +53,11 @@ const NameClient = ({ product }: TName) => {
   });
 
   const discount = result.discountedPrice;
+  const { data } = api.product.filterProduct.useQuery({
+    subcategory: product.subcategory,
+    category: product.category,
+  });
+  const recomendasi = data?.filter((item) => item.id !== product.id);
   return (
     <section className="container relative mt-2">
       <section className="grid grid-cols-1 gap-10 lg:grid-cols-3">
@@ -184,6 +191,28 @@ const NameClient = ({ product }: TName) => {
         <div className="flex items-center gap-2 p-2">
           <ModalPayment product={product} />
           <AddToCart product={product} />
+        </div>
+      </div>
+      <div className="mt-4 flex flex-col gap-3">
+        <div className="flex w-full items-center justify-between">
+          <h3 className="text-2xl font-semibold">
+            Recomend.
+            <span className="text-primary">for you</span>
+          </h3>
+          <Button
+            as="a"
+            href="/product"
+            radius="full"
+            variant="flat"
+            color="primary"
+          >
+            View more
+          </Button>
+        </div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
+          {recomendasi?.map((item) => (
+            <CardProducts product={item} rattings={item.rattings} />
+          ))}
         </div>
       </div>
     </section>

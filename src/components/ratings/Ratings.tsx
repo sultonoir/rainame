@@ -1,5 +1,12 @@
 "use client";
-import { Card, CardBody, Checkbox, User, cn } from "@nextui-org/react";
+import {
+  Card,
+  CardBody,
+  Checkbox,
+  Pagination,
+  User,
+  cn,
+} from "@nextui-org/react";
 import { type User as Profile, type Rattings } from "@prisma/client";
 import { Star } from "lucide-react";
 import React, { useState } from "react";
@@ -14,6 +21,7 @@ type Props = {
 
 const Ratings = ({ rattings }: Props) => {
   const [value, setValue] = useState(5);
+  const [page, setPage] = React.useState(1);
 
   const num = [1, 2, 3, 4, 5];
 
@@ -37,6 +45,13 @@ const Ratings = ({ rattings }: Props) => {
 
   const filteredRating = rattings.filter((item) => item.value === value);
 
+  const items = React.useMemo(() => {
+    const start = (page - 1) * 5;
+    const end = start + 5;
+
+    return filteredRating.slice(start, end);
+  }, [page, filteredRating]);
+  const pages = Math.ceil(filteredRating.length / 5);
   return (
     <div className="my-10">
       <p className="py-3 text-xl font-semibold">Rattings</p>
@@ -77,10 +92,10 @@ const Ratings = ({ rattings }: Props) => {
         <div className="col-span-1 lg:col-span-3">
           <div
             className={cn("grid grid-cols-1 gap-10", {
-              "h-full": filteredRating.length < 1,
+              "h-full": items.length < 1,
             })}
           >
-            {filteredRating.map((item) => (
+            {items.map((item) => (
               <div
                 className="flex flex-col gap-2 border-b border-default-100 py-3"
                 key={item.id}
@@ -101,15 +116,25 @@ const Ratings = ({ rattings }: Props) => {
                     {item.value}
                   </p>
                 </div>
-
                 <p>{item.comment}</p>
               </div>
             ))}
-            {filteredRating.length < 1 && (
+            {items.length < 1 && (
               <div className="inline-flex h-full w-full items-center justify-center">
                 <p className="text-lg font-semibold">No rating yet</p>
               </div>
             )}
+          </div>
+          <div className="mt-2 flex justify-center">
+            <Pagination
+              isCompact
+              showControls
+              showShadow
+              color="primary"
+              page={page}
+              total={pages}
+              onChange={setPage}
+            />
           </div>
         </div>
       </div>

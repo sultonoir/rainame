@@ -41,7 +41,7 @@ const ModalRating = ({ productId }: Props) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       productId,
-      value: 1,
+      value: 5,
       comment: "",
     },
   });
