@@ -35,13 +35,13 @@ export default function Carousel({
         mousewheel={true}
         keyboard={true}
         modules={[Navigation, Pagination, Mousewheel, Keyboard]}
-        className="mySwiper rounded-large"
+        className="mySwiper"
       >
         {slides.map((item) => (
           <SwiperSlide key={item.id}>
             <a
               href={`/product?promo=${item.name}`}
-              className="relative block h-[30dvh] w-full lg:h-[500px]"
+              className="relative block h-[30dvh] w-full lg:h-[calc(100dvh-200px)]"
             >
               <Image
                 fill
