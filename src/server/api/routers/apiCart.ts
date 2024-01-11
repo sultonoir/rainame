@@ -2,7 +2,6 @@ import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
-import { absoluteUrl } from "@/lib/utils";
 import { stripe } from "@/lib/stripe";
 
 export const apiCart = createTRPCRouter({
@@ -90,8 +89,8 @@ export const apiCart = createTRPCRouter({
         size,
         imageUrl,
       } = input;
-      const successUrl = absoluteUrl("/");
-      const cancelUrl = absoluteUrl(path);
+      const successUrl = "https://rainame.vercel.app/";
+      const cancelUrl = `https://rainame.vercel.app/${path}`;
       const userId = ctx.session.user.id;
       const admin = ctx.session.user.role;
 
@@ -169,8 +168,8 @@ export const apiCart = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const successUrl = absoluteUrl("/");
-      const cancelUrl = absoluteUrl(input.path);
+      const successUrl = "https://rainame.vercel.app/";
+      const cancelUrl = `https://rainame.vercel.app/${input.path}`;
       const userId = ctx.session.user.id;
       const payment = await ctx.db.payment.create({
         data: {
