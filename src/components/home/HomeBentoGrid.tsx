@@ -35,7 +35,7 @@ export default function Carousel({
         mousewheel={true}
         keyboard={true}
         modules={[Navigation, Pagination, Mousewheel, Keyboard]}
-        className="mySwiper"
+        className="mySwiper max-w-[1900px]"
       >
         {slides.map((item) => (
           <SwiperSlide key={item.id}>
