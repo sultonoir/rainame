@@ -123,7 +123,7 @@ export default function NavbarUi() {
                 <a
                   href={item.path}
                   color="foreground"
-                  className="rounded-full px-4 py-2 hover:bg-default"
+                  className="rounded-full px-4 py-2 font-semibold hover:bg-default"
                 >
                   {item.name}
                 </a>

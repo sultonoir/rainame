@@ -100,14 +100,14 @@ const CardProducts = ({ product, rattings }: TProducts) => {
   };
 
   return (
-    <div className="relative flex flex-col bg-transparent ">
+    <div className="relative overflow-hidden rounded-large bg-content1 shadow-medium">
       {product.discount! > 0 && (
         <div className="absolute right-2.5 top-2.5 z-20 rounded-lg bg-danger px-2 py-1 text-small text-white">
           {product.discount}% off
         </div>
       )}
       <a href={`/product/${product.path}`} className="absolute inset-0" />
-      <div className="z-1 group relative flex-shrink-0 overflow-hidden rounded-large bg-slate-50 dark:bg-slate-300">
+      <div className="z-1 group relative flex-shrink-0 overflow-hidden  bg-slate-50 dark:bg-slate-300">
         <a href={`/product/${product.path}`} className="block">
           <NextImage
             sizes="(max-width: 640px) 100vw, (max-width: 1200px) 50vw, 40vw"
@@ -135,7 +135,7 @@ const CardProducts = ({ product, rattings }: TProducts) => {
         </div>
       </div>
 
-      <div className="px-2.5 pb-2.5 pt-5">
+      <div className="px-2.5 py-2.5">
         <div>
           <h3 className="truncate text-small font-semibold transition-colors">
             {product.name}
@@ -146,15 +146,21 @@ const CardProducts = ({ product, rattings }: TProducts) => {
         </div>
         <div className="flex items-end justify-between ">
           {product.discount && product.discount > 0 ? (
-            <div className="w-full text-start text-medium font-semibold">
+            <div className="inline-flex w-full items-center gap-2 text-start text-medium font-semibold">
               <span className="text-foreground-200 line-through">
                 ${result.price}
-              </span>{" "}
-              ${result.discountedPrice}
+              </span>
+              <div className="flex items-center rounded-lg border-2 border-green-500 px-2 py-1 text-sm font-medium md:px-2.5 md:py-1.5">
+                <span className="!leading-none text-green-500">
+                  ${result.discountedPrice}
+                </span>
+              </div>
             </div>
           ) : (
-            <div className="w-full text-start text-medium font-semibold">
-              ${result.price}
+            <div className="flex items-center rounded-lg border-2 border-green-500 px-2 py-1 text-sm font-medium md:px-2.5 md:py-1.5">
+              <span className="!leading-none text-green-500">
+                ${result.discountedPrice}
+              </span>
             </div>
           )}
           <p className="flex flex-row flex-nowrap items-center gap-x-1 text-xs">

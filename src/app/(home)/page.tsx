@@ -1,5 +1,4 @@
 import CardProducts from "@/components/card/CardProducts";
-import HomeBentoGrid from "@/components/home/HomeBentoGrid";
 import HomeCategory from "@/components/home/HomeCategory";
 import { Hiws } from "@/lib/Array";
 import { api } from "@/trpc/server";
@@ -9,6 +8,7 @@ import { Chip, type ChipProps } from "@nextui-org/chip";
 import Image from "next/image";
 import React from "react";
 import { ArrowRight } from "lucide-react";
+import HomeBentoGrid from "@/components/home/HomeBentoGrid";
 
 const page = async () => {
   const products = await api.product.filterProduct.query({});
@@ -22,7 +22,7 @@ const page = async () => {
   };
   return (
     <>
-      <HomeBentoGrid slides={promo} />
+      <HomeBentoGrid />
       <section className="container mt-24">
         <section className="my-10 flex flex-col justify-items-center gap-5">
           <div className="mb-10 flex flex-col justify-between gap-y-2 lg:flex-row">

@@ -77,7 +77,7 @@ const TableOrderUser = ({ payments }: Props) => {
   );
 
   return (
-    <div className="flex w-full flex-col gap-5">
+    <div className="relative flex w-full flex-col gap-5 bg-content1">
       <div className="flex items-center justify-between">
         <Input
           isClearable
