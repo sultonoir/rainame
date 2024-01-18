@@ -12,8 +12,6 @@ import HomeBentoGrid from "@/components/home/HomeBentoGrid";
 
 const page = async () => {
   const products = await api.product.filterProduct.query({});
-  const promo = await api.promo.getPromoAndProduct.query();
-
   const statusColorMap: Record<string, ChipProps["color"]> = {
     "Step 1": "danger",
     "Step 2": "primary",
