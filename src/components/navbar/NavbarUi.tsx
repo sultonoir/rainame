@@ -40,15 +40,15 @@ export default function NavbarUi() {
     },
     {
       name: "Pants",
-      path: "http://localhost:3000/product?subcategory=Pants",
+      path: "/product?subcategory=Pants",
     },
     {
       name: "Shoes",
-      path: "http://localhost:3000/product?subcategory=Pants",
+      path: "/product?subcategory=Pants",
     },
     {
       name: "Accessories",
-      path: "http://localhost:3000/product?subcategory=Accessories",
+      path: "/product?subcategory=Accessories",
     },
   ];
   //handle submit
