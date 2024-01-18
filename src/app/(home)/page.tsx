@@ -55,6 +55,7 @@ const page = async () => {
                 className="absolute inset-x-0 top-5 hidden md:block"
                 width={1431}
                 height={105}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
               {Hiws.map((item) => (
                 <div
@@ -68,6 +69,7 @@ const page = async () => {
                       width={450}
                       height={450}
                       className="bg-blend-color-burn"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                   </div>
                   <div className="mt-auto space-y-5 text-center">
@@ -95,6 +97,7 @@ const page = async () => {
                   src="/logo-transparent.png"
                   width={50}
                   height={50}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
                 Rainame
               </a>
@@ -116,9 +119,9 @@ const page = async () => {
             <Image
               alt="discover"
               src="/rightLargeImg (1).png"
-              sizes="(max-width: 768px) 100vw, 50vw"
               width={800}
               height={755}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           </div>
           <HomeCategory />
@@ -201,7 +204,7 @@ const page = async () => {
                 width={751}
                 height={824}
                 src="/promo3.png"
-                sizes="(max-width: 768px) 100vw, 50vw"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
             </div>
           </div>
