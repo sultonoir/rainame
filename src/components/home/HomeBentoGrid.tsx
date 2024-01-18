@@ -35,7 +35,7 @@ export default function Carousel({
         mousewheel={true}
         keyboard={true}
         modules={[Navigation, Pagination, Mousewheel, Keyboard]}
-        className="mySwiper max-w-[1900px]"
+        className="mySwiper container"
       >
         {slides.map((item) => (
           <SwiperSlide key={item.id}>
@@ -47,10 +47,9 @@ export default function Carousel({
                 fill
                 src={item.imageUrl}
                 alt={item.name}
-                className="object-cover"
+                className="aspect-video object-cover"
                 priority
-                loading="eager"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                sizes="(max-width: 640px) 100dvw, (max-width: 1200px) 50dvw, 1400px"
               />
             </a>
           </SwiperSlide>
