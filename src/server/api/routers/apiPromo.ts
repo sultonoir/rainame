@@ -61,15 +61,7 @@ export const apiPromo = createTRPCRouter({
     return promo;
   }),
   getPromoAndProduct: publicProcedure.query(async ({ ctx }) => {
-    const promo = await ctx.db.promo.findMany({
-      include: {
-        products: {
-          orderBy: {
-            createdAt: "desc",
-          },
-        },
-      },
-    });
+    const promo = await ctx.db.promo.findMany({});
     return promo;
   }),
   deletePromo: protectedProcedure

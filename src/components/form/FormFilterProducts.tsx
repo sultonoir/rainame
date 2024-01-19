@@ -4,7 +4,7 @@
 "use client";
 
 import React, { useCallback, useState } from "react";
-import { Button, Checkbox, Input, Select, SelectItem } from "@nextui-org/react";
+import { Button, Input, Select, SelectItem } from "@nextui-org/react";
 import { Colors, Sizes, Subcategory } from "@/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
 import qs from "query-string";
@@ -118,16 +118,16 @@ const FormFilterProducts = () => {
   };
 
   return (
-    <section className="pr-4 lg:w-1/3 xl:w-1/4">
-      <div className="sticky top-[73px] h-fit">
+    <section className="hidden pr-4 lg:flex lg:w-1/3 xl:w-1/4">
+      <div className="sticky top-[73px] h-fit rounded-large border p-4 dark:border-default-300/50">
         <div className="divide-y divide-slate-200 dark:divide-slate-700">
-          <div className="relative flex flex-col gap-4 pb-8">
+          <div className="relative flex flex-col gap-4">
             <div className="flex flex-row items-center justify-between">
               {cat.map((item) => (
                 <Button
-                  radius="full"
+                  radius="lg"
                   color="primary"
-                  variant={values.category === item.value ? "solid" : "light"}
+                  variant={values.category === item.value ? "solid" : "flat"}
                   key={item.Label}
                   onClick={() => handleSubmit(item.value)}
                 >
@@ -164,6 +164,7 @@ const FormFilterProducts = () => {
               variant="bordered"
               size="sm"
               placeholder="Select colors"
+              selectedKeys={[values.colors]}
               className="max-w-xs"
               onChange={(e) => handleSelectionChange(e, "colors")}
             >
@@ -203,32 +204,7 @@ const FormFilterProducts = () => {
                 </SelectItem>
               ))}
             </Select>
-            <div className="flex flex-row gap-2">
-              <Checkbox
-                color="primary"
-                isSelected={values.discount === true}
-                onChange={() => {
-                  setValues({
-                    ...values,
-                    discount: !values.discount,
-                  });
-                }}
-              />
-              Discount
-            </div>
-            <div className="flex flex-row gap-2">
-              <Checkbox
-                color="primary"
-                isSelected={values.hot === true}
-                onChange={() => {
-                  setValues({
-                    ...values,
-                    hot: !values.hot,
-                  });
-                }}
-              />
-              Hot sale
-            </div>
+
             <div className="flex gap-2">
               <Button fullWidth size="sm" color="primary" onClick={handleClick}>
                 Submit

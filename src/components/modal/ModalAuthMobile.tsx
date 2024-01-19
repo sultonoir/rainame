@@ -9,6 +9,7 @@ import FormSignup from "../form/FormSignup";
 import { signIn } from "next-auth/react";
 import FormForgotPass from "../form/FormForgotPass";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 
 const ModalAuthMobile = () => {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -89,6 +90,31 @@ const ModalAuthMobile = () => {
                 </div>
 
                 <div className="mt-6 flex w-full max-w-md flex-col gap-2">
+                  <Button
+                    onClick={async () =>
+                      await signIn("signin", {
+                        email: "afdal@gmail.com",
+                        password: "hajimete365",
+                        redirect: false,
+                      })
+                        .then((callback) => {
+                          if (callback?.ok) {
+                            toast.success("sigin");
+                          }
+                          if (callback?.error) {
+                            toast.error(callback.error);
+                          }
+                        })
+                        .catch(() => {
+                          toast.error("Errors");
+                        })
+                    }
+                    variant="bordered"
+                    color="default"
+                    size="sm"
+                  >
+                    Try demo account
+                  </Button>
                   <Button
                     onClick={() => signIn("google")}
                     variant="bordered"

@@ -77,7 +77,12 @@ const Profile = () => {
           key="logout"
           color="danger"
           startContent={<LogOut />}
-          onPress={() => signOut()}
+          onPress={() =>
+            signOut({
+              callbackUrl: "/",
+              redirect: true,
+            })
+          }
         >
           Log Out
         </DropdownItem>

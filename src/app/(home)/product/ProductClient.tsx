@@ -173,26 +173,30 @@ const ProductClient = ({ products }: Props) => {
       <div className="container space-y-16 py-16 lg:space-y-28 lg:pb-28 lg:pt-20">
         <main>
           <div className="relative mb-12 flex flex-col">
-            <div className="flex flex-col justify-between space-y-6 lg:flex-row lg:items-center lg:space-x-2 lg:space-y-0 ">
-              <div className="relative flex w-full justify-end text-sm md:text-base">
-                <Select
-                  placeholder="Sort order"
-                  labelPlacement="outside"
-                  startContent={<SlidersHorizontal />}
-                  className="max-w-[200px]"
-                  items={fileterCategory}
-                  onChange={(e) => setNameFilter(e.target.value)}
-                >
-                  {fileterCategory.map((item) => (
-                    <SelectItem key={item.value} textValue={item.value}>
-                      <div className="flex w-full gap-2">
-                        <item.icons />
-                        {item.label}
-                      </div>
-                    </SelectItem>
-                  ))}
-                </Select>
+            <div className="flex w-full items-center justify-between space-y-6 lg:flex-row lg:items-center lg:justify-end lg:space-x-2 lg:space-y-0 ">
+              <div className="lg:hidden">
+                <ModalFilter />
               </div>
+              <Select
+                classNames={{
+                  base: "m-0",
+                }}
+                placeholder="Sort order"
+                labelPlacement="outside"
+                startContent={<SlidersHorizontal />}
+                className="max-w-[200px]"
+                items={fileterCategory}
+                onChange={(e) => setNameFilter(e.target.value)}
+              >
+                {fileterCategory.map((item) => (
+                  <SelectItem key={item.value} textValue={item.value}>
+                    <div className="flex w-full gap-2">
+                      <item.icons />
+                      {item.label}
+                    </div>
+                  </SelectItem>
+                ))}
+              </Select>
             </div>
           </div>
           <div className="flex flex-col lg:flex-row">
@@ -227,7 +231,6 @@ const ProductClient = ({ products }: Props) => {
               </div>
             )}
           </div>
-          <ModalFilter />
         </main>
       </div>
     </>

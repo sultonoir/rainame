@@ -10,14 +10,14 @@ const HomeCategory = () => {
       path: "/product?subcategory=Shoes",
       bgImage: "/explore1.svg",
       image: "/full3.png",
-      totalProcuts: "145 products",
+      totalProcuts: "155 products",
     },
     {
       name: "Chlotes",
       path: "/product?subcategory=Chlotes",
       bgImage: "/explore2.svg",
       image: "/full1.png",
-      totalProcuts: "145 products",
+      totalProcuts: "141 products",
     },
     {
       name: "Hat",
@@ -31,21 +31,21 @@ const HomeCategory = () => {
       path: "/product?subcategory=Pants",
       bgImage: "/explore4.svg",
       image: "/8.png",
-      totalProcuts: "145 products",
+      totalProcuts: "142 products",
     },
     {
       name: "Accessories",
       path: "/product?subcategory=Accessories",
       bgImage: "/explore5.svg",
       image: "/4.png",
-      totalProcuts: "145 products",
+      totalProcuts: "144 products",
     },
     {
       name: "Shoes",
       path: "/product?subcategory=Shoes",
       bgImage: "/explore6.svg",
       image: "/full3.png",
-      totalProcuts: "145 products",
+      totalProcuts: "149 products",
     },
   ];
   return (
@@ -61,7 +61,7 @@ const HomeCategory = () => {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-7 xl:grid-cols-3">
         {lists.map((item) => (
           <div
-            key={item.name}
+            key={item.totalProcuts}
             className="group relative w-full overflow-hidden rounded-3xl bg-white p-4 transition-shadow hover:shadow-lg dark:bg-neutral-900"
           >
             <div className="relative z-10 flex flex-col justify-between space-y-20">

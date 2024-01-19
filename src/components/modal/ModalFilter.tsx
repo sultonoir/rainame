@@ -16,7 +16,7 @@ import {
   SelectItem,
   Checkbox,
 } from "@nextui-org/react";
-import { SlidersHorizontal } from "lucide-react";
+import { Settings2, SlidersHorizontal } from "lucide-react";
 import { Categories, Colors, Sizes, Subcategory } from "@/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
 import qs from "query-string";
@@ -104,20 +104,16 @@ const ModalFilter = () => {
 
   return (
     <>
-      <Button
-        onPress={onOpen}
-        isIconOnly
-        color="primary"
-        className="fixed bottom-1 right-1 z-20 lg:hidden"
-      >
-        <SlidersHorizontal />
+      <Button onPress={onOpen} color="primary">
+        <Settings2 />
+        Filter products
       </Button>
       <Modal placement="center" isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {() => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Modal Title
+                Filter Products
               </ModalHeader>
               <ModalBody className="flex flex-col gap-2">
                 <div className="flex flex-row gap-x-4">
@@ -150,7 +146,6 @@ const ModalFilter = () => {
                   size="sm"
                   placeholder="Select colors"
                   selectedKeys={[values.colors]}
-                  className="max-w-xs"
                   onChange={(e) => handleSelectionChange(e, "colors")}
                 >
                   {Colors.map((color) => (

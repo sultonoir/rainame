@@ -100,14 +100,14 @@ const CardProducts = ({ product, rattings }: TProducts) => {
   };
 
   return (
-    <div className="relative overflow-hidden rounded-large bg-content1 shadow-medium">
+    <div className="relative overflow-hidden rounded-large bg-content1 shadow-small">
       {product.discount! > 0 && (
         <div className="absolute right-2.5 top-2.5 z-20 rounded-lg bg-danger px-2 py-1 text-small text-white">
           {product.discount}% off
         </div>
       )}
       <a href={`/product/${product.path}`} className="absolute inset-0" />
-      <div className="z-1 group relative flex-shrink-0 overflow-hidden  bg-slate-50 dark:bg-slate-300">
+      <div className="z-1 group relative flex-shrink-0 overflow-hidden bg-slate-50 dark:bg-slate-300">
         <a href={`/product/${product.path}`} className="block">
           <NextImage
             sizes="(max-width: 640px) 100vw, (max-width: 1200px) 50vw, 40vw"

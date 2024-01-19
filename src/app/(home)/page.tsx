@@ -147,7 +147,7 @@ const page = async () => {
                 />
               ))}
           </div>
-          <div className="relative mt-24 flex flex-col rounded-2xl bg-slate-50 p-4 pb-0 dark:bg-slate-800 sm:rounded-[40px] sm:p-5 sm:pb-0 lg:flex-row lg:p-24">
+          <div className="relative mt-24 flex flex-col rounded-2xl bg-slate-50 p-4 pb-0 dark:bg-content1 sm:rounded-[40px] sm:p-5 sm:pb-0 lg:flex-row lg:p-24">
             <div className="relative max-w-lg lg:w-[50%]">
               <h2 className="text-4xl font-semibold md:text-5xl">
                 Don't miss out on special offers
@@ -184,7 +184,7 @@ const page = async () => {
               </ul>
               <div className="relative mt-10 max-w-sm">
                 <input
-                  className="block h-11 w-full rounded-full border border-default bg-white px-4 py-3 text-sm font-normal outline-none focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 disabled:bg-neutral-200 dark:border-neutral-700 dark:bg-neutral-900 dark:focus:ring-primary-600 dark:focus:ring-opacity-25 dark:disabled:bg-neutral-800 "
+                  className="block h-11 w-full rounded-full border border-default bg-white px-4 py-3 text-sm font-normal outline-none focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 disabled:bg-neutral-200 dark:border-neutral-700 dark:bg-default-900 dark:focus:ring-primary-600 dark:focus:ring-opacity-25 dark:disabled:bg-neutral-800 "
                   placeholder="Enter your email"
                   type="email"
                 />

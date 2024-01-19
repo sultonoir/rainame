@@ -15,12 +15,12 @@ import { Button } from "@nextui-org/react";
 const HomeBentoGrid = () => {
   const hero = [
     {
-      image: "/hero-right.png",
-      title: "hero1",
-    },
-    {
       image: "/hero-right-3.png",
       title: "hero2",
+    },
+    {
+      image: "/hero-right.png",
+      title: "hero1",
     },
     {
       image: "/promo2.png",
@@ -63,15 +63,12 @@ const HomeBentoGrid = () => {
                   Exclusive collection for everyone
                 </a>
               </div>
-              <a
-                className="nc-Button ttnc-ButtonPrimary nc-SectionHero2Item__button focus:ring-primary-6000 relative z-10 inline-flex h-auto items-center justify-center rounded-full bg-slate-900 px-6 py-3 text-sm  font-medium text-slate-50 shadow-xl transition-colors hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:bg-opacity-90 dark:bg-content1 dark:focus:ring-offset-0 sm:px-9 sm:py-5 sm:text-base "
-                href={`/product`}
-              >
+              <Button size="lg" as="a" href="/product" color="primary">
                 <span>Explore now</span>
                 <span>
                   <SearchIcon className="ml-2" />
                 </span>
-              </a>
+              </Button>
             </div>
             <div className="bottom-0 right-0 top-0 mt-10 w-full max-w-2xl lg:absolute lg:mt-0 xl:max-w-3xl 2xl:max-w-4xl">
               <Image

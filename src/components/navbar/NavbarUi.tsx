@@ -19,38 +19,13 @@ import { Button } from "@nextui-org/react";
 import { SearchIcon } from "lucide-react";
 import ModalSearch from "../modal/ModalSearch";
 import { useRouter } from "next/navigation";
+import Test from "../test";
 
 export default function NavbarUi() {
   const [isOpen, setIsOpen] = React.useState(false);
   const [values, setValues] = React.useState("");
   const { data: user } = useSession();
 
-  const list = [
-    {
-      name: "Men",
-      path: "/product?category=Man",
-    },
-    {
-      name: "Women",
-      path: "/product?category=Women",
-    },
-    {
-      name: "Clothes",
-      path: "/product?subcategory=Clothes",
-    },
-    {
-      name: "Pants",
-      path: "/product?subcategory=Pants",
-    },
-    {
-      name: "Shoes",
-      path: "/product?subcategory=Pants",
-    },
-    {
-      name: "Accessories",
-      path: "/product?subcategory=Accessories",
-    },
-  ];
   //handle submit
   const router = useRouter();
   const handleSubmit = () => {
@@ -101,7 +76,11 @@ export default function NavbarUi() {
           </span>
         </div>
       </NavbarContent>
-      <NavbarContent className="hidden grow lg:flex" justify="center">
+      <NavbarContent
+        as="div"
+        className="relative hidden grow lg:flex"
+        justify="center"
+      >
         {isOpen ? (
           <div className="relative w-full">
             <input
@@ -117,19 +96,7 @@ export default function NavbarUi() {
             </span>
           </div>
         ) : (
-          <>
-            {list.map((item) => (
-              <NavbarItem key={item.name}>
-                <a
-                  href={item.path}
-                  color="foreground"
-                  className="rounded-full px-4 py-2 font-semibold hover:bg-default"
-                >
-                  {item.name}
-                </a>
-              </NavbarItem>
-            ))}
-          </>
+          <Test />
         )}
       </NavbarContent>
       <NavbarContent justify="end" className="gap-1">
