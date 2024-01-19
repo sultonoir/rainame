@@ -12,9 +12,9 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
     redirect("/");
   }
   return (
-    <main className="flex flex-row">
+    <main className="flex min-h-screen w-full">
       <AsideAdmin />
-      <section className="flex min-h-screen flex-1 flex-col items-center px-6">
+      <section className="flex w-full flex-1 grow flex-col items-center px-6">
         <NavbarAdmin />
         {children}
       </section>
