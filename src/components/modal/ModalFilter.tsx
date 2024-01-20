@@ -16,7 +16,7 @@ import {
   SelectItem,
   Checkbox,
 } from "@nextui-org/react";
-import { Settings2, SlidersHorizontal } from "lucide-react";
+import { Settings2 } from "lucide-react";
 import { Categories, Colors, Sizes, Subcategory } from "@/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
 import qs from "query-string";

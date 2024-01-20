@@ -1,7 +1,6 @@
 "use client";
 import CardProducts from "@/components/card/CardProducts";
 import ModalPayment from "@/components/modal/ModalPayment";
-import Ratings from "@/components/ratings/Ratings";
 import AddToCart from "@/components/shared/AddToCart";
 import { Preview } from "@/components/shared/Preview";
 import ProductImage from "@/components/shared/ProductImage";
@@ -11,7 +10,7 @@ import { api } from "@/trpc/react";
 import { BreadcrumbItem, Breadcrumbs, Button } from "@nextui-org/react";
 import { type User, type Products, type Rattings } from "@prisma/client";
 import { Star } from "lucide-react";
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 
 type TName = {
   product: Products & {
@@ -58,8 +57,9 @@ const NameClient = ({ product }: TName) => {
     category: product.category,
   });
   const recomendasi = data?.filter((item) => item.id !== product.id);
+  const Rattings = React.lazy(() => import("@/components/ratings/Ratings"));
   return (
-    <section className="container relative mt-2">
+    <section className="container relative my-2">
       <section className="grid grid-cols-1 gap-10 lg:grid-cols-3">
         <div className="relative col-span-1">
           <ProductImage product={product} />
@@ -184,7 +184,9 @@ const NameClient = ({ product }: TName) => {
           />
         </div>
         <div className="col-span-1 row-span-1 h-fit p-2 sm:col-span-2">
-          <Ratings rattings={product.rattings} />
+          <Suspense fallback={"loading rattings"}>
+            <Rattings rattings={product.rattings} />
+          </Suspense>
         </div>
       </section>
       <div className="fixed bottom-0 left-0 z-10 w-full bg-background/70 backdrop-blur-sm lg:hidden">
@@ -202,18 +204,20 @@ const NameClient = ({ product }: TName) => {
           <Button
             as="a"
             href="/product"
-            radius="full"
+            radius="lg"
             variant="flat"
             color="primary"
           >
             View more
           </Button>
         </div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
-          {recomendasi?.map((item) => (
-            <CardProducts product={item} rattings={item.rattings} />
-          ))}
-        </div>
+        <Suspense fallback={"Loading Recomendasi..."}>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
+            {recomendasi?.map((item) => (
+              <CardProducts product={item} rattings={item.rattings} />
+            ))}
+          </div>
+        </Suspense>
       </div>
     </section>
   );
