@@ -1,12 +1,8 @@
 "use client";
-
-import Test from "@/components/test";
-import { api } from "@/trpc/react";
 import React from "react";
 
-const Page = () => {
-  const { data } = api.product.getAllProduct.useQuery();
-  return <Test Products={data} />;
+const page = () => {
+  return <div>Ratings page</div>;
 };
 
-export default Page;
+export default page;
