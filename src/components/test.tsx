@@ -48,7 +48,7 @@ const Test = () => {
           {item.name}
         </a>
       ))}
-      <div className="animation rounded-medium bg-content2 dark:bg-content1"></div>
+      <div className="animation rounded-medium bg-default"></div>
     </div>
   );
 };
