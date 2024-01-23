@@ -68,8 +68,8 @@ const TableRatingUser = ({ ratings }: Props) => {
     [],
   );
   return (
-    <div className="flex w-full flex-col gap-5">
-      <div className="flex items-center justify-between">
+    <div className="relative flex w-full flex-col gap-5 bg-content1">
+      <div className="flex flex-col items-center justify-between space-y-2 md:flex-row">
         <Input
           isClearable
           labelPlacement="outside"
@@ -107,7 +107,7 @@ const TableRatingUser = ({ ratings }: Props) => {
           key={item.id}
           className="rounded-medium border border-default-300 bg-content1 p-3"
         >
-          <div className="flex flex-row items-center gap-5">
+          <div className="flex flex-col items-center gap-5 md:flex-row">
             <Image
               src={item.products.imageUrl.at(0)}
               alt={item.products.name}
