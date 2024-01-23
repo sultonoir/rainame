@@ -12,9 +12,10 @@ import { api } from "@/trpc/react";
 type TProducts = {
   product: Products;
   rattings: Rattings[];
+  priority?: boolean;
 };
 
-const CardProducts = ({ product, rattings }: TProducts) => {
+const CardProducts = ({ product, rattings, priority }: TProducts) => {
   let totalRating = 0;
   let jumlahRatings = 0;
 
@@ -108,7 +109,7 @@ const CardProducts = ({ product, rattings }: TProducts) => {
       )}
       <a href={`/product/${product.path}`} className="absolute inset-0" />
       <div className="z-1 group relative flex-shrink-0 overflow-hidden bg-slate-50 dark:bg-slate-300">
-        <a href={`/product/${product.path}`} className="block">
+        <a href={`/product/${product.path}`} className="relative block">
           <NextImage
             sizes="(max-width: 640px) 100vw, (max-width: 1200px) 50vw, 40vw"
             src={product.imageUrl.at(0) ?? ""}
@@ -116,6 +117,7 @@ const CardProducts = ({ product, rattings }: TProducts) => {
             className="aspect-square object-cover"
             width={600}
             height={600}
+            priority={priority}
           />
         </a>
         <div className="invisible absolute inset-x-1 bottom-0 flex justify-center opacity-0 transition-all group-hover:visible group-hover:bottom-4 group-hover:opacity-100">

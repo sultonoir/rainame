@@ -1,7 +1,7 @@
 import { Image } from "@nextui-org/react";
 import { type Products } from "@prisma/client";
 import React, { useState } from "react";
-
+import nextImage from "next/image";
 type Props = {
   product: Products;
 };
@@ -15,6 +15,7 @@ const ProductImage = ({ product }: Props) => {
     <div className="sticky top-24 flex flex-col gap-5">
       <div className="ml-auto w-full overflow-hidden">
         <Image
+          as={nextImage}
           classNames={{
             wrapper: "mx-auto",
           }}
@@ -23,7 +24,7 @@ const ProductImage = ({ product }: Props) => {
           width={400}
           height={400}
           alt={product?.name}
-          loading="eager"
+          priority
           className="aspect-square"
         />
       </div>
@@ -31,12 +32,14 @@ const ProductImage = ({ product }: Props) => {
         {product?.imageUrl.map((e) => (
           <Image
             isZoomed
+            as={nextImage}
             isBlurred={picture === e}
             key={e}
             src={e}
             width={80}
             height={80}
             alt={product?.name}
+            priority
             onMouseEnter={() => setPicture(e)}
             onClick={() => setPicture(e)}
             className="aspect-square"

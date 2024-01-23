@@ -1,6 +1,7 @@
 "use client";
-import CardProducts from "@/components/card/CardProducts";
+
 import ModalPayment from "@/components/modal/ModalPayment";
+import Ratings from "@/components/ratings/Ratings";
 import AddToCart from "@/components/shared/AddToCart";
 import { Preview } from "@/components/shared/Preview";
 import ProductImage from "@/components/shared/ProductImage";
@@ -21,7 +22,7 @@ type TName = {
     >;
   };
 };
-
+const CardProducts = React.lazy(() => import("@/components/card/CardProducts"));
 const NameClient = ({ product }: TName) => {
   const [readmore, setReadmore] = useState<boolean>(true);
   const [selectColor, setSelectColor] = useState(product.color.at(0) ?? "");
@@ -29,23 +30,17 @@ const NameClient = ({ product }: TName) => {
 
   const selling = product.selling ? product.selling : 0;
 
-  let totalRating = 0;
-  let jumlahRatings = 0;
-
-  // Iterasi melalui setiap objek rating
-  for (const rating of product.rattings) {
-    totalRating += rating.value;
-    jumlahRatings++;
-  }
-  const rataRataRating = () => {
-    if (jumlahRatings === 0) {
-      return 0; // Menghindari pembagian oleh nol jika tidak ada ratings
-    } else {
-      const ratting = totalRating / jumlahRatings;
-      return ratting;
-    }
+  const calculateAverageRating = () => {
+    const totalRating = product.rattings.reduce(
+      (total, current) => total + current.value,
+      0,
+    );
+    const averageRating = totalRating / product.rattings.length;
+    return averageRating;
   };
-  const rataRata = rataRataRating();
+
+  const rataRata = calculateAverageRating();
+
   const result = calculateTotalPrice({
     price: product.price,
     discount: product.discount,
@@ -57,9 +52,8 @@ const NameClient = ({ product }: TName) => {
     category: product.category,
   });
   const recomendasi = data?.filter((item) => item.id !== product.id);
-  const Rattings = React.lazy(() => import("@/components/ratings/Ratings"));
   return (
-    <section className="container relative my-2">
+    <section className="container relative mb-5 mt-2">
       <section className="grid grid-cols-1 gap-10 lg:grid-cols-3">
         <div className="relative col-span-1">
           <ProductImage product={product} />
@@ -184,9 +178,7 @@ const NameClient = ({ product }: TName) => {
           />
         </div>
         <div className="col-span-1 row-span-1 h-fit p-2 sm:col-span-2">
-          <Suspense fallback={"loading rattings"}>
-            <Rattings rattings={product.rattings} />
-          </Suspense>
+          <Ratings rattings={product.rattings} />
         </div>
       </section>
       <div className="fixed bottom-0 left-0 z-10 w-full bg-background/70 backdrop-blur-sm lg:hidden">
@@ -211,13 +203,17 @@ const NameClient = ({ product }: TName) => {
             View more
           </Button>
         </div>
-        <Suspense fallback={"Loading Recomendasi..."}>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
+          <Suspense fallback={"loading...."}>
             {recomendasi?.map((item) => (
-              <CardProducts product={item} rattings={item.rattings} />
+              <CardProducts
+                product={item}
+                rattings={item.rattings}
+                key={item.id}
+              />
             ))}
-          </div>
-        </Suspense>
+          </Suspense>
+        </div>
       </div>
     </section>
   );
