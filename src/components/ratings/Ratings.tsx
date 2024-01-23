@@ -25,25 +25,29 @@ const Ratings = ({ rattings }: Props) => {
 
   const num = [1, 2, 3, 4, 5];
 
-  let totalRating = 0;
-  let jumlahRatings = 0;
+  const calculateAverageRating = () => {
+    const totalRating = rattings.reduce(
+      (total, current) => total + current.value,
+      0,
+    );
 
-  // Iterasi melalui setiap objek rating
-  for (const rating of rattings) {
-    totalRating += rating.value;
-    jumlahRatings++;
-  }
-  const rataRataRating = () => {
-    if (jumlahRatings === 0) {
-      return 0; // Menghindari pembagian oleh nol jika tidak ada ratings
-    } else {
-      const ratting = totalRating / jumlahRatings;
-      return ratting;
-    }
+    const averageRating = totalRating / rattings.length;
+    return averageRating;
   };
-  const rataRata = rataRataRating();
+
+  const rataRata = calculateAverageRating();
 
   const filteredRating = rattings.filter((item) => item.value === value);
+
+  function calPercen(nilai: number) {
+    const totalRating = rattings.length;
+    const jumlahKemunculan = rattings.filter(
+      (rating) => rating.value === nilai,
+    ).length;
+    const persentase = (jumlahKemunculan / totalRating) * 100;
+
+    return persentase;
+  }
 
   const items = React.useMemo(() => {
     const start = (page - 1) * 5;
@@ -55,11 +59,11 @@ const Ratings = ({ rattings }: Props) => {
   return (
     <div className="my-10">
       <p className="py-3 text-xl font-semibold">Rattings</p>
-      <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="col-span-1">
+      <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="col-span-2">
           <div className="relative order-1">
             <div className="sticky top-24">
-              <Card className="h-fit">
+              <Card className="h-fit w-full px-5">
                 <CardBody className="flex flex-col gap-2">
                   <div className="my-3 flex flex-row items-center justify-center gap-1">
                     <Star
@@ -70,37 +74,54 @@ const Ratings = ({ rattings }: Props) => {
                       {rataRata.toFixed(1)} <span>/</span> <span>5</span>
                     </p>
                   </div>
-                  {num.reverse().map((item) => (
-                    <Checkbox
-                      key={item}
-                      isSelected={value === item}
-                      onChange={() => {
-                        setValue(item);
-                      }}
-                    >
-                      <div className="flex flex-row gap-2" key={item}>
-                        <Star className="fill-yellow-400 stroke-default-100 stroke-1" />
-                        {item}
+                  {num.reverse().map((item) => {
+                    const percen = calPercen(item);
+                    return (
+                      <div key={item} className="flex w-full space-x-4">
+                        <Checkbox
+                          key={item}
+                          isSelected={value === item}
+                          onChange={() => {
+                            setValue(item);
+                          }}
+                        >
+                          <div
+                            className="flex flex-row items-center gap-2"
+                            key={item}
+                          >
+                            <Star className="fill-yellow-400 stroke-default-100 stroke-1" />
+                            {item}
+                          </div>
+                        </Checkbox>
+                        <span className="relative w-full overflow-hidden rounded-large border">
+                          <span
+                            className="absolute inset-0 bg-primary"
+                            style={{ width: percen }}
+                          ></span>
+                        </span>
                       </div>
-                    </Checkbox>
-                  ))}
+                    );
+                  })}
                 </CardBody>
               </Card>
             </div>
           </div>
         </div>
-        <div className="col-span-1 lg:col-span-3">
+        <div className="col-span-2 lg:col-span-3">
           <div
-            className={cn("grid grid-cols-1 gap-10", {
-              "h-full": items.length < 1,
-            })}
+            className={cn(
+              "grid min-h-full grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-1",
+              {
+                "h-full": items.length < 1,
+              },
+            )}
           >
             {items.map((item) => (
               <div
                 className="flex flex-col gap-2 border-b border-default-100 py-3"
                 key={item.id}
               >
-                <div className="flex flex-1 items-center justify-between">
+                <div className="flex items-center justify-between lg:flex-1">
                   <User
                     classNames={{
                       base: "justify-start",
@@ -125,7 +146,7 @@ const Ratings = ({ rattings }: Props) => {
               </div>
             )}
           </div>
-          <div className="mt-2 flex justify-center">
+          <div className="mt-5 flex justify-center">
             <Pagination
               isCompact
               showControls
