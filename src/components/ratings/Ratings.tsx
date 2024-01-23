@@ -96,7 +96,7 @@ const Ratings = ({ rattings }: Props) => {
                         <span className="relative w-full overflow-hidden rounded-large border">
                           <span
                             className="absolute inset-0 bg-primary"
-                            style={{ width: percen }}
+                            style={{ width: `${percen}%` }}
                           ></span>
                         </span>
                       </div>
