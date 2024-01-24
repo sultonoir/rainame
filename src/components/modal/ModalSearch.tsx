@@ -34,6 +34,8 @@ const ModalSearch = () => {
   return (
     <>
       <Button
+        title="search"
+        aria-hidden
         size="sm"
         variant="light"
         isIconOnly

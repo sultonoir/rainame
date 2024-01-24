@@ -194,7 +194,6 @@ export const apiCart = createTRPCRouter({
           quantity: item.totalProduct,
         };
       });
-      console.log(line_items);
       const sessionPayment = await stripe.checkout.sessions.create({
         line_items,
         metadata: {
@@ -224,5 +223,9 @@ export const apiCart = createTRPCRouter({
     });
 
     return payments;
+  }),
+  getPayment: protectedProcedure.query(async ({ ctx }) => {
+    const payment = await ctx.db.dataPayment.findMany({});
+    return payment;
   }),
 });

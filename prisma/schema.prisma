@@ -112,6 +112,8 @@ model DataPayment{
   productId         String
   paymentId         String
   cartId            String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @default(now())
   payment           Payment   @relation(fields: [paymentId],references: [id],onDelete: Cascade)
 
   @@index([id])

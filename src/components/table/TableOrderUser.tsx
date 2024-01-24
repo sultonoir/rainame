@@ -6,6 +6,7 @@ import {
   Pagination,
   Select,
   SelectItem,
+  cn,
 } from "@nextui-org/react";
 import { type DataPayment, type Payment } from "@prisma/client";
 import { SearchIcon } from "lucide-react";
@@ -77,7 +78,7 @@ const TableOrderUser = ({ payments }: Props) => {
   );
 
   return (
-    <div className="relative flex w-full flex-col gap-5 bg-content1">
+    <div className={cn("relative flex w-full flex-col gap-5")}>
       <div className="flex items-center justify-between">
         <Input
           isClearable

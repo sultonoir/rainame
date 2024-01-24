@@ -80,7 +80,7 @@ const AsideAdmin = () => {
                       "bg-primary text-white": path === item.path,
                     },
                     {
-                      "hover:bg-primary-100 hover:text-primary-500":
+                      "hover:bg-primary-100 hover:text-primary-500 dark:hover:text-white":
                         path !== item.path,
                     },
                   )}

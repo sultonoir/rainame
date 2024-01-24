@@ -19,9 +19,11 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <NavbarUi />
-      <main className="container relative my-5 flex min-h-screen w-full flex-col gap-5 sm:flex-row">
-        <AsideUser />
-        {children}
+      <main className="container my-2 min-h-screen">
+        <div className="flex flex-col gap-5 lg:flex-row">
+          <AsideUser />
+          {children}
+        </div>
       </main>
     </>
   );

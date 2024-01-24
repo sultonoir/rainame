@@ -1,30 +1,42 @@
-"use client";
-import React from "react";
 import Image from "next/image";
+import Link from "next/link";
+import React from "react";
+
 import FormSignin from "../form/FormSingin";
 
-const AuthAdmin = () => {
+const Page = () => {
   return (
-    <main className="grid grid-cols-1 lg:grid-cols-2">
-      <section className="relative hidden h-[100dvh] w-full lg:block">
-        <Image
-          alt="Logo"
-          src="/Logo.png"
-          className="h-[100dvh] object-cover"
-          priority
-          fill
-        />
-      </section>
-      <section className="flex h-[100dvh] flex-1 flex-col items-center justify-center gap-4 p-4">
-        <section className="w-full max-w-md">
-          <h1 className="w-full text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
-            Wellcome back admin
-          </h1>
-          <FormSignin />
-        </section>
-      </section>
-    </main>
+    <div className="flex h-full w-full flex-col lg:flex-row">
+      <div className="w-full dark:bg-content1 lg:max-w-[66.666667%] lg:basis-2/3 lg:bg-slate-50">
+        <div className="p-4">
+          <Link href="/" className="inline-flex w-fit">
+            <Image
+              src="/logo.png"
+              alt="logo"
+              width={40}
+              height={40}
+              className="rounded-full"
+            />
+          </Link>
+        </div>
+        <div className="hidden h-[calc(100dvh-80px)] items-center justify-center lg:flex">
+          <Image
+            src="/login-bg.svg"
+            alt="image login"
+            width={500}
+            height={500}
+            priority
+          />
+        </div>
+      </div>
+      <div className="mx-auto flex min-h-[calc(100dvh-80px)] w-full max-w-[350px] flex-col justify-center space-y-6 p-4 sm:w-[350px] lg:p-0">
+        <div className="flex flex-col space-y-0 text-center">
+          <h3 className="text-lg font-semibold">Welcome back admin Rainame</h3>
+        </div>
+        <FormSignin />
+      </div>
+    </div>
   );
 };
 
-export default AuthAdmin;
+export default Page;

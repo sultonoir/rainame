@@ -41,7 +41,7 @@ const Footer = () => {
             <div className="ml-2 flex justify-start gap-2">
               {sosial.map((item) => (
                 <Link key={item.name} href={item.path} color="foreground">
-                  <item.icon />
+                  <item.icon size={30} />
                 </Link>
               ))}
             </div>

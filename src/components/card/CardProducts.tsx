@@ -107,7 +107,11 @@ const CardProducts = ({ product, rattings, priority }: TProducts) => {
           {product.discount}% off
         </div>
       )}
-      <a href={`/product/${product.path}`} className="absolute inset-0" />
+      <a
+        href={`/product/${product.path}`}
+        className="absolute inset-0"
+        aria-hidden
+      />
       <div className="z-1 group relative flex-shrink-0 overflow-hidden bg-slate-50 dark:bg-slate-300">
         <a href={`/product/${product.path}`} className="relative block">
           <NextImage

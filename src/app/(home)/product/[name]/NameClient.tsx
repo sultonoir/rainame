@@ -203,7 +203,7 @@ const NameClient = ({ product }: TName) => {
             View more
           </Button>
         </div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <Suspense fallback={"loading...."}>
             {recomendasi?.map((item) => (
               <CardProducts

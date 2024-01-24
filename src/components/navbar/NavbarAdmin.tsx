@@ -1,20 +1,13 @@
 "use client";
 
 import React from "react";
-import {
-  Navbar,
-  NavbarContent,
-  Avatar,
-  Input,
-  NavbarItem,
-} from "@nextui-org/react";
+import { Navbar, NavbarContent, Input, NavbarItem } from "@nextui-org/react";
 import { SearchIcon } from "lucide-react";
 import NotifyAdmin from "../notify/NotifyAdmin";
-import { useSession } from "next-auth/react";
 import { ThemeSwitcher } from "../shared/ThemeSwithcer";
+import ProfileAdmin from "../shared/ProfileAdmin";
 
 export default function NavbarAdmin() {
-  const { data } = useSession();
   return (
     <Navbar
       isBordered
@@ -36,14 +29,7 @@ export default function NavbarAdmin() {
           <ThemeSwitcher />
           <NotifyAdmin />
         </NavbarItem>
-        <Avatar
-          isBordered
-          className="transition-transform"
-          color="primary"
-          src={data?.user.image ?? ""}
-          alt={data?.user.name ?? ""}
-          size="sm"
-        />
+        <ProfileAdmin />
       </NavbarContent>
     </Navbar>
   );
