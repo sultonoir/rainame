@@ -15,7 +15,7 @@ const TopProduct = async () => {
     return result;
   });
   return (
-    <div className="col-span-1 rounded-large border border-default bg-content1 p-4">
+    <div className="col-span-1 rounded-large border border-default bg-content1 p-4 lg:col-span-3 2xl:col-span-1">
       <div className="mb-5 flex items-center justify-between">
         <h3 className="text-2xl font-bold">Top products</h3>
         <Button as="a" href="/admin/product" size="sm" color="primary">
@@ -24,8 +24,11 @@ const TopProduct = async () => {
       </div>
       <div className="flex flex-col space-y-5">
         {topSale.map((item, i) => (
-          <div key={item.id} className="flex py-2 last:pb-0">
-            <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-slate-100">
+          <div
+            key={item.id}
+            className="flex flex-col space-y-3 py-2 last:pb-0 lg:flex-row"
+          >
+            <div className="relative h-36 w-[dvh] flex-shrink-0 overflow-hidden rounded-xl bg-slate-100 lg:h-20 lg:w-20">
               <a
                 href={`/product/${item.path}`}
                 className="absolute inset-0 z-10"
@@ -34,12 +37,12 @@ const TopProduct = async () => {
                   src={item.imageUrl.at(0) ?? ""}
                   alt={item.name}
                   fill
-                  className="aspect-square object-cover"
+                  className="aspect-video object-cover lg:aspect-square"
                   priority
                 />
               </a>
             </div>
-            <div className="ml-4 flex flex-1 flex-col">
+            <div className="flex flex-1 flex-col lg:ml-4">
               <div>
                 <div className="flex justify-between">
                   <div>

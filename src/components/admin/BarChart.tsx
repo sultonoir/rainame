@@ -67,7 +67,7 @@ const BarChart = () => {
 
   return (
     <>
-      <div className="relative m-auto h-[50vh] w-full rounded-lg border border-default bg-content1 p-4 md:col-span-2 lg:h-[70vh]">
+      <div className="relative m-auto h-[50vh] w-full rounded-lg border border-default bg-content1 p-4  md:col-span-3 lg:col-span-3 lg:h-[70vh] xl:col-span-2 2xl:col-span-2">
         <Bar data={chartData} options={chartOptions} aria-label="false" />
       </div>
     </>

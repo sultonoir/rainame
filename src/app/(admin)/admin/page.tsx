@@ -58,9 +58,9 @@ export const metadata: Metadata = {
 };
 const page = () => {
   return (
-    <section className="container my-2 h-full w-full">
+    <section className="my-2 h-full w-full">
       <Dashboard />
-      <div className="grid grid-cols-1 gap-4 p-4 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 p-4 lg:grid-cols-3">
         <BarChart />
         <TopProduct />
       </div>

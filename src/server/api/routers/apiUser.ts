@@ -179,4 +179,27 @@ export const apiUser = createTRPCRouter({
       },
     });
   }),
+  getNotifyAdmin: protectedProcedure.query(async ({ ctx }) => {
+    const admin = await ctx.db.user.findUnique({
+      where: {
+        id: ctx.session.user.id,
+      },
+    });
+    const notify = await ctx.db.notify.findMany({
+      where: {
+        userId: ctx.session.user.id,
+      },
+    });
+    const payments = await ctx.db.payment.findMany({
+      where: {
+        id: { in: notify.map((item) => item.paymentId ?? "") },
+      },
+      include: {
+        user: true,
+        dataPayment: true,
+      },
+    });
+
+    return { admin, payments };
+  }),
 });

@@ -5,8 +5,8 @@ import React from "react";
 const Dashboard = async () => {
   const data = await api.cart.getPayment.query();
   return (
-    <div className="grid gap-4 p-4 lg:grid-cols-5">
-      <div className="col-span-1 flex w-full justify-between rounded-large border border-default bg-content1 p-4 lg:col-span-2">
+    <div className="grid gap-4 p-4 2xl:grid-cols-5">
+      <div className="col-span-1 flex w-full justify-between rounded-large border border-default bg-content1 p-4 2xl:col-span-2">
         <div className="flex w-full flex-col">
           <p className="text-2xl font-bold">${data.totalRevenueDaily}</p>
           <p>Daily revenue</p>
@@ -20,7 +20,7 @@ const Dashboard = async () => {
           {data.growDaily.toFixed(2)}%
         </div>
       </div>
-      <div className="col-span-1 flex w-full justify-between rounded-large border border-default bg-content1 p-4 lg:col-span-2">
+      <div className="col-span-1 flex w-full justify-between rounded-large border border-default bg-content1 p-4 2xl:col-span-2">
         <div className="flex w-full flex-col">
           <p className="text-2xl font-bold">${data.totalCurrentAnual}</p>
           <p>Annual revenue</p>
@@ -37,7 +37,7 @@ const Dashboard = async () => {
       <div className="col-span-1 flex w-full justify-between rounded-large border border-default bg-content1 p-4">
         <div className="flex w-full flex-col">
           <p className="text-2xl font-bold">{data.dataUserMonthly.length}</p>
-          <p>Monthly new customers</p>
+          <p className="">new customers</p>
         </div>
         <div
           className={cn("flex items-center justify-center rounded-medium p-2", {
