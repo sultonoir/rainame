@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 import { stripe } from "@/lib/stripe";
+import { type DataPayment } from "@prisma/client";
 
 export const apiCart = createTRPCRouter({
   addToCart: protectedProcedure
@@ -226,6 +227,69 @@ export const apiCart = createTRPCRouter({
   }),
   getPayment: protectedProcedure.query(async ({ ctx }) => {
     const payment = await ctx.db.dataPayment.findMany({});
-    return payment;
+    const user = await ctx.db.user.findMany();
+    // Calculate dates
+    const currentDate: Date = new Date();
+    const yesterday: Date = new Date(currentDate);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const lastMonth: Date = new Date(currentDate);
+    lastMonth.setMonth(lastMonth.getMonth() - 1);
+    const lastYear: Date = new Date(currentDate);
+    lastYear.setFullYear(lastYear.getFullYear() - 1);
+    // Filter data based on dates
+    const filterByDay = (date: Date) => (item: DataPayment) =>
+      item.createdAt.getDay() === date.getDay();
+
+    const daily: DataPayment[] = payment.filter(filterByDay(currentDate));
+    const yesterdayData: DataPayment[] = payment.filter(filterByDay(yesterday));
+    const prevanuallData = payment.filter(
+      (item: DataPayment) =>
+        item.createdAt.getFullYear() === lastYear.getFullYear(),
+    );
+    const annualData: DataPayment[] = payment.filter(
+      (item: DataPayment) =>
+        item.createdAt.getFullYear() === currentDate.getFullYear(),
+    );
+    const dataUserMonthly = user.filter(
+      (item) => item.createdAt.getMonth() === currentDate.getMonth(),
+    );
+    const prevDatauser = user.filter(
+      (item) => item.createdAt.getMonth() === lastMonth.getMonth(),
+    );
+    // Calculate total revenue
+    const calculateTotalRevenue = (data: DataPayment[]) =>
+      data.reduce((total, current) => total + current.totalPrice, 0);
+    const totalRevenueYesterday: number = calculateTotalRevenue(yesterdayData);
+    const totalRevenueDaily: number = calculateTotalRevenue(daily);
+    const totalPrevAnual = calculateTotalRevenue(prevanuallData);
+    const totalCurrentAnual = calculateTotalRevenue(annualData);
+    console.log(totalCurrentAnual);
+    // Calculate growth
+    const calculateGrowth = (currentValue: number, previousValue: number) =>
+      previousValue !== 0
+        ? ((currentValue - previousValue) / previousValue) * 100
+        : 0;
+
+    const growDaily: number = calculateGrowth(
+      totalRevenueDaily,
+      totalRevenueYesterday,
+    );
+
+    const growUser = calculateGrowth(
+      dataUserMonthly.length,
+      prevDatauser.length,
+    );
+
+    const growAnual = calculateGrowth(totalCurrentAnual, totalPrevAnual);
+
+    // Return the payment data
+    return {
+      growDaily,
+      growAnual,
+      growUser,
+      totalRevenueDaily,
+      totalCurrentAnual,
+      dataUserMonthly,
+    };
   }),
 });
