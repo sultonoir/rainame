@@ -8,6 +8,7 @@ import {
   FileText,
   LayoutDashboard,
   Mail,
+  Settings2,
   StarIcon,
 } from "lucide-react";
 import Image from "next/image";
@@ -47,13 +48,18 @@ const AsideAdmin = () => {
   const supports = [
     {
       title: "Message",
-      path: "/admin",
+      path: "#",
       icons: Mail,
     },
     {
       title: "Invoice",
-      path: "/admin",
+      path: "#",
       icons: FileText,
+    },
+    {
+      title: "Settings",
+      path: "/admin/settings",
+      icons: Settings2,
     },
   ];
   return (

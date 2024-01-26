@@ -170,6 +170,14 @@ export const apiUser = createTRPCRouter({
     return user;
   }),
   readsNotify: protectedProcedure.mutation(async ({ ctx }) => {
+    await ctx.db.user.updateMany({
+      where: {
+        id: ctx.session.user.id,
+      },
+      data: {
+        hasNotify: false,
+      },
+    });
     await ctx.db.notify.updateMany({
       where: {
         userId: ctx.session.user.id,

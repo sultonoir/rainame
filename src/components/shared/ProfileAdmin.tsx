@@ -12,24 +12,14 @@ import {
 } from "@nextui-org/react";
 
 import { signOut } from "next-auth/react";
-import { HeartIcon, LogOut, ScrollText, UserIcon } from "lucide-react";
+import { LogOut, UserIcon } from "lucide-react";
 
 const ProfileAdmin = () => {
   const lists = [
     {
       title: "My profile",
-      path: "/profile",
+      path: "/admin/settings",
       icons: UserIcon,
-    },
-    {
-      title: "My order",
-      path: "/profile/order",
-      icons: ScrollText,
-    },
-    {
-      title: "Wishlist",
-      path: "/profile/order",
-      icons: HeartIcon,
     },
   ];
   const { data: user } = useSession();

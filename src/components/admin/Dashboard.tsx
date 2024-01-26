@@ -8,7 +8,9 @@ const Dashboard = async () => {
     <div className="grid gap-4 p-4 2xl:grid-cols-5">
       <div className="col-span-1 flex w-full justify-between rounded-large border border-default bg-content1 p-4 2xl:col-span-2">
         <div className="flex w-full flex-col">
-          <p className="text-2xl font-bold">${data.totalRevenueDaily}</p>
+          <p className="text-2xl font-bold">
+            ${data.totalRevenueDaily.toFixed(2)}
+          </p>
           <p>Daily revenue</p>
         </div>
         <div
@@ -22,7 +24,9 @@ const Dashboard = async () => {
       </div>
       <div className="col-span-1 flex w-full justify-between rounded-large border border-default bg-content1 p-4 2xl:col-span-2">
         <div className="flex w-full flex-col">
-          <p className="text-2xl font-bold">${data.totalCurrentAnual}</p>
+          <p className="text-2xl font-bold">
+            ${data.totalCurrentAnual.toFixed(2)}
+          </p>
           <p>Annual revenue</p>
         </div>
         <div
