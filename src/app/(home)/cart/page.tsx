@@ -143,6 +143,7 @@ const Page = () => {
               </div>
             </div>
             <Button
+              isLoading={payment.isLoading}
               fullWidth
               color="primary"
               variant="solid"

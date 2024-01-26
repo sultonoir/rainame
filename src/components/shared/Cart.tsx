@@ -253,6 +253,7 @@ const Cart = () => {
                     View cart
                   </Button>
                   <Button
+                    isLoading={payment.isLoading}
                     radius="full"
                     onClick={handlePayment}
                     fullWidth

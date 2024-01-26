@@ -99,7 +99,7 @@ const NotifyUser = () => {
                       <p className="text-xl font-bold">No notification</p>
                     </div>
                   ) : (
-                    <div className="flex h-fit max-h-[300px] flex-col gap-1 divide-y overflow-y-auto">
+                    <div className="flex h-fit max-h-[300px] flex-col gap-1 divide-y overflow-y-auto scrollbar-hide">
                       {data?.notify.map((item) => (
                         <div
                           key={item.id}
@@ -124,7 +124,7 @@ const NotifyUser = () => {
                               Payment success
                             </p>
                             <p className="w-full max-w-[150px] truncate text-small text-default-500">
-                              {item.createdAt.toLocaleString()}
+                              {item.createdAt.toLocaleDateString()}
                             </p>
                           </div>
                           <a
