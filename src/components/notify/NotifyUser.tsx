@@ -128,7 +128,7 @@ const NotifyUser = () => {
                             </p>
                           </div>
                           <a
-                            href={`/${data.name}?options=Order`}
+                            href="profile/order"
                             className="absolute inset-0"
                           ></a>
                         </div>
