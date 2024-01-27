@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Stripe from "stripe";
-import { NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { db } from "@/server/db";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "", {
   apiVersion: "2023-10-16",
 });
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   const body = await req.text();
-  const sig = req.headers.get("stripe-signature");
+  const sig = req.headers.get("stripe-signature")!;
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
   let event: Stripe.Event;
 
