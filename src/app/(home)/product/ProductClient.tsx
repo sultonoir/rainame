@@ -215,7 +215,7 @@ const ProductClient = ({ products }: Props) => {
                     />
                   ))}
                 </div>
-                <div className="mt-2 flex justify-center">
+                <div className="mt-8 flex justify-center">
                   <Pagination
                     isCompact
                     showControls

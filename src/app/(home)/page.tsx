@@ -184,12 +184,12 @@ const page = async () => {
               </ul>
               <div className="relative mt-10 max-w-sm">
                 <input
-                  className="block h-11 w-full rounded-full border border-default bg-white px-4 py-3 text-sm font-normal outline-none focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 disabled:bg-neutral-200 dark:border-neutral-700 dark:bg-default-900 dark:focus:ring-primary-600 dark:focus:ring-opacity-25 dark:disabled:bg-neutral-800 "
+                  className="block h-11 w-full rounded-full border border-default bg-white px-4 py-3 text-sm font-normal outline-none focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 disabled:bg-primary-200 dark:border-primary-700 dark:bg-default-900 dark:focus:ring-primary-600 dark:focus:ring-opacity-25 dark:disabled:bg-primary-800 "
                   placeholder="Enter your email"
                   type="email"
                 />
                 <button
-                  className="ttnc-ButtonCircle focus:ring-primary-6000 !leading-non absolute right-1 top-1/2 flex h-9 w-9 -translate-y-1/2 transform items-center justify-center rounded-full bg-slate-900 text-slate-50 hover:bg-slate-800  focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:bg-opacity-70 dark:focus:ring-offset-0"
+                  className="absolute right-1 top-1/2 flex h-9 w-9 -translate-y-1/2 transform items-center justify-center rounded-full bg-primary text-slate-50 hover:bg-primary/90  focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:bg-opacity-70 dark:focus:ring-offset-0"
                   type="submit"
                 >
                   <ArrowRight />

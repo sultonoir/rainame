@@ -232,7 +232,7 @@ const Cart = () => {
               </>
             )}
             {data && data.length > 0 ? (
-              <div className="rounded-small bg-content2 p-5">
+              <div className="mt-4 rounded-small bg-content2 p-5">
                 <p className="flex justify-between text-large font-semibold text-slate-900 dark:text-slate-100">
                   <span>
                     <span>Subtotal</span>

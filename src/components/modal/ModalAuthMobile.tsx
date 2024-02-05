@@ -31,30 +31,6 @@ const ModalAuthMobile = () => {
         >
           <div className="fixed inset-0 z-50 flex h-[100dvh] w-screen items-center justify-center">
             <motion.section
-              style={{ pointerEvents: isOpen ? "auto" : "none" }}
-              variants={{
-                open: {
-                  clipPath: "inset(0% 0% 0% 0% round 10px)",
-                  transition: {
-                    type: "spring",
-                    bounce: 0,
-                    duration: 0.7,
-                    delayChildren: 0.3,
-                    staggerChildren: 0.05,
-                  },
-                },
-                closed: {
-                  clipPath: "inset(10% 50% 90% 50% round 10px)",
-                  transition: {
-                    type: "spring",
-                    bounce: 0,
-                    duration: 0.3,
-                  },
-                },
-              }}
-              initial="closed" // Pastikan ada properti initial yang menetapkan keadaan awal
-              animate={isOpen ? "open" : "closed"} // Pastikan untuk memberikan kondisi untuk animasi
-              role="dialog"
               aria-hidden
               className="relative z-50 mx-1 my-1 box-border flex w-full max-w-md flex-col overflow-y-hidden rounded-large bg-content1 shadow-small outline-none sm:mx-6 sm:my-16"
               onClick={(e) => {
