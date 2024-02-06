@@ -8,6 +8,8 @@ import { calculateTotalPrice } from "@/lib/utils";
 import { toast } from "sonner";
 import { Image, Spinner } from "@nextui-org/react";
 import { api } from "@/trpc/react";
+import { useSession } from "next-auth/react";
+import useModal from "@/hooks/useModal";
 
 type TProducts = {
   product: Products;
@@ -16,23 +18,19 @@ type TProducts = {
 };
 
 const CardProducts = ({ product, rattings, priority }: TProducts) => {
-  let totalRating = 0;
-  let jumlahRatings = 0;
+  const { data: user } = useSession();
+  const { onOpen } = useModal();
 
-  // Iterasi melalui setiap objek rating
-  for (const rating of rattings) {
-    totalRating += rating.value;
-    jumlahRatings++;
+  function calculateAverageRating() {
+    const totalRatings = rattings.reduce(
+      (total, current) => total + current.value,
+      0,
+    );
+    const averageRating = totalRatings / rattings.length;
+    return averageRating.toFixed(1);
   }
-  const rataRataRating = () => {
-    if (jumlahRatings === 0) {
-      return 0; // Menghindari pembagian oleh nol jika tidak ada ratings
-    } else {
-      const ratting = totalRating / jumlahRatings;
-      return ratting;
-    }
-  };
-  const rataRata = rataRataRating();
+
+  const rataRata = calculateAverageRating();
 
   const result = calculateTotalPrice({
     price: product.price,
@@ -95,6 +93,9 @@ const CardProducts = ({ product, rattings, priority }: TProducts) => {
     },
   });
   const handleCart = () => {
+    if (!user) {
+      return onOpen();
+    }
     cart.mutate({
       productId: product.id,
     });
@@ -171,7 +172,7 @@ const CardProducts = ({ product, rattings, priority }: TProducts) => {
           )}
           <p className="flex flex-row flex-nowrap items-center gap-x-1 text-xs">
             <Star className="fill-yellow-400 stroke-default-100 stroke-1" />
-            <span>{rataRata.toFixed(1)}</span>
+            <span>{rataRata}</span>
             <span>{`(${rattings.length})`}</span>
           </p>
         </div>

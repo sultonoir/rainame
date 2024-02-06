@@ -26,7 +26,7 @@ const ModalAuthMobile = () => {
       </Button>
       {isOpen ? (
         <div
-          className="z- fixed inset-0 h-screen w-screen bg-overlay/50 backdrop-opacity-disabled"
+          className="fixed inset-0 h-screen w-screen bg-overlay/50 backdrop-opacity-disabled"
           onClick={() => setIsOpen(!isOpen)}
         >
           <div className="fixed inset-0 z-50 flex h-[100dvh] w-screen items-center justify-center">

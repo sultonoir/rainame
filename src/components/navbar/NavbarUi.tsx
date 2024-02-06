@@ -68,7 +68,7 @@ export default function NavbarUi() {
             value={values}
             onChange={(e) => setValues(e.target.value)}
             autoFocus
-            className="flex w-full rounded-full bg-content1 p-2 pl-11 outline-none"
+            className="flex w-full rounded-full border border-primary bg-content1 p-2 pl-11 outline-none focus:ring focus:ring-primary focus:ring-opacity-20"
             placeholder="Search...."
           />
           <span className="absolute left-[10px] top-1/2 -translate-y-1/2 transform text-2xl">
