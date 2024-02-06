@@ -7,26 +7,17 @@ import { useRouter } from "next/navigation";
 
 const ModalSearch = () => {
   const [open, setOpen] = React.useState(false);
-  const [values, setValues] = React.useState("");
-  const onClose = () => {
-    setOpen(false);
-  };
 
-  //handle submit
-  const router = useRouter();
-  const handleSubmit = () => {
-    if (values !== "") {
-      setValues("");
-      router.replace(`/product?search=${values}`);
-      return setOpen((open) => !open);
-    }
-    setValues("");
-    setOpen((open) => !open);
-  };
   //handle keydown
+  const router = useRouter();
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
-      handleSubmit(); // Menambahkan todo saat tombol "Enter" ditekan
+      event.preventDefault();
+      const value = event.currentTarget.value.trim();
+      if (value !== "") {
+        router.replace(`/product?search=${value}`);
+        setOpen((open) => !open);
+      }
     }
   };
 
@@ -65,9 +56,7 @@ const ModalSearch = () => {
               </header>
               <div className="relative mx-auto w-full">
                 <input
-                  value={values}
                   onKeyDown={handleKeyDown}
-                  onChange={(e) => setValues(e.target.value)}
                   autoFocus
                   className="flex w-full rounded-full border border-primary bg-content1 p-2 pl-11 outline-none focus:ring focus:ring-primary focus:ring-opacity-50"
                   placeholder="Search...."
