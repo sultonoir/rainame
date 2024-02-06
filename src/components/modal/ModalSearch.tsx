@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@nextui-org/react";
-import { SearchIcon } from "lucide-react";
+import { SearchIcon, XIcon } from "lucide-react";
 import React from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
@@ -43,34 +43,41 @@ const ModalSearch = () => {
       </Button>
       {open ? (
         <div
-          className="fixed inset-0 z-50 h-screen w-screen bg-overlay/50 backdrop-opacity-disabled"
-          onClick={onClose}
+          className="fixed inset-0 h-screen w-screen bg-overlay/50 backdrop-opacity-disabled"
+          onClick={() => setOpen(!open)}
         >
-          <motion.section
-            initial={{ translateY: -200 }}
-            animate={{ translateY: 0 }}
-            exit={{ translateY: 200 }}
-            className="flex h-full w-full items-center justify-center"
-          >
-            <div
-              className="relative w-full max-w-sm"
+          <div className="fixed inset-0 z-50 flex h-[100dvh] w-screen items-center justify-center">
+            <motion.section
+              aria-hidden
+              className="relative z-50 mx-1 my-1 box-border flex w-full max-w-md flex-col gap-2 overflow-y-hidden rounded-large bg-content1 p-5 shadow-small outline-none sm:mx-6 sm:my-16"
               onClick={(e) => {
                 e.stopPropagation();
               }}
             >
-              <input
-                value={values}
-                onKeyDown={handleKeyDown}
-                onChange={(e) => setValues(e.target.value)}
-                autoFocus
-                className="flex w-full rounded-full border border-primary bg-content1 p-2 pl-11 outline-none focus:ring focus:ring-primary focus:ring-opacity-50"
-                placeholder="Search...."
-              />
-              <span className="absolute left-[10px] top-1/2 -translate-y-1/2 transform text-2xl">
-                <SearchIcon />
-              </span>
-            </div>
-          </motion.section>
+              <button
+                className="absolute right-1 top-1 select-none appearance-none rounded-full p-2 text-foreground-500 outline-none tap-highlight-transparent hover:bg-default-100"
+                onClick={() => setOpen(false)}
+              >
+                <XIcon />
+              </button>
+              <header className="flex flex-initial text-large font-semibold">
+                Search
+              </header>
+              <div className="relative mx-auto w-full">
+                <input
+                  value={values}
+                  onKeyDown={handleKeyDown}
+                  onChange={(e) => setValues(e.target.value)}
+                  autoFocus
+                  className="flex w-full rounded-full border border-primary bg-content1 p-2 pl-11 outline-none focus:ring focus:ring-primary focus:ring-opacity-50"
+                  placeholder="Search...."
+                />
+                <span className="absolute left-[10px] top-1/2 -translate-y-1/2 transform text-2xl">
+                  <SearchIcon />
+                </span>
+              </div>
+            </motion.section>
+          </div>
         </div>
       ) : null}
     </>
