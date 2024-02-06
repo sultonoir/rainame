@@ -39,11 +39,8 @@ const ModalSearch = () => {
         >
           <div className="fixed inset-0 z-50 flex h-[100dvh] w-screen items-center justify-center">
             <motion.section
-              aria-hidden
               className="relative z-50 mx-1 my-1 box-border flex w-full max-w-md flex-col gap-2 overflow-y-hidden rounded-large bg-content1 p-5 shadow-small outline-none sm:mx-6 sm:my-16"
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
+              onClick={(e) => e.stopPropagation()}
             >
               <button
                 className="absolute right-1 top-1 select-none appearance-none rounded-full p-2 text-foreground-500 outline-none tap-highlight-transparent hover:bg-default-100"
@@ -54,9 +51,10 @@ const ModalSearch = () => {
               <header className="flex flex-initial text-large font-semibold">
                 Search
               </header>
-              <div className="relative mx-auto w-full">
+              <form className="relative mx-auto w-full">
                 <input
                   onKeyDown={handleKeyDown}
+                  type="text"
                   autoFocus
                   className="flex w-full rounded-full border border-primary bg-content1 p-2 pl-11 outline-none focus:ring focus:ring-primary focus:ring-opacity-50"
                   placeholder="Search...."
@@ -64,7 +62,7 @@ const ModalSearch = () => {
                 <span className="absolute left-[10px] top-1/2 -translate-y-1/2 transform text-2xl">
                   <SearchIcon />
                 </span>
-              </div>
+              </form>
             </motion.section>
           </div>
         </div>
