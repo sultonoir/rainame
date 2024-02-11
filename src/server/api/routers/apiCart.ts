@@ -221,6 +221,9 @@ export const apiCart = createTRPCRouter({
       include: {
         dataPayment: true,
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
 
     return payments;

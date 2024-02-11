@@ -1,13 +1,5 @@
 "use client";
-import {
-  Button,
-  Input,
-  Link,
-  Pagination,
-  Select,
-  SelectItem,
-  cn,
-} from "@nextui-org/react";
+import { Button, Input, Link, Pagination, cn } from "@nextui-org/react";
 import { type DataPayment, type Payment } from "@prisma/client";
 import { SearchIcon } from "lucide-react";
 import React from "react";
@@ -25,7 +17,6 @@ type Props = {
 const TableOrderUser = ({ payments }: Props) => {
   const [filterValue, setFilterValue] = React.useState("");
   const [page, setPage] = React.useState(1);
-  const [rowsPerPage, setRowsPerPage] = React.useState(15);
   const hasSearchFilter = Boolean(filterValue);
 
   const filteredItems = React.useMemo(() => {
@@ -46,14 +37,14 @@ const TableOrderUser = ({ payments }: Props) => {
     return filteredproducts;
   }, [payments, filterValue]);
 
-  const pages = Math.ceil(filteredItems.length / rowsPerPage);
+  const pages = Math.ceil(filteredItems.length / 15);
 
   const items = React.useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
+    const start = (page - 1) * 15;
+    const end = start + 15;
 
     return filteredItems.slice(start, end);
-  }, [page, filteredItems, rowsPerPage]);
+  }, [page, filteredItems, 15]);
 
   const onSearchChange = React.useCallback((value?: string) => {
     if (value) {
@@ -69,14 +60,6 @@ const TableOrderUser = ({ payments }: Props) => {
     setPage(1);
   }, []);
 
-  const onRowsPerPageChange = React.useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => {
-      setRowsPerPage(Number(e.target.value));
-      setPage(1);
-    },
-    [],
-  );
-
   return (
     <div className={cn("relative flex w-full flex-col gap-5")}>
       <div className="flex items-center justify-between">
@@ -90,27 +73,6 @@ const TableOrderUser = ({ payments }: Props) => {
           onClear={() => onClear()}
           onValueChange={onSearchChange}
         />
-        <label className="flex w-fit items-center gap-2 text-small text-default-400">
-          <p className="whitespace-nowrap">Rows per page:</p>
-          <Select
-            size="sm"
-            labelPlacement="outside"
-            aria-label="number options displayed"
-            defaultSelectedKeys={["15"]}
-            className="w-20"
-            onChange={onRowsPerPageChange}
-          >
-            <SelectItem key={"5"} value="5">
-              5
-            </SelectItem>
-            <SelectItem key={"10"} value="10">
-              10
-            </SelectItem>
-            <SelectItem key={"15"} value="15">
-              15
-            </SelectItem>
-          </Select>
-        </label>
       </div>
       {items.map((item) => (
         <div
@@ -129,7 +91,7 @@ const TableOrderUser = ({ payments }: Props) => {
               totalPrice={item.totalPrice}
             />
           </div>
-          <div className="mt-2 flex w-full items-center justify-center  gap-5 sm:justify-end">
+          <div className="mt-2 flex w-full items-center justify-end gap-5 sm:justify-end">
             <Button
               as={Link}
               href={`/product/${item.name.replaceAll(/[^a-zA-Z0-9]/g, "-")}`}
@@ -138,7 +100,7 @@ const TableOrderUser = ({ payments }: Props) => {
             >
               buy again
             </Button>
-            {item.status === "pending" && (
+            {item.status === "paid" && (
               <ModalRating productId={item.productId} />
             )}
           </div>
