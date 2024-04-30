@@ -70,7 +70,7 @@ const TableRatingUser = ({ ratings }: Props) => {
       {items.map((item) => (
         <div
           key={item.id}
-          className="rounded-2xl border border-default-300 bg-content1 p-3"
+          className="rounded-lg border border-default-300 bg-content1 p-3"
         >
           <div className="flex w-full flex-1 last:pb-0">
             <div className="relative h-24 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-slate-100">
