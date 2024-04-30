@@ -29,7 +29,7 @@ const AsideUser = () => {
 
   const active = usePathname();
   return (
-    <div className="relative w-full lg:w-[240px]">
+    <div className="flex-1">
       <div className="sticky top-20 flex flex-col gap-5">
         <User
           className="justify-start pl-2"
@@ -38,24 +38,21 @@ const AsideUser = () => {
             src: admin.user.image ?? "",
           }}
         />
-        <ul className="flex w-full flex-col gap-1" aria-label="option">
-          <li className="flex w-full flex-col gap-1 md:flex-row lg:flex-col">
-            {option.map((item) => (
-              <Button
-                as="a"
-                id={item.id}
-                href={item.id}
-                size="sm"
-                fullWidth
-                key={item.title}
-                variant={active === item.id ? "flat" : "light"}
-                color="primary"
-                className="justify-start md:justify-center lg:justify-start"
-              >
-                {item.title}
-              </Button>
-            ))}
-          </li>
+        <ul className="flex w-fit flex-col gap-1" aria-label="option">
+          {option.map((item) => (
+            <Button
+              as="li"
+              id={item.id}
+              size="sm"
+              key={item.title}
+              variant={active === item.id ? "flat" : "light"}
+              color="primary"
+              className="relative w-[240px] justify-start"
+            >
+              {item.title}
+              <a href={item.id} className="absolute inset-0"></a>
+            </Button>
+          ))}
         </ul>
       </div>
     </div>

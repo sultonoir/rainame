@@ -32,12 +32,12 @@ const CardItems = ({
     pending: "default",
   };
   return (
-    <div className="flex w-full flex-1 py-5 last:pb-0">
+    <div className="flex flex-1 py-5 last:pb-0">
       <div className="relative h-24 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-slate-100">
         <Image src={image} alt={name} />
         <a href={`/product/${path}`} className="absolute inset-0 z-10"></a>
       </div>
-      <div className="ml-4 flex w-full flex-1 flex-col">
+      <div className="ml-4 flex flex-1 flex-col">
         <div>
           <div className="flex justify-between">
             <div>

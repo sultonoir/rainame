@@ -57,7 +57,7 @@ const FormChangePass = () => {
   };
   return (
     <form
-      className="mx-auto flex w-full flex-col gap-3 lg:max-w-xs"
+      className="mx-auto flex w-full max-w-xs flex-col gap-3"
       onSubmit={handleSubmit(onSubmit)}
     >
       <Controller

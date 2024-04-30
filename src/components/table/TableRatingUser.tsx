@@ -1,6 +1,12 @@
 "use client";
 
-import { Image, Input, Pagination } from "@nextui-org/react";
+import {
+  Image,
+  Input,
+  Pagination,
+  Select,
+  SelectItem,
+} from "@nextui-org/react";
 import { type Rattings, type Products } from "@prisma/client";
 import { SearchIcon, StarIcon } from "lucide-react";
 import React from "react";
@@ -16,6 +22,7 @@ type Props = {
 const TableRatingUser = ({ ratings }: Props) => {
   const [filterValue, setFilterValue] = React.useState("");
   const [page, setPage] = React.useState(1);
+  const [rowsPerPage, setRowsPerPage] = React.useState(15);
   const hasSearchFilter = Boolean(filterValue);
 
   const filteredItems = React.useMemo(() => {
@@ -30,14 +37,14 @@ const TableRatingUser = ({ ratings }: Props) => {
     return filteredproducts;
   }, [ratings, filterValue]);
 
-  const pages = Math.ceil(filteredItems.length / 15);
+  const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
   const items = React.useMemo(() => {
-    const start = (page - 1) * 15;
-    const end = start + 15;
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
 
     return filteredItems.slice(start, end);
-  }, [page, filteredItems, 15]);
+  }, [page, filteredItems, rowsPerPage]);
 
   const onSearchChange = React.useCallback((value?: string) => {
     if (value) {
@@ -53,9 +60,16 @@ const TableRatingUser = ({ ratings }: Props) => {
     setPage(1);
   }, []);
 
+  const onRowsPerPageChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      setRowsPerPage(Number(e.target.value));
+      setPage(1);
+    },
+    [],
+  );
   return (
-    <div className="relative flex w-full flex-col gap-5">
-      <div className="flex flex-col items-start justify-start space-y-2 md:flex-row">
+    <div className="relative flex w-full flex-col gap-5 bg-content1">
+      <div className="flex flex-col items-center justify-between space-y-2 md:flex-row">
         <Input
           isClearable
           labelPlacement="outside"
@@ -66,44 +80,49 @@ const TableRatingUser = ({ ratings }: Props) => {
           onClear={() => onClear()}
           onValueChange={onSearchChange}
         />
+        <label className="flex w-fit items-center gap-2 text-small text-default-400">
+          <p className="whitespace-nowrap">Rows per page:</p>
+          <Select
+            size="sm"
+            labelPlacement="outside"
+            aria-label="number options displayed"
+            defaultSelectedKeys={["15"]}
+            className="w-20"
+            onChange={onRowsPerPageChange}
+          >
+            <SelectItem key={"5"} value="5">
+              5
+            </SelectItem>
+            <SelectItem key={"10"} value="10">
+              10
+            </SelectItem>
+            <SelectItem key={"15"} value="15">
+              15
+            </SelectItem>
+          </Select>
+        </label>
       </div>
       {items.map((item) => (
         <div
           key={item.id}
-          className="rounded-2xl border border-default-300 bg-content1 p-3"
+          className="rounded-medium border border-default-300 bg-content1 p-3"
         >
-          <div className="flex w-full flex-1 last:pb-0">
-            <div className="relative h-24 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-slate-100">
-              <Image
-                src={item.products.imageUrl.at(0)}
-                alt={item.products.name}
-              />
-              <a
-                href={`/product/${item.products.path}`}
-                className="absolute inset-0 z-10"
-              ></a>
-            </div>
-            <div className="ml-4 flex w-full flex-1 flex-col">
-              <div>
-                <div className="flex justify-between">
-                  <div>
-                    <h3 className="pr-1 text-base font-medium">
-                      <a href={`/product/${item.products.path}`}>
-                        {item.products.name}
-                      </a>
-                    </h3>
-                    <p className="mt-1 max-w-2xl text-sm text-slate-500 dark:text-slate-400">
-                      {item.comment}
-                    </p>
-                  </div>
-                  <div className="mt-0.5">
-                    <p className="inline-flex">
-                      {item.value}{" "}
-                      <StarIcon className="fill-yellow-400 stroke-default-100 stroke-1" />
-                    </p>
-                  </div>
-                </div>
-              </div>
+          <div className="flex flex-col items-center gap-5 md:flex-row">
+            <Image
+              src={item.products.imageUrl.at(0)}
+              alt={item.products.name}
+              width={100}
+              height={100}
+              radius="sm"
+              className="aspect-square object-cover"
+            />
+            <div className="flex w-full flex-col">
+              <p className="text-medium font-semibold">{item.products.name}</p>
+              <p className="inline-flex">
+                {item.value}{" "}
+                <StarIcon className="fill-yellow-400 stroke-default-100 stroke-1" />
+              </p>
+              <p>{`"${item.comment}"`}</p>
             </div>
           </div>
         </div>

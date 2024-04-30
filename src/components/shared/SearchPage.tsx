@@ -27,7 +27,7 @@ const SearchPage = () => {
   return (
     <div className="container">
       <header className="mx-auto -mt-10 flex max-w-2xl flex-col lg:-mt-7">
-        <form className="relative w-full">
+        <div className="relative w-full">
           <label htmlFor="search-input">
             <input
               className="block w-full rounded-full border-1 border-default-300 bg-background py-5 pl-14 pr-5 text-sm font-normal shadow-lg outline-none focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 md:pl-16"
@@ -48,7 +48,7 @@ const SearchPage = () => {
               <SearchIcon />
             </span>
           </label>
-        </form>
+        </div>
       </header>
     </div>
   );
