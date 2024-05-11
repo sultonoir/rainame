@@ -14,7 +14,7 @@ import { Button } from "../ui/button";
 import { signOut } from "next-auth/react";
 import { type Session } from "next-auth";
 import Link from "next/link";
-import { LogOut, Sliders } from "lucide-react";
+import { LayoutDashboard, LogOut, Sliders } from "lucide-react";
 import { profileMenu } from "@/dummy";
 
 interface Props {
@@ -57,6 +57,17 @@ const UserButton = ({ data }: Props) => {
           <DropdownMenuGroup>
             <DropdownMenuItem asChild>
               <Link
+                href="/admin/dashboard"
+                className="flex h-full w-full items-center gap-2"
+              >
+                <span className="inline-flex size-10 items-center justify-center rounded-md bg-primary/20 p-1">
+                  <LayoutDashboard size={24} className="text-primary" />
+                </span>
+                Dashbord
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link
                 href="/admin/settings"
                 className="flex h-full w-full items-center gap-2"
               >
@@ -84,7 +95,6 @@ const UserButton = ({ data }: Props) => {
             ))}
           </DropdownMenuGroup>
         )}
-
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
           <Button
