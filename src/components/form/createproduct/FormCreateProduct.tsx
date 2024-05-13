@@ -129,6 +129,7 @@ const FormCreateProduct = () => {
       stocks: values.stocks,
       category: values.category,
       subCategory: values.subCategory,
+      discount: values.discount,
     });
   }
 

@@ -4,6 +4,7 @@ import Logo from "./Logo";
 import { getServerAuthSession } from "@/server/auth";
 import DialogAuth from "../auth/DialogAuth";
 import UserButton from "./UserButton";
+import CartSheet from "../cart/CartSheet";
 
 const MainNavbar = async () => {
   const session = await getServerAuthSession();
@@ -11,7 +12,10 @@ const MainNavbar = async () => {
     <Header>
       <div className="container flex items-center justify-between">
         <Logo />
-        {!session ? <DialogAuth /> : <UserButton data={session} />}
+        <div className="flex items-center gap-2">
+          <CartSheet />
+          {!session ? <DialogAuth /> : <UserButton data={session} />}
+        </div>
       </div>
     </Header>
   );

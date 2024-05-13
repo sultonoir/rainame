@@ -677,4 +677,6 @@ export const memberRealtions = relations(member, ({ one }) => ({
 }));
 
 export type Product = typeof product.$inferSelect;
+export type ImageProduct = typeof imageProduct.$inferSelect
 export type Category = typeof category.$inferSelect;
+export type Details = typeof details.$inferSelect

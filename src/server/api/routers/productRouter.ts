@@ -19,7 +19,9 @@ export const productRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const result = await ctx.db.query.product.findMany({
         with: {
-          imageUrl: true,
+          imageUrl: {
+            limit: 1,
+          },
           details: {
             where: (q, { or, eq, isNotNull }) =>
               or(eq(q.sizeId, input.size ?? ""), isNotNull(q.sizeId)),
@@ -136,6 +138,34 @@ export const productRouter = createTRPCRouter({
               sizes: true,
             },
           },
+        },
+      });
+      return result;
+    }),
+  getAllproducts: publicProcedure.query(async ({ ctx }) => {
+    const result = await ctx.db.query.product.findMany({
+      with: {
+        imageUrl: {
+          limit: 1,
+        },
+      },
+    });
+    return result;
+  }),
+  getProductsByIds: publicProcedure
+    .input(
+      z.object({
+        ids: z.array(z.string()),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const result = await ctx.db.query.product.findMany({
+        where: (q, { inArray }) => inArray(q.id, input.ids),
+        with: {
+          imageUrl: {
+            limit: 1,
+          },
+          details: true,
         },
       });
       return result;
