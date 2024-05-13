@@ -45,31 +45,40 @@ const CartItem = ({ product, imageProduct, details }: Props) => {
           />
         ))}
       </div>
-      <div className="flex w-full flex-col gap-1">
-        <Link
-          href={`/product/${product.slug}`}
-          className="w-[calc(100%-10px)] truncate"
-        >
-          {product.title}
-        </Link>
-        {details.at(0)?.sizeId}
-        {product.discount > 0 ? (
-          <div className="flex items-center justify-start gap-2">
-            <p className="text-destructive line-through">${product.price}</p>
-            <p className="font-semibold">${totalPrice}</p>
+      <div className="ml-4 flex flex-1 flex-col space-y-3">
+        <div>
+          <div className="flex justify-between">
+            <div>
+              <Link
+                href={`/product/${product.slug}`}
+                className="pr-1 text-base font-medium"
+              >
+                {product.title}
+              </Link>
+              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                <span className="capitalize">{product.subCategoryId}</span>
+                <span className="mx-2 h-4 border-l border-slate-200 dark:border-slate-700"></span>
+                <span>{details.at(0)?.sizeId}</span>
+              </p>
+            </div>
+            <div className="mt-0.5">
+              <div className="flex items-center rounded-lg border-2 border-green-500 px-2 py-1 text-sm font-medium md:px-2.5 md:py-1.5">
+                <span className="!leading-none text-green-500">
+                  ${totalPrice}
+                </span>
+              </div>
+            </div>
           </div>
-        ) : (
-          <p className="font-semibold">${product.price}</p>
-        )}
+        </div>
         <div className="flex items-center justify-between">
           <Counter id={product.id} price={totalPrice} />
           <Button
-            variant="ghost"
             size="icon"
-            className="rounded-full text-muted-foreground"
+            variant="ghost"
+            className=" rounded-full text-destructive hover:text-destructive"
             onClick={() => remove(product.id)}
           >
-            <Trash2 />
+            <Trash2 size={20} />
           </Button>
         </div>
       </div>

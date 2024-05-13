@@ -12,17 +12,17 @@ import useCart from "@/hook/useCart";
 import { ShoppingBag } from "lucide-react";
 import useStore from "@/hook/useStore";
 import CartSection from "../cart/CartSection";
+import useCartSheet from "@/hook/useCartSheet";
 
 export default function CartSheet() {
-  const { setIsOpen } = useCart();
-  const isOpen = useStore(useCart, (state) => state.isOpen);
+  const { onOpen, isOpen } = useCartSheet();
   const carts = useStore(useCart, (state) => state.cart);
   const items = carts?.reduce((acc, cur) => acc + cur.amount, 0);
 
   const ids = carts?.map((item) => item.id);
 
   return (
-    <Sheet open={isOpen} onOpenChange={setIsOpen}>
+    <Sheet open={isOpen} onOpenChange={onOpen}>
       <SheetTrigger asChild>
         <Button
           variant="ghost"

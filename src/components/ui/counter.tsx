@@ -15,11 +15,11 @@ const Counter = ({ id, price }: Props) => {
   const amount = findcart ? findcart : 1;
 
   return (
-    <div className="flex items-center gap-2 rounded-full bg-secondary p-2">
+    <div className="flex items-center gap-2 rounded-full">
       <Button
         size="icon"
         variant="outline"
-        className="size-7 rounded-full border border-muted-foreground hover:border-2"
+        className="size-6 rounded-full border border-muted-foreground hover:border-2"
         disabled={amount <= 1}
         onClick={() => decrement({ id, amount: 1, price })}
       >
@@ -29,7 +29,7 @@ const Counter = ({ id, price }: Props) => {
       <Button
         size="icon"
         variant="outline"
-        className="size-7 rounded-full border border-muted-foreground hover:border-2"
+        className="size-6 rounded-full border border-muted-foreground hover:border-2"
         onClick={() => increment({ id, amount: 1, price })}
       >
         <Plus />

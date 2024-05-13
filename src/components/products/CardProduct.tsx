@@ -9,6 +9,7 @@ import { Button } from "../ui/button";
 import useCart from "@/hook/useCart";
 import ButtonWishlist from "./ButtonWishlist";
 import { cn } from "@/lib/utils";
+import useCartSheet from "@/hook/useCartSheet";
 interface Props {
   product: Product;
   imageProduct: ImageProduct[];
@@ -16,6 +17,7 @@ interface Props {
 
 const CardProduct = ({ product, imageProduct }: Props) => {
   const { increment } = useCart();
+  const { onOpen } = useCartSheet();
   function calculated() {
     const price = product.price;
     const discount = product.discount;
@@ -32,6 +34,7 @@ const CardProduct = ({ product, imageProduct }: Props) => {
   const totalPrice = calculated();
 
   const handleClick = () => {
+    onOpen(true);
     increment({ id: product.id, amount: 1, price: totalPrice });
   };
 
