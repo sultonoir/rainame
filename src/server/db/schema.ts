@@ -206,6 +206,9 @@ export const cart = createTable(
       .unique()
       .primaryKey()
       .$defaultFn(() => nanoid(10)),
+    totalPrice: real("totalPrice").notNull().default(0),
+    size: varchar("size").notNull(),
+    totalProduct: smallint("totalProduct").notNull().default(0),
     productId: varchar("productId")
       .notNull()
       .references(() => product.id),
@@ -225,6 +228,33 @@ export const cart = createTable(
   }),
 );
 
+export const wishlist = createTable(
+  "wishlist",
+  {
+    id: varchar("id", { length: 255 })
+      .notNull()
+      .unique()
+      .primaryKey()
+      .$defaultFn(() => nanoid(10)),
+    productId: varchar("productId")
+      .notNull()
+      .references(() => product.id),
+    userId: varchar("userId", { length: 255 })
+      .notNull()
+      .references(() => users.id),
+    createdAt: timestamp("createdAt", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updatedAt", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (c) => ({
+    cartUserIdx: index("wishlistUserIdx").on(c.userId),
+    cartProductIdx: index("wishlistProductIdx").on(c.productId),
+  }),
+);
+
 export const lineItems = createTable("lineItems", {
   id: varchar("id", { length: 255 })
     .notNull()
@@ -234,6 +264,7 @@ export const lineItems = createTable("lineItems", {
   paymentId: varchar("paymentId").notNull(),
   productId: varchar("productId").notNull(),
   totalPrice: real("totalPrice").notNull().default(0),
+  size: varchar("size").notNull(),
   totlaProduct: smallint("totalProduct").notNull().default(0),
   createdAt: timestamp("createdAt", { withTimezone: true })
     .notNull()
@@ -492,6 +523,7 @@ export const usersRelations = relations(users, ({ many }) => ({
   notifiRead: many(notifiRead),
   product: many(product),
   ratings: many(ratings),
+  wishlist: many(wishlist),
 }));
 
 export const accountsRelations = relations(accounts, ({ one }) => ({
@@ -518,6 +550,18 @@ export const productRelations = relations(product, ({ one, many }) => ({
   ratings: many(ratings),
   details: many(details),
   lineitems: many(lineItems),
+  wishlist: many(wishlist),
+}));
+
+export const wishlistRelations = relations(wishlist, ({ one }) => ({
+  product: one(product, {
+    fields: [wishlist.id],
+    references: [product.id],
+  }),
+  user: one(users, {
+    fields: [wishlist.id],
+    references: [users.id],
+  }),
 }));
 
 export const sizesRelations = relations(sizes, ({ many }) => ({
@@ -677,6 +721,6 @@ export const memberRealtions = relations(member, ({ one }) => ({
 }));
 
 export type Product = typeof product.$inferSelect;
-export type ImageProduct = typeof imageProduct.$inferSelect
+export type ImageProduct = typeof imageProduct.$inferSelect;
 export type Category = typeof category.$inferSelect;
-export type Details = typeof details.$inferSelect
+export type Details = typeof details.$inferSelect;

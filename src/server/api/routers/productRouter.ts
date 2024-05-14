@@ -140,11 +140,28 @@ export const productRouter = createTRPCRouter({
           },
         },
       });
-      return result;
+
+      if (!result) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Product not found",
+        });
+      }
+
+      const totalrating = result?.ratings.reduce(
+        (acc, cure) => acc + cure.value,
+        0,
+      );
+      const newResult = {
+        ...result,
+        ratings: totalrating,
+      };
+      return newResult;
     }),
   getAllproducts: publicProcedure.query(async ({ ctx }) => {
     const result = await ctx.db.query.product.findMany({
       with: {
+        details: true,
         imageUrl: {
           limit: 1,
         },

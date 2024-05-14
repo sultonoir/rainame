@@ -8,6 +8,7 @@ import {
 import { subCategory } from "@/server/db/schema";
 import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
+import slugify from "slugify";
 
 export const subCategoryRouter = createTRPCRouter({
   getSubCategory: publicProcedure
@@ -34,7 +35,9 @@ export const subCategoryRouter = createTRPCRouter({
       if (!admin) {
         throw new TRPCError({ code: "BAD_REQUEST", message: "Access denied" });
       }
-      const id = input.name.toLowerCase();
+      const id = slugify(input.name, {
+        lower: true,
+      });
       await ctx.db.insert(subCategory).values({
         name: input.name,
         categoryId: input.categoryId,

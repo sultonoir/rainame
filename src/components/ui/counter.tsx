@@ -4,15 +4,8 @@ import { Button } from "./button";
 import { Minus, Plus } from "lucide-react";
 import useCart from "@/hook/useCart";
 
-interface Props {
-  id: string;
-  price: number;
-}
-
-const Counter = ({ id, price }: Props) => {
-  const { increment, decrement, cart } = useCart();
-  const findcart = cart.find((item) => item.id === id)?.amount;
-  const amount = findcart ? findcart : 1;
+const Counter = () => {
+  const { increment, decrement, amount } = useCart();
 
   return (
     <div className="flex items-center gap-2 rounded-lg border p-0.5">
@@ -21,7 +14,7 @@ const Counter = ({ id, price }: Props) => {
         variant="outline"
         className="size-6 border-none hover:bg-transparent"
         disabled={amount <= 1}
-        onClick={() => decrement({ id, amount: 1, price })}
+        onClick={() => decrement(1)}
       >
         <Minus />
       </Button>
@@ -30,7 +23,7 @@ const Counter = ({ id, price }: Props) => {
         size="icon"
         variant="outline"
         className="size-6 border-none hover:bg-transparent"
-        onClick={() => increment({ id, amount: 1, price })}
+        onClick={() => increment(1)}
       >
         <Plus />
       </Button>

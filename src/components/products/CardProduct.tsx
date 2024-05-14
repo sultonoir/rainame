@@ -1,23 +1,26 @@
 "use client";
-import { type ImageProduct, type Product } from "@/server/db/schema";
+import {
+  type Details,
+  type ImageProduct,
+  type Product,
+} from "@/server/db/schema";
 import React from "react";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
 import { BadgePercent, ScanIcon, ShoppingBag } from "lucide-react";
 import { Button } from "../ui/button";
-import useCart from "@/hook/useCart";
 import ButtonWishlist from "./ButtonWishlist";
 import { cn } from "@/lib/utils";
-import useCartSheet from "@/hook/useCartSheet";
+import { api } from "@/trpc/react";
+import { toast } from "sonner";
 interface Props {
   product: Product;
   imageProduct: ImageProduct[];
+  details: Details[];
 }
 
-const CardProduct = ({ product, imageProduct }: Props) => {
-  const { increment } = useCart();
-  const { onOpen } = useCartSheet();
+const CardProduct = ({ product, imageProduct, details }: Props) => {
   function calculated() {
     const price = product.price;
     const discount = product.discount;
@@ -32,10 +35,28 @@ const CardProduct = ({ product, imageProduct }: Props) => {
   }
 
   const totalPrice = calculated();
-
+  const ctx = api.useUtils();
+  const { mutate, isPending } = api.cart.createCart.useMutation({
+    onError: (e) => {
+      toast.error(e.message);
+    },
+    onSuccess: () => {
+      toast.success("Product Successfully Added");
+    },
+    onSettled: async () => {
+      await ctx.cart.getCart.invalidate();
+      await ctx.cart.getIndicator.invalidate();
+    },
+  });
   const handleClick = () => {
-    onOpen(true);
-    increment({ id: product.id, amount: 1, price: totalPrice });
+    {
+      mutate({
+        productId: product.id,
+        totalPrice,
+        size: details.at(0)?.sizeId ?? "",
+        totalProduct: 1,
+      });
+    }
   };
 
   return (
@@ -64,6 +85,8 @@ const CardProduct = ({ product, imageProduct }: Props) => {
         <div className="invisible absolute inset-x-1 bottom-0 z-10 justify-center gap-1 opacity-0 transition-all group-hover:visible group-hover:bottom-4 group-hover:opacity-100 lg:flex">
           <Button
             className="h-min rounded-full bg-popover text-[12px] text-foreground hover:bg-secondary hover:text-foreground"
+            disabled={isPending}
+            isLoading={isPending}
             startContent={<ShoppingBag size={15} className="mr-2" />}
             onClick={handleClick}
           >

@@ -1,34 +1,20 @@
-import useCart from "@/hook/useCart";
-import type { Details, ImageProduct, Product } from "@/server/db/schema";
+import type { ImageProduct, Product } from "@/server/db/schema";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import Counter from "../ui/counter";
-import { Button } from "../ui/button";
-import { Trash2 } from "lucide-react";
+import { calculate } from "@/lib/totalprice";
 
 interface Props {
   product: Product;
   imageProduct: ImageProduct[];
-  details: Details[];
+  size: string;
 }
 
-const CartItem = ({ product, imageProduct, details }: Props) => {
-  const { remove } = useCart();
-  function calculated() {
-    const price = product.price;
-    const discount = product.discount;
-    let total = price;
-
-    if (discount && discount > 0) {
-      const discountAmount = (price * discount) / 100;
-      total = price - discountAmount;
-    }
-    total = parseFloat(total.toFixed(2));
-    return total;
-  }
-
-  const totalPrice = calculated();
+const CartItem = ({ product, imageProduct, size }: Props) => {
+  const totalPrice = calculate({
+    discount: product.discount,
+    price: product.price,
+  });
   return (
     <div className="flex gap-2 pt-3">
       <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg">
@@ -58,7 +44,7 @@ const CartItem = ({ product, imageProduct, details }: Props) => {
               <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                 <span className="capitalize">{product.subCategoryId}</span>
                 <span className="mx-2 h-4 border-l border-slate-200 dark:border-slate-700"></span>
-                <span>{details.at(0)?.sizeId}</span>
+                <span>{size}</span>
               </p>
             </div>
             <div className="mt-0.5">
@@ -69,17 +55,6 @@ const CartItem = ({ product, imageProduct, details }: Props) => {
               </div>
             </div>
           </div>
-        </div>
-        <div className="flex items-center justify-between">
-          <Counter id={product.id} price={totalPrice} />
-          <Button
-            size="icon"
-            variant="ghost"
-            className=" rounded-full text-destructive hover:text-destructive"
-            onClick={() => remove(product.id)}
-          >
-            <Trash2 size={20} />
-          </Button>
         </div>
       </div>
     </div>
