@@ -31,7 +31,7 @@ const CartItem = ({ product, imageProduct, details }: Props) => {
   const totalPrice = calculated();
   return (
     <div className="flex gap-2 pt-3">
-      <div className="relative h-24 w-20 flex-shrink-0 overflow-hidden rounded-lg">
+      <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg">
         {imageProduct.map((item) => (
           <Image
             key={item.id}
