@@ -7,7 +7,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     <React.Fragment>
       <MainNavbar />
       {children}
-      <Toaster />
+      <Toaster richColors />
     </React.Fragment>
   );
 };

@@ -28,7 +28,7 @@ import { useUploadThing } from "@/lib/uploadthing";
 import useDraft from "@/hook/useDraft";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
-import { createBlurhash } from "@/lib/blur";
+import getBlur from "@/lib/blur";
 import CreateSubCategory from "../createSubcategory/CreateSubCategory";
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
@@ -115,7 +115,7 @@ const FormCreateProduct = () => {
 
       await Promise.all(
         imageUpload.map(async (item) => {
-          const blurhash = await createBlurhash(item.url, 150, 150);
+          const blurhash = await getBlur(item.url);
           item.blur = blurhash;
           return blurhash;
         }),

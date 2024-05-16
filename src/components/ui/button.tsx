@@ -68,7 +68,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             <Loader2 className="mr-2 size-4 animate-spin" />
           ) : (
             <React.Fragment>
-              {startContent && <span>{startContent}</span>}
+              {startContent && <>{startContent}</>}
             </React.Fragment>
           )}
           {children}

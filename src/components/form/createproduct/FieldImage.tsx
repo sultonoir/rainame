@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import useDraft from "@/hook/useDraft";
 import { ImagePlus, Trash2 } from "lucide-react";
 import Image from "next/image";
-import React, { type ChangeEvent } from "react";
+import React from "react";
 
 interface Props {
   valueChange: (value: string[]) => void;
@@ -13,32 +13,43 @@ interface Props {
 const FieldImage = ({ valueChange }: Props) => {
   const { images, setImages } = useDraft();
 
-  const handleImage = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleDrop = async (e: React.DragEvent<HTMLElement>) => {
     e.preventDefault();
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      const newFiles = Array.from(e.dataTransfer.files);
+      const uniqueFiles = filterUniqueImages(newFiles, images);
 
-    if (e.target.files && e.target.files.length > 0) {
-      const newFiles = Array.from(e.target.files);
-      const uniqueFiles: File[] = [];
-
-      newFiles.forEach((file) => {
-        if (!file.type.includes("image")) return;
-
-        const isDuplicate = images?.some((item) => item.name === file.name);
-        if (!isDuplicate) {
-          uniqueFiles.push(file);
-        }
-
-        const fileReader = new FileReader();
-        fileReader.readAsDataURL(file);
-      });
-      const newImages = [...images, ...uniqueFiles];
-      const values = newImages.map((item) => {
-        const result = URL.createObjectURL(item);
-        return result;
-      });
-      valueChange(values);
+      const img = uniqueFiles.map((item) => URL.createObjectURL(item));
+      valueChange(img);
       setImages([...images, ...uniqueFiles]);
     }
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLElement>) => {
+    e.preventDefault();
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+
+    const newFiles = Array.from(e.target.files);
+    const uniqueFiles = filterUniqueImages(newFiles, images);
+    const img = uniqueFiles.map((item) => URL.createObjectURL(item));
+    valueChange(img);
+    setImages([...images, ...uniqueFiles]);
+  };
+
+  const filterUniqueImages = (
+    files: File[],
+    existingImages: File[],
+  ): File[] => {
+    return files.filter((file) => {
+      if (!file.type.includes("image")) return false;
+      const isDuplicate = existingImages.some(
+        (image) => image.name === file.name,
+      );
+      return !isDuplicate;
+    });
   };
 
   const handleDelete = (value: string) => {
@@ -93,6 +104,8 @@ const FieldImage = ({ valueChange }: Props) => {
       ))}
       <Label
         htmlFor="upload"
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
         className="flex size-40 items-center justify-center border border-dashed"
       >
         <ImagePlus />
@@ -103,7 +116,7 @@ const FieldImage = ({ valueChange }: Props) => {
         multiple
         id="upload"
         accept="image/*"
-        onChange={(e) => handleImage(e)}
+        onChange={handleImageUpload}
       />
     </div>
   );

@@ -13,7 +13,7 @@ const ProductImage = ({ images }: Props) => {
   );
   return (
     <div
-      className="grid gap-2"
+      className="grid h-fit gap-2"
       onMouseLeave={() => setHighligt(images?.at(0)?.url)}
     >
       <div className="relative aspect-square overflow-hidden rounded-md lg:text-white">
@@ -34,7 +34,7 @@ const ProductImage = ({ images }: Props) => {
             key={img.id}
             className="relative aspect-square"
             onMouseEnter={() => setHighligt(img.url)}
-            onClick={()=>setHighligt(img.url)}
+            onClick={() => setHighligt(img.url)}
           >
             <Image
               alt="Product image"

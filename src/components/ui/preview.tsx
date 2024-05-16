@@ -36,7 +36,7 @@ const Preview = ({ values }: Props) => {
     editable: false,
     editorProps: {
       attributes: {
-        class: "h-fit lg:text-lg",
+        class: "h-fit lg:text-sm",
       },
     },
     content: values,

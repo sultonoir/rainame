@@ -3,12 +3,13 @@ import { Heart } from "lucide-react";
 import useWishlist from "@/hook/useWishlist";
 import { cn } from "@/lib/utils";
 import useStore from "@/hook/useStore";
+import { buttonVariants, type ButtonProps } from "../ui/button";
 
-interface Props {
+interface Props extends ButtonProps {
   id: string;
 }
 
-const ButtonWishlist = ({ id }: Props) => {
+const ButtonWishlist = ({ id, className, variant, size, children }: Props) => {
   const { toggle } = useWishlist();
   const wishlist = useStore(useWishlist, (state) => state.wishlist);
 
@@ -20,7 +21,7 @@ const ButtonWishlist = ({ id }: Props) => {
 
   return (
     <button
-      className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-secondary text-foreground"
+      className={cn(buttonVariants({ variant, size, className }))}
       onClick={handleClick}
     >
       <Heart
@@ -29,6 +30,7 @@ const ButtonWishlist = ({ id }: Props) => {
           "fill-rose-500 stroke-red-500": exist === true,
         })}
       />
+      {children}
     </button>
   );
 };

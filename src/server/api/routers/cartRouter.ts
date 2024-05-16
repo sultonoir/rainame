@@ -16,11 +16,22 @@ export const cartRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      const admin = ctx.session.user.role === "admin";
+      if (admin) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Admin can't do this",
+        });
+      }
+
       const exist = await ctx.db.query.cart.findMany({
         where: (q, { eq, and }) =>
-          and(eq(q.productId, input.productId), eq(q.size, input.size)),
+          and(
+            eq(q.productId, input.productId),
+            eq(q.size, input.size),
+            eq(q.userId, ctx.session.user.id),
+          ),
       });
-
       if (exist.length > 0) {
         await ctx.db
           .update(cart)
@@ -70,6 +81,7 @@ export const cartRouter = createTRPCRouter({
         },
       },
     });
+
     return result;
   }),
   removeFromCart: protectedProcedure

@@ -1,13 +1,16 @@
-import { api } from "@/trpc/server";
+"use client";
 import React from "react";
 import CardProduct from "@/components/products/CardProduct";
+import { api } from "@/trpc/react";
+import ProductLoading from "../loading/ProductLoading";
 
-const page = async () => {
-  const products = await api.product.getAllproducts();
+const Products = () => {
+  const { data: products, isLoading } = api.product.getAllproducts.useQuery();
   return (
-    <div className="container py-5">
+    <React.Fragment>
+      {isLoading && <ProductLoading />}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
-        {products.map((product) => (
+        {products?.map((product) => (
           <CardProduct
             key={product.id}
             product={product}
@@ -16,8 +19,8 @@ const page = async () => {
           />
         ))}
       </div>
-    </div>
+    </React.Fragment>
   );
 };
 
-export default page;
+export default Products;
