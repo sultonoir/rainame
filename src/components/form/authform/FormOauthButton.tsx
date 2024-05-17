@@ -15,20 +15,21 @@ const FormOauthButton = () => {
     <div className="mt-3 flex flex-col gap-1">
       <Button
         variant="outline"
-        startContent={<Chrome className="mr-2 flex-shrink-0" />}
+        startContent={<Chrome className="mr-2 flex-shrink-0" size={20} />}
         onClick={() =>
           signIn("google", {
             callbackUrl: "/",
             redirect: true,
           })
         }
+        className="w-full justify-start pl-36"
       >
         Continue with google
       </Button>
       <Button
         disabled={isLoading.github}
         isLoading={isLoading.github}
-        startContent={<FacebookIcon className="mr-2 flex-shrink-0" />}
+        startContent={<FacebookIcon className="mr-2 flex-shrink-0" size={20} />}
         variant="outline"
         onClick={async () => {
           setIsLoading({
@@ -55,14 +56,15 @@ const FormOauthButton = () => {
             }
           });
         }}
+        className="w-full justify-start pl-36"
       >
-        Continue with github
+        Continue with facebook
       </Button>
       <Button
         variant="outline"
         disabled={isLoading.demo}
         isLoading={isLoading.demo}
-        startContent={<KeyRound className="mr-2 flex-shrink-0" />}
+        startContent={<KeyRound className="mr-2 flex-shrink-0" size={20} />}
         onClick={async () => {
           setIsLoading({
             ...isLoading,
@@ -88,6 +90,7 @@ const FormOauthButton = () => {
             }
           });
         }}
+        className="w-full justify-start pl-36"
       >
         Continue with demo
       </Button>

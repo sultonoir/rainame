@@ -1,21 +1,13 @@
-import { api } from "@/trpc/server";
 import React from "react";
-import CardProduct from "@/components/products/CardProduct";
+import Products from "@/components/products/Products";
+import ProductLoading from "@/components/loading/ProductLoading";
 
 const page = async () => {
-  const products = await api.product.getAllproducts();
   return (
     <div className="container py-5">
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
-        {products.map((product) => (
-          <CardProduct
-            key={product.id}
-            product={product}
-            imageProduct={product.imageUrl}
-            details={product.details}
-          />
-        ))}
-      </div>
+      <React.Suspense fallback={<ProductLoading />}>
+        <Products />
+      </React.Suspense>
     </div>
   );
 };

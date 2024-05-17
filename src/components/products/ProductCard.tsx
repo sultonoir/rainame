@@ -19,7 +19,7 @@ interface Props {
   details: Details[];
 }
 
-const CardProduct = ({ product, imageProduct, details }: Props) => {
+const ProductCard = ({ product, imageProduct, details }: Props) => {
   function calculated() {
     const price = product.price;
     const discount = product.discount;
@@ -119,7 +119,7 @@ const CardProduct = ({ product, imageProduct, details }: Props) => {
               <p className="text-sm leading-none text-muted-foreground line-through">
                 ${product.price}
               </p>
-              <p className="rounded-lg bg-red-50 px-2 py-0.5 text-sm font-medium text-red-600">
+              <p className="rounded-lg bg-red-50 px-2 py-0.5 text-[13px] font-medium leading-none text-red-600">
                 {product.discount}%
               </p>
             </div>
@@ -132,4 +132,4 @@ const CardProduct = ({ product, imageProduct, details }: Props) => {
   );
 };
 
-export default CardProduct;
+export default ProductCard;
