@@ -1,23 +1,45 @@
 import React from "react";
 import { Heart } from "lucide-react";
-import useWishlist from "@/hook/useWishlist";
 import { cn } from "@/lib/utils";
-import useStore from "@/hook/useStore";
 import { buttonVariants, type ButtonProps } from "../ui/button";
+import { api } from "@/trpc/react";
+import { toast } from "sonner";
 
 interface Props extends ButtonProps {
   id: string;
+  heart?: string;
 }
 
-const ButtonWishlist = ({ id, className, variant, size, children }: Props) => {
-  const { toggle } = useWishlist();
-  const wishlist = useStore(useWishlist, (state) => state.wishlist);
+const ButtonWishlist = ({
+  id,
+  className,
+  variant,
+  size,
+  children,
+  heart,
+}: Props) => {
+  const { data: exist } = api.wishlist.isWishlist.useQuery({
+    productId: id,
+  });
 
-  const exist = wishlist?.some((item) => item === id);
-
+  const ctx = api.useUtils();
+  const { mutate, isPending } = api.wishlist.toggleWishlist.useMutation({
+    onSuccess: (e) => {
+      toast.success(e);
+    },
+    onError: (e) => {
+      toast.error(e.message);
+    },
+    onSettled: async () => {
+      await ctx.wishlist.isWishlist.invalidate();
+    },
+  });
   const handleClick = () => {
-    toggle(id);
+    mutate({
+      productId: id,
+    });
   };
+  
 
   return (
     <button
@@ -26,9 +48,16 @@ const ButtonWishlist = ({ id, className, variant, size, children }: Props) => {
     >
       <Heart
         size={20}
-        className={cn("stroke-foreground/80", {
-          "fill-rose-500 stroke-red-500": exist === true,
-        })}
+        className={cn(
+          "stroke-black/80",
+          heart,
+          {
+            "fill-rose-500 stroke-red-500": exist === true,
+          },
+          {
+            "fill-rose-500 stroke-red-500": isPending === true,
+          },
+        )}
       />
       {children}
     </button>

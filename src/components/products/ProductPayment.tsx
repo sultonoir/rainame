@@ -107,7 +107,12 @@ const ProductPayment = ({ id, price }: Props) => {
             Chat
           </Button>
           <Separator orientation="vertical" className="h-10" />
-          <ButtonWishlist id={id} variant="ghost" className="gap-2">
+          <ButtonWishlist
+            id={id}
+            variant="ghost"
+            className="gap-2"
+            heart="stroke-foreground/80"
+          >
             Wishlist
           </ButtonWishlist>
           <Separator orientation="vertical" className="h-10" />

@@ -8,10 +8,9 @@ import React from "react";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
-import { BadgePercent, ScanIcon, ShoppingBag } from "lucide-react";
+import { ScanIcon, ShoppingBag } from "lucide-react";
 import { Button } from "../ui/button";
 import ButtonWishlist from "./ButtonWishlist";
-import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
 interface Props {
@@ -63,23 +62,12 @@ const CardProduct = ({ product, imageProduct, details }: Props) => {
     <Card key={product.id} className="border-none shadow-none">
       <CardContent className="group relative p-0">
         <div className="absolute top-1 z-10 w-full px-4">
-          <div
-            className={cn("flex w-full items-center justify-end", {
-              "justify-between": product.discount > 0,
-            })}
-          >
-            <div
-              className={cn(
-                "flex items-center gap-2 rounded-full border bg-background px-3 py-1",
-                {
-                  hidden: product.discount === 0,
-                },
-              )}
-            >
-              <BadgePercent size={14} />
-              <span className="text-[12px]">{product.discount}% Discount</span>
-            </div>
-            <ButtonWishlist id={product.id} />
+          <div className="flex w-full items-center justify-end">
+            <ButtonWishlist
+              id={product.id}
+              size="icon"
+              className="rounded-full border-slate-200 bg-slate-200 hover:bg-slate-300"
+            />
           </div>
         </div>
         <div className="invisible absolute inset-x-1 bottom-0 z-10 justify-center gap-1 opacity-0 transition-all group-hover:visible group-hover:bottom-4 group-hover:opacity-100 lg:flex">
@@ -125,9 +113,16 @@ const CardProduct = ({ product, imageProduct, details }: Props) => {
           {product.title}
         </p>
         {product.discount > 0 ? (
-          <div className="flex items-center justify-start gap-2">
-            <p className="text-destructive line-through">${product.price}</p>
-            <p className="font-semibold">${totalPrice}</p>
+          <div className="flex flex-col items-start justify-start">
+            <p className="font-bold">${totalPrice}</p>
+            <div className="flex items-center gap-1 text-sm">
+              <p className="text-sm leading-none text-muted-foreground line-through">
+                ${product.price}
+              </p>
+              <p className="rounded-lg bg-red-50 px-2 py-0.5 text-sm font-medium text-red-600">
+                {product.discount}%
+              </p>
+            </div>
           </div>
         ) : (
           <p className="font-semibold">${product.price}</p>
