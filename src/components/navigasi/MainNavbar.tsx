@@ -7,13 +7,15 @@ import UserButton from "./UserButton";
 import CartSheet from "../cart/CartSheet";
 import { ThemeSwitcher } from "../theme/ThemeSwithcer";
 import { Separator } from "../ui/separator";
+import SearchBar from "../filter/SearchBar";
 
 const MainNavbar = async () => {
   const session = await getServerAuthSession();
   return (
     <Header>
       <div className="container flex items-center justify-between">
-        <Logo />
+        <Logo className="flex-shrink-0" />
+        <SearchBar />
         <div className="flex items-center">
           <ThemeSwitcher />
           {!session ? (

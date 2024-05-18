@@ -8,10 +8,12 @@ import { Button } from "../ui/button";
 import { ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const Logo = () => {
+type LogoProps = React.HTMLAttributes<HTMLDivElement>;
+
+const Logo = ({ className }: LogoProps) => {
   const path = usePathname();
   return (
-    <React.Fragment>
+    <div className={cn(className)}>
       <Link
         href="/"
         className={cn("hidden lg:block", {
@@ -39,7 +41,7 @@ const Logo = () => {
           <ArrowLeft />
         </Link>
       </Button>
-    </React.Fragment>
+    </div>
   );
 };
 
