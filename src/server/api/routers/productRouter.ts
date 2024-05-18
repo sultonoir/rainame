@@ -7,16 +7,23 @@ import {
 } from "@/server/api/trpc";
 import { product, imageProduct, details } from "@/server/db/schema";
 import { TRPCError } from "@trpc/server";
+import { stringToNumber } from "@/lib/stringtonumber";
 
 export const productRouter = createTRPCRouter({
   filterProduct: publicProcedure
     .input(
       z.object({
         category: z.string().optional(),
+        subCategory: z.string().optional(),
         size: z.string().optional(),
+        title: z.string().optional(),
+        min: z.string().optional(),
+        max: z.string().optional(),
       }),
     )
     .query(async ({ ctx, input }) => {
+      const min = stringToNumber(input.min);
+      const max = stringToNumber(input.max);
       const result = await ctx.db.query.product.findMany({
         with: {
           imageUrl: {
@@ -27,8 +34,14 @@ export const productRouter = createTRPCRouter({
               or(eq(q.sizeId, input.size ?? ""), isNotNull(q.sizeId)),
           },
         },
-        where: (q, { or, isNotNull, eq }) =>
-          or(eq(q.categoryId, input.category ?? ""), isNotNull(q.categoryId)),
+        where: (q, { or, isNotNull, eq, ilike, gte, lte }) =>
+          or(
+            eq(q.categoryId, input.category ?? ""),
+            isNotNull(q.categoryId),
+            ilike(q.title, input.title ?? ""),
+            gte(q.price, min),
+            lte(q.price, max),
+          ),
       });
       return result;
     }),

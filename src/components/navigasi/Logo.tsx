@@ -13,7 +13,12 @@ type LogoProps = React.HTMLAttributes<HTMLDivElement>;
 const Logo = ({ className }: LogoProps) => {
   const path = usePathname();
   return (
-    <div className={cn(className)}>
+    <div
+      className={cn("mr-2 block", className, {
+        "hidden md:block": path === "/",
+        block: path !== "/",
+      })}
+    >
       <Link
         href="/"
         className={cn("hidden lg:block", {

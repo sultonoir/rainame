@@ -29,10 +29,11 @@ const SearchBar: React.FC = () => {
   }, []);
 
   return (
-    <div ref={menuRef} className="relative mx-20 w-full">
+    <div ref={menuRef} className="relative hidden w-full lg:mx-20 lg:block">
       <form
         onSubmit={(e) => {
           e.preventDefault();
+          setView(false);
           setSearchList(value);
           navigate(`/product/?title=${value}`);
         }}
