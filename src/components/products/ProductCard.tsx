@@ -13,6 +13,8 @@ import { Button } from "../ui/button";
 import ButtonWishlist from "./ButtonWishlist";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
+import { useSession } from "next-auth/react";
+import useDialog from "@/hook/useDialog";
 interface Props {
   product: Product;
   imageProduct: ImageProduct[];
@@ -20,6 +22,8 @@ interface Props {
 }
 
 const ProductCard = ({ product, imageProduct, details }: Props) => {
+  const { data } = useSession();
+  const { onOpen } = useDialog();
   function calculated() {
     const price = product.price;
     const discount = product.discount;
@@ -48,14 +52,16 @@ const ProductCard = ({ product, imageProduct, details }: Props) => {
     },
   });
   const handleClick = () => {
-    {
-      mutate({
-        productId: product.id,
-        totalPrice,
-        size: details.at(0)?.sizeId ?? "",
-        totalProduct: 1,
-      });
+    if (!data) {
+      onOpen(true);
+      return;
     }
+    mutate({
+      productId: product.id,
+      totalPrice,
+      size: details.at(0)?.sizeId ?? "",
+      totalProduct: 1,
+    });
   };
 
   return (

@@ -4,7 +4,7 @@ import ProductLoading from "@/components/loading/ProductLoading";
 
 const page = async () => {
   return (
-    <div className="container py-5">
+    <div className="container min-h-dvh py-5">
       <React.Suspense fallback={<ProductLoading />}>
         <Products />
       </React.Suspense>

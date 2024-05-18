@@ -18,6 +18,7 @@ import ProductDesc from "@/components/products/ProductDesc";
 import Feature from "@/components/ui/feature";
 import ProductSizes from "@/components/products/ProductSizes";
 import ProductRecom from "@/components/products/ProductRecom";
+import PaymentBar from "@/components/paymen/PaymentBar";
 
 interface Props {
   params: { slug: string };
@@ -110,6 +111,7 @@ const Page = async ({ params }: Props) => {
         </div>
       </div>
       <ProductRecom />
+      <PaymentBar product={product} details={product.details} />
     </div>
   );
 };

@@ -4,6 +4,8 @@ import { cn } from "@/lib/utils";
 import { buttonVariants, type ButtonProps } from "../ui/button";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
+import { useSession } from "next-auth/react";
+import useDialog from "@/hook/useDialog";
 
 interface Props extends ButtonProps {
   id: string;
@@ -18,6 +20,8 @@ const ButtonWishlist = ({
   children,
   heart,
 }: Props) => {
+  const { data } = useSession();
+  const { onOpen } = useDialog();
   const { data: exist } = api.wishlist.isWishlist.useQuery({
     productId: id,
   });
@@ -35,11 +39,14 @@ const ButtonWishlist = ({
     },
   });
   const handleClick = () => {
+    if (!data) {
+      onOpen(true);
+      return;
+    }
     mutate({
       productId: id,
     });
   };
-  
 
   return (
     <button

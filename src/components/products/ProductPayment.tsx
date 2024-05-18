@@ -98,9 +98,9 @@ const ProductPayment = ({ id, price }: Props) => {
         >
           Buy now
         </Button>
-        <div className="mt-2 flex w-full items-center gap-2">
+        <div className="mt-2 flex w-full  items-center justify-center gap-2">
           <Button
-            className="w-full gap-2"
+            className="w-full gap-2 px-0"
             variant="ghost"
             startContent={<MessageSquareText size={20} />}
           >
@@ -110,14 +110,14 @@ const ProductPayment = ({ id, price }: Props) => {
           <ButtonWishlist
             id={id}
             variant="ghost"
-            className="gap-2"
+            className="w-full gap-2 px-1"
             heart="stroke-foreground/80"
           >
             Wishlist
           </ButtonWishlist>
           <Separator orientation="vertical" className="h-10" />
           <Button
-            className="w-full gap-2"
+            className="w-full gap-2 px-0"
             variant="ghost"
             startContent={<Share2 size={20} />}
           >
