@@ -7,7 +7,6 @@ type Props = React.HTMLAttributes<HTMLDivElement>;
 const ProductLoading = ({ className }: Props) => {
   return (
     <div className={cn("h-full space-y-5", className)}>
-      <Skeleton className="h-7 w-[34%] rounded-full" />
       <div className="grid grid-cols-1 lg:grid-cols-6 lg:gap-4">
         {Array.from({ length: 6 }).map((_, index) => (
           <div key={index} className="space-y-2">

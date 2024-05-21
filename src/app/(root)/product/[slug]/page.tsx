@@ -85,7 +85,9 @@ const Page = async ({ params }: Props) => {
                     </p>
                   </div>
                 ) : (
-                  <div className="flex items-center gap-2"></div>
+                  <div className="text-3xl font-semibold leading-none">
+                    ${totalPrice}
+                  </div>
                 )}
                 <Separator orientation="vertical" className="h-6" />
                 <div className="flex items-center gap-2 font-medium">

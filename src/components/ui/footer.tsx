@@ -2,12 +2,9 @@
 import { Github, Instagram, Mail } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams } from "next/navigation";
 import React from "react";
 
 const Footer = () => {
-  const params = useParams();
-  console.log(params)
   const sosial = [
     {
       name: "Github",

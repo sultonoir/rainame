@@ -8,12 +8,17 @@ import { MessageSquareText, Minus, Plus, Share2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardFooter } from "../ui/card";
 import { Separator } from "../ui/separator";
 import ButtonWishlist from "./ButtonWishlist";
+import { navigate } from "@/lib/navigate";
+import { useSession } from "next-auth/react";
+import useDialog from "@/hook/useDialog";
 interface Props {
   id: string;
   price: number;
 }
 
 const ProductPayment = ({ id, price }: Props) => {
+  const { data: user } = useSession();
+  const { onOpen } = useDialog();
   const { amount, size, increment, decrement, setInitial } = useCart();
 
   const ctx = api.useUtils();
@@ -32,6 +37,10 @@ const ProductPayment = ({ id, price }: Props) => {
   });
 
   const handleClick = () => {
+    if (!user) {
+      onOpen(true);
+      return;
+    }
     mutate({
       size,
       productId: id,
@@ -41,6 +50,28 @@ const ProductPayment = ({ id, price }: Props) => {
   };
 
   const totalPrice = amount * price;
+
+  const payment = api.payment.createPayment.useMutation({
+    onSuccess: (e) => {
+      navigate(`/payment/${e}`);
+    },
+    onError: (e) => {
+      toast.error(e.message);
+    },
+  });
+
+  const handlePayment = () => {
+    if (!user) {
+      onOpen(true);
+      return;
+    }
+    payment.mutate({
+      size,
+      productId: id,
+      amount,
+      price: totalPrice,
+    });
+  };
 
   return (
     <Card>
@@ -91,9 +122,9 @@ const ProductPayment = ({ id, price }: Props) => {
         </Button>
         <Button
           className="h-9 w-full"
-          disabled={isPending}
-          isLoading={isPending}
-          onClick={handleClick}
+          disabled={payment.isPending}
+          isLoading={payment.isPending}
+          onClick={handlePayment}
           size="icon"
         >
           Buy now

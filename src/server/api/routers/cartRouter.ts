@@ -74,6 +74,9 @@ export const cartRouter = createTRPCRouter({
       with: {
         product: {
           with: {
+            details: {
+              where: (q, { ne }) => ne(q.stock, 0),
+            },
             imageUrl: {
               limit: 1,
             },
@@ -93,4 +96,14 @@ export const cartRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await ctx.db.delete(cart).where(eq(cart.id, input.id));
     }),
+  removeAllcart: protectedProcedure.mutation(async ({ ctx }) => {
+    const userId = ctx.session.user.id;
+    try {
+      await ctx.db.delete(cart).where(eq(cart.userId, userId));
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: error.message });
+      }
+    }
+  }),
 });

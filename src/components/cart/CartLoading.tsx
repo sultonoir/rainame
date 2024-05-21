@@ -1,10 +1,14 @@
 import React from "react";
 import { Skeleton } from "../ui/skeleton";
 
-const CartLoading = () => {
+interface Props {
+  length?: number;
+}
+
+const CartLoading = ({ length = 5 }: Props) => {
   return (
     <div className="flex w-full flex-col gap-2">
-      {Array.from({ length: 5 }).map((_, index) => (
+      {Array.from({ length }).map((_, index) => (
         <div className="flex w-full gap-2" key={index}>
           <Skeleton className="h-24 w-20 flex-shrink-0" />
           <div className="w-full space-y-2">

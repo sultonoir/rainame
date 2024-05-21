@@ -725,3 +725,4 @@ export type Wishlist = typeof wishlist.$inferSelect
 export type ImageProduct = typeof imageProduct.$inferSelect;
 export type Category = typeof category.$inferSelect;
 export type Details = typeof details.$inferSelect;
+export type Cart = typeof cart.$inferSelect;
