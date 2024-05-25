@@ -46,7 +46,7 @@ const CartPage = () => {
                 </Link>
               </div>
             ))}
-          {!isLoading && <CartHeader cart={cart ?? []} />}
+          {!isLoading && data?.length !== 0 && <CartHeader cart={cart ?? []} />}
           {data?.map((item) => (
             <CartItem
               key={item.id}
@@ -61,7 +61,7 @@ const CartPage = () => {
       </div>
       <div className="relative hidden max-w-xs flex-1 lg:flex">
         <div className="sticky top-20 h-fit w-full">
-          <CartPayment cart={data ?? []} />
+          {data && data.length !== 0 && <CartPayment cart={data} />}
         </div>
       </div>
     </div>

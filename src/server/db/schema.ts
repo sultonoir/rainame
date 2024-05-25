@@ -334,18 +334,6 @@ export const ratings = createTable(
   }),
 );
 
-export const categoryNotifi = createTable(
-  "categoryNotifi",
-  {
-    id: varchar("id", { length: 255 }).notNull().unique().primaryKey(),
-    name: varchar("name", { length: 255 }).notNull(),
-  },
-  (c) => ({
-    categoryNotifiIdx: index("categoryNotifiIdx").on(c.id),
-    categoryNotifiNameIdx: index("categoryNotifiNameIdx").on(c.name),
-  }),
-);
-
 export const notifiRead = createTable(
   "notifiRead",
   {
@@ -380,16 +368,17 @@ export const notifi = createTable(
     title: varchar("title", { length: 2555 }).notNull(),
     details: text("details"),
     userId: varchar("userId", { length: 255 }).references(() => users.id),
-    categoryNotifiId: varchar("categoryNotifiId")
-      .notNull()
-      .references(() => categoryNotifi.id),
+    paymentId: varchar("paymentId", { length: 255 }).references(
+      () => payment.id,
+    ),
+    category: varchar("category").notNull(),
     createdAt: timestamp("createdAt", { withTimezone: true })
       .notNull()
       .defaultNow(),
   },
   (c) => ({
     notifiIdIdx: index("notifiIdIdx").on(c.id),
-    notifiCategoryIdx: index("notifiCategoryIdx").on(c.categoryNotifiId),
+    notifiCategoryIdx: index("notifiCategoryIdx").on(c.category),
     notifiUserIdx: index("notifiUserIdx").on(c.userId),
   }),
 );
@@ -663,13 +652,6 @@ export const ratingRelations = relations(ratings, ({ one }) => ({
   }),
 }));
 
-export const categoryNotifiRelations = relations(
-  categoryNotifi,
-  ({ many }) => ({
-    notifi: many(notifi),
-  }),
-);
-
 export const notifiReadRealtions = relations(notifiRead, ({ one }) => ({
   users: one(users, {
     fields: [notifiRead.userId],
@@ -687,9 +669,9 @@ export const notifiRelations = relations(notifi, ({ many, one }) => ({
     fields: [notifi.userId],
     references: [users.id],
   }),
-  categoryNotifi: one(categoryNotifi, {
-    fields: [notifi.categoryNotifiId],
-    references: [categoryNotifi.id],
+  payment: one(payment, {
+    fields: [notifi.paymentId],
+    references: [payment.id],
   }),
 }));
 
@@ -721,7 +703,7 @@ export const memberRealtions = relations(member, ({ one }) => ({
 }));
 
 export type Product = typeof product.$inferSelect;
-export type Wishlist = typeof wishlist.$inferSelect
+export type Wishlist = typeof wishlist.$inferSelect;
 export type ImageProduct = typeof imageProduct.$inferSelect;
 export type Category = typeof category.$inferSelect;
 export type Details = typeof details.$inferSelect;

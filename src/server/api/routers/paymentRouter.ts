@@ -1,8 +1,9 @@
 import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
-import { lineItems, payment } from "@/server/db/schema";
+import { cart, details, lineItems, notifi, payment } from "@/server/db/schema";
 import { TRPCError } from "@trpc/server";
+import { and, eq, inArray, sql } from "drizzle-orm";
 
 export const paymentRouter = createTRPCRouter({
   createPayment: protectedProcedure
@@ -82,9 +83,127 @@ export const paymentRouter = createTRPCRouter({
         totalPrice: item.totalPrice,
         totlaProduct: item.totalProduct,
         size: item.size,
+        cartId: item.id,
       }));
 
       await ctx.db.insert(lineItems).values(line_items);
       return paymentId;
+    }),
+  getPayment: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const result = await ctx.db.query.payment.findFirst({
+        where: (q, { eq }) => eq(q.id, input.id),
+        with: {
+          items: {
+            orderBy: (comments, { asc }) => [asc(comments.createdAt)],
+            with: {
+              product: {
+                with: {
+                  imageUrl: {
+                    limit: 1,
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+      return result;
+    }),
+  calcelPayment: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db
+        .update(payment)
+        .set({ status: "cancel" })
+        .where(
+          and(
+            eq(payment.id, input.id),
+            eq(payment.userId, ctx.session.user.id),
+          ),
+        );
+    }),
+  paidPayment: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const findPayment = await ctx.db.query.payment.findFirst({
+        where: (q, { eq }) => eq(q.id, input.id),
+        with: {
+          items: {
+            with: {
+              product: true,
+            },
+          },
+        },
+      });
+
+      if (!findPayment) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Payment notfound",
+        });
+      }
+
+      //get cart id and delete from cart
+      const cartId = findPayment.items.flatMap((item) => {
+        if (!item.cartId) {
+          return []; // Return an empty array if there is no cartId
+        }
+        return [item.cartId]; // Return an array with the cartId
+      });
+
+      console.log({ cartId, findPayment });
+      if (cartId.length !== 0) {
+        await ctx.db.delete(cart).where(inArray(cart.id, cartId));
+      }
+
+      //decrement stock
+      await Promise.all(
+        findPayment.items.map((item) =>
+          ctx.db
+            .update(details)
+            .set({ stock: sql`${details.stock} - ${item.totlaProduct}` })
+            .where(eq(details.productId, item.productId)),
+        ),
+      );
+
+      //update payment to paid
+      await ctx.db
+        .update(payment)
+        .set({ status: "paid" })
+        .where(eq(payment.id, findPayment.id));
+
+      await ctx.db.insert(notifi).values({
+        title: "Successful purchases",
+        details:
+          "Thank you for your purchase, we will deliver the goods immediately.",
+        userId: ctx.session.user.id,
+        category: "payment",
+        paymentId: input.id,
+      });
+      const admin = await ctx.db.query.users.findFirst({
+        where: (q, { eq }) => eq(q.role, "admin"),
+      });
+
+      await ctx.db.insert(notifi).values({
+        title: "New order received",
+        details: "New order received",
+        userId: admin?.id,
+        category: "payment",
+        paymentId: input.id,
+      });
     }),
 });
