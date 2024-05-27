@@ -71,6 +71,7 @@ export const cartRouter = createTRPCRouter({
   getCart: protectedProcedure.query(async ({ ctx }) => {
     const result = await ctx.db.query.cart.findMany({
       where: (q, { eq }) => eq(q.userId, ctx.session.user.id),
+      orderBy: (q, { asc }) => asc(q.createdAt),
       with: {
         product: {
           with: {
@@ -87,6 +88,19 @@ export const cartRouter = createTRPCRouter({
 
     return result;
   }),
+  amountCart: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        amount: z.number(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db
+        .update(cart)
+        .set({ totalProduct: input.amount })
+        .where(eq(cart.id, input.id));
+    }),
   removeFromCart: protectedProcedure
     .input(
       z.object({

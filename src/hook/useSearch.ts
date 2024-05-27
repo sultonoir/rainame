@@ -29,7 +29,7 @@ const useSearch = create<SearchStore>()(
           searchLists: state.searchLists.filter((item) => item !== value),
         })),
     }),
-    { name: "search", skipHydration: true, getStorage: () => localStorage },
+    { name: "search", skipHydration: true },
   ),
 );
 

@@ -7,24 +7,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "../ui/button";
-import CartHeader from "./CartHeader";
 
-interface Props {
-  isSeleceted?: boolean;
-}
-
-const CartSection = ({ isSeleceted }: Props) => {
+const CartSection = () => {
   const { data, isLoading, isError } = api.cart.getCart.useQuery();
-  const cart = data?.map((item) => item.id);
   return (
     <>
       {isLoading && <CartLoading />}
       <div
         className={cn(
-          "flex max-h-[550px] w-full flex-col gap-2 divide-y overflow-y-auto overflow-x-hidden *:pt-2",
-          {
-            "h-full max-h-full *:pt-4 ": isSeleceted === true,
-          },
+          "flex max-h-[350px] w-full flex-col gap-2 divide-y overflow-y-auto overflow-x-hidden *:pt-2",
         )}
       >
         {isError ||
@@ -54,14 +45,12 @@ const CartSection = ({ isSeleceted }: Props) => {
               </Link>
             </div>
           ))}
-        {isSeleceted && !isLoading && <CartHeader cart={cart ?? []} />}
         {data?.map((item) => (
           <CartItem
             key={item.id}
             product={item.product}
             imageProduct={item.product.imageUrl}
             size={item.size}
-            isSelected={isSeleceted}
             cartId={item.id}
           />
         ))}

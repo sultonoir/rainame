@@ -10,6 +10,7 @@ import CartItem from "./CartItem";
 import CartHeader from "./CartHeader";
 import { buttonVariants } from "../ui/button";
 import CartPayment from "./CartPayment";
+import CartCounter from "./CartCounter";
 
 const CartPage = () => {
   const { data, isLoading, isError } = api.cart.getCart.useQuery();
@@ -55,6 +56,7 @@ const CartPage = () => {
               size={item.size}
               isSelected
               cartId={item.id}
+              counter={<CartCounter id={item.id} amount={item.totalProduct} />}
             />
           ))}
         </div>

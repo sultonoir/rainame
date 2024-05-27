@@ -12,6 +12,7 @@ interface Props {
   imageProduct: ImageProduct[];
   size: string;
   isSelected?: boolean;
+  counter?: React.ReactNode;
   cartId: string;
 }
 
@@ -21,6 +22,7 @@ const CartItem = ({
   size,
   isSelected,
   cartId,
+  counter,
 }: Props) => {
   const { toggle, selected } = useSelected();
   const isChecked = selected.some((item) => item === cartId);
@@ -86,6 +88,7 @@ const CartItem = ({
               </div>
             </div>
           </div>
+          {counter}
         </div>
       </div>
     </div>
