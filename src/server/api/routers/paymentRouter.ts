@@ -165,7 +165,6 @@ export const paymentRouter = createTRPCRouter({
         return [item.cartId]; // Return an array with the cartId
       });
 
-      console.log({ cartId, findPayment });
       if (cartId.length !== 0) {
         await ctx.db.delete(cart).where(inArray(cart.id, cartId));
       }

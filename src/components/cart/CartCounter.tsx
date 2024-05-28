@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import { Minus, Plus } from "lucide-react";
+import { Minus, Plus, Trash2 } from "lucide-react";
 import { api } from "@/trpc/react";
+import { toast } from "sonner";
 
 interface CartCounterProps {
   id: string;
@@ -18,7 +19,21 @@ const CartCounter = ({ id, amount }: CartCounterProps) => {
       await ctx.cart.getCart.invalidate();
       await ctx.cart.getIndicator.invalidate();
     },
+    onError: (e) => {
+      toast.error(e.message);
+    },
   });
+
+  const { mutate: remove,isPending } = api.cart.removeFromCart.useMutation({
+    onSuccess: async () => {
+      await ctx.cart.getCart.invalidate();
+      await ctx.cart.getIndicator.invalidate();
+    },
+    onError : (e)=>{
+      toast.error(e.message)
+    }
+  });
+
   const increment = (incrementValue: number) => {
     setPendingValue((state) => state + incrementValue);
   };
@@ -44,7 +59,7 @@ const CartCounter = ({ id, amount }: CartCounterProps) => {
   }, [id, mutate, pendingValue]);
 
   return (
-    <div className="flex w-full items-center justify-end">
+    <div className="flex w-full items-center justify-end gap-4">
       <div className="flex items-center gap-x-4">
         <div className="flex items-center gap-2 rounded-lg border p-0.5">
           <Button
@@ -67,6 +82,15 @@ const CartCounter = ({ id, amount }: CartCounterProps) => {
           </Button>
         </div>
       </div>
+      <Button
+        variant="ghost"
+        size="icon"
+        disabled={isPending}
+        isLoading={isPending}
+        className="size-6 border-none hover:bg-transparent"
+        startContent={<Trash2 size={18} />}
+        onClick={() => remove({ id })}
+      />
     </div>
   );
 };

@@ -10,6 +10,7 @@ import { Separator } from "../ui/separator";
 import SearchBar from "../filter/SearchBar";
 import SearbarMobile from "../filter/SearchBarMobile";
 import { cn } from "@/lib/utils";
+import UserNotifications from "../notifications/user/UserNotifications";
 
 const MainNavbar = async () => {
   const session = await getServerAuthSession();
@@ -27,6 +28,7 @@ const MainNavbar = async () => {
             <DialogAuth />
           ) : (
             <React.Fragment>
+              <UserNotifications />
               <div className="lg:mr-4">
                 <CartSheet />
               </div>

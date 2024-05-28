@@ -86,6 +86,7 @@ const FieldCardInfo = ({ id }: Props) => {
   const { mutate, isPending } = api.payment.paidPayment.useMutation({
     onSuccess: async () => {
       await ctx.cart.getIndicator.invalidate();
+      await ctx.notifi.notifyIndicator.invalidate();
       navigate("/");
     },
     onError: (e) => {
