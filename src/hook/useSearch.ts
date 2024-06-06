@@ -10,13 +10,14 @@ interface SearchStore {
 
 const useSearch = create<SearchStore>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       searchLists: [],
       setSearchList: (value: string) => {
-        set(() => {
-          const newSearch = get().searchLists;
-          if (newSearch.length >= 10) {
-            newSearch.pop();
+        set((state) => {
+          const newSearch = state.searchLists;
+          if (newSearch.length > 10) {
+            newSearch.shift();
+            newSearch.push(value);
             return { searchLists: newSearch };
           }
           newSearch.push(value);
@@ -29,7 +30,7 @@ const useSearch = create<SearchStore>()(
           searchLists: state.searchLists.filter((item) => item !== value),
         })),
     }),
-    { name: "search", skipHydration: true },
+    { name: "search", skipHydration: true, getStorage: () => localStorage },
   ),
 );
 

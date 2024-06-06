@@ -95,7 +95,7 @@ export const details = createTable(
       .$defaultFn(() => nanoid(10)),
     stock: smallint("stock").notNull().default(0),
     productId: varchar("productId", { length: 255 })
-      .references(() => product.id, { onDelete: "cascade" })
+      .references(() => product.id)
       .notNull()
       .references(() => product.id),
     sizeId: varchar("sizeId", { length: 255 })
@@ -265,7 +265,7 @@ export const lineItems = createTable("lineItems", {
   productId: varchar("productId").notNull(),
   totalPrice: real("totalPrice").notNull().default(0),
   size: varchar("size").notNull(),
-  totlaProduct: smallint("totalProduct").notNull().default(0),
+  totalProduct: smallint("totalProduct").notNull().default(0),
   createdAt: timestamp("createdAt", { withTimezone: true })
     .notNull()
     .defaultNow(),

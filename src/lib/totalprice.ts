@@ -12,3 +12,4 @@ export const calculate = ({ discount, price }: Props) => {
   total = parseFloat(total.toFixed(2));
   return total;
 };
+

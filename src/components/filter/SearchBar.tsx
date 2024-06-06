@@ -35,7 +35,7 @@ const SearchBar: React.FC = () => {
           e.preventDefault();
           setView(false);
           setSearchList(value);
-          navigate(`/product/?title=${value}`);
+          navigate(`/product/?search=${value}`);
         }}
         className="flex w-full items-center rounded-md border focus-within:border-primary/50 focus-within:ring focus-within:ring-primary/30"
       >
@@ -61,7 +61,7 @@ const SearchBar: React.FC = () => {
           <XIcon size={16} />
         </button>
       </form>
-      {view && <SearchItem />}
+      {view && <SearchItem close={() => setView(false)} />}
     </div>
   );
 };

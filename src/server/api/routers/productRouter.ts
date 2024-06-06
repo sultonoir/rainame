@@ -8,13 +8,14 @@ import {
 import { product, imageProduct, details } from "@/server/db/schema";
 import { TRPCError } from "@trpc/server";
 import { stringToNumber } from "@/lib/stringtonumber";
+import { between, ilike, inArray, or, sql } from "drizzle-orm";
 
 export const productRouter = createTRPCRouter({
   filterProduct: publicProcedure
     .input(
       z.object({
-        category: z.string().optional(),
-        subCategory: z.string().optional(),
+        category: z.array(z.string()).optional(),
+        subCategory: z.array(z.string()).optional(),
         size: z.string().optional(),
         title: z.string().optional(),
         min: z.string().optional(),
@@ -22,27 +23,84 @@ export const productRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
-      const min = stringToNumber(input.min);
-      const max = stringToNumber(input.max);
-      const result = await ctx.db.query.product.findMany({
+      const max = input.max ? stringToNumber(input.max) : undefined;
+      const min = input.min ? stringToNumber(input.min) : undefined;
+      const categoryCondition =
+        input.category && input.category.length > 0
+          ? inArray(product.categoryId, input.category)
+          : undefined;
+      const subCategoryCondition =
+        input.subCategory && input.subCategory.length > 0
+          ? inArray(product.subCategoryId, input.subCategory)
+          : undefined;
+      const titleCondition = input.title
+        ? ilike(product.title, `%${input.title}%`)
+        : undefined;
+
+      const priceCondition =
+        min && max ? between(product.price, min, max) : undefined;
+
+      const products = await ctx.db.query.product.findMany({
         with: {
           imageUrl: {
             limit: 1,
           },
+          lineitems: {
+            columns: {
+              totalProduct: true,
+            },
+          },
           details: {
-            where: (q, { or, eq, isNotNull }) =>
-              or(eq(q.sizeId, input.size ?? ""), isNotNull(q.sizeId)),
+            where: (q, { gt }) => gt(q.stock, 0),
           },
         },
-        where: (q, { or, isNotNull, eq, ilike, gte, lte }) =>
-          or(
-            eq(q.categoryId, input.category ?? ""),
-            isNotNull(q.categoryId),
-            ilike(q.title, input.title ?? ""),
-            gte(q.price, min),
-            lte(q.price, max),
-          ),
+        where: or(
+          categoryCondition,
+          subCategoryCondition,
+          titleCondition,
+          priceCondition,
+        ),
+        orderBy: (q, { desc }) => desc(q.createdAt),
+        extras: {
+          priceWithDiscount:
+            sql`(${product.price} - (${product.price} * ${product.discount} / 100))`.as(
+              "priceWithDiscount",
+            ),
+        },
       });
+
+      const result = products
+        .map((item) => {
+          const totalProduct = item.lineitems.reduce(
+            (acc, cur) => acc + cur.totalProduct,
+            0,
+          );
+          return {
+            ...item,
+            lineitems: totalProduct,
+          };
+        })
+        .filter((item) => item.details.some((detail) => detail.stock > 0));
+
+      if (input.size) {
+        return products
+          .map((item) => {
+            const totalProduct = item.lineitems.reduce(
+              (acc, cur) => acc + cur.totalProduct,
+              0,
+            );
+            return {
+              ...item,
+              lineitems: totalProduct,
+            };
+          })
+          .filter((item) =>
+            item.details.some(
+              (detail) => detail.stock > 0 && detail.sizeId === input.size,
+            ),
+          );
+      }
+
       return result;
     }),
   createProduct: protectedProcedure
@@ -174,7 +232,9 @@ export const productRouter = createTRPCRouter({
   getAllproducts: publicProcedure.query(async ({ ctx }) => {
     const result = await ctx.db.query.product.findMany({
       with: {
-        details: true,
+        details: {
+          where: (q, { gt }) => gt(q.stock, 0),
+        },
         imageUrl: {
           limit: 1,
         },

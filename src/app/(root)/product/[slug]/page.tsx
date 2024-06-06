@@ -47,13 +47,17 @@ const Page = async ({ params }: Props) => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href={`/product/${product?.category?.id}`}>
+            <BreadcrumbLink
+              href={`/product/?category=${product?.category?.id}`}
+            >
               {product?.category?.name}
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href={`/product/${product?.subCategory?.id}`}>
+            <BreadcrumbLink
+              href={`/product/?subCategory=${product?.subCategory?.id}`}
+            >
               {product?.subCategory?.name}
             </BreadcrumbLink>
           </BreadcrumbItem>

@@ -62,7 +62,7 @@ const SearbarMobile = () => {
             onSubmit={(e) => {
               e.preventDefault();
               setOpen(false);
-              navigate(`/product/?title=${value}`);
+              navigate(`/product/?search=${value}`);
               setSearchList(value);
             }}
             className="flex h-fit flex-row items-center gap-2 space-y-0"
@@ -79,35 +79,37 @@ const SearbarMobile = () => {
           </form>
         </DialogHeader>
         <div className="flex flex-col gap-2">
-          {searchLists?.map((item) => (
-            <li
-              key={item}
-              className="flex items-center gap-3 rounded-lg px-2 py-1 text-muted-foreground hover:bg-secondary"
-            >
-              <span className="size-5 flex-shrink-0">
-                <HistoryIcon size={20} />
-              </span>
-              <Link
-                href={{
-                  pathname: "/product",
-                  query: { title: item },
-                }}
-                className="flex-1"
+          {searchLists
+            ?.map((item) => (
+              <li
+                key={item}
+                className="flex items-center gap-3 rounded-lg px-2 py-1 text-muted-foreground hover:bg-secondary"
               >
-                {item}
-              </Link>
-              <button
-                type="button"
-                className="z-10"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  removeItem(item);
-                }}
-              >
-                <XIcon size={20} />
-              </button>
-            </li>
-          ))}
+                <span className="size-5 flex-shrink-0">
+                  <HistoryIcon size={20} />
+                </span>
+                <Link
+                  href={{
+                    pathname: "/product",
+                    query: { title: item },
+                  }}
+                  className="flex-1"
+                >
+                  {item}
+                </Link>
+                <button
+                  type="button"
+                  className="z-10"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeItem(item);
+                  }}
+                >
+                  <XIcon size={20} />
+                </button>
+              </li>
+            ))
+            .reverse()}
         </div>
       </DialogContent>
     </Dialog>
