@@ -228,19 +228,32 @@ export const productRouter = createTRPCRouter({
         ...result,
         ratings: totalrating,
       };
+
       return newResult;
     }),
   getAllproducts: publicProcedure.query(async ({ ctx }) => {
-    const result = await ctx.db.query.product.findMany({
+    const products = await ctx.db.query.product.findMany({
       with: {
         details: {
           where: (q, { gt }) => gt(q.stock, 0),
         },
+        ratings: true,
         imageUrl: {
           limit: 1,
         },
       },
     });
+
+    const result = products
+      .flatMap((item) => {
+        const ratings = item.ratings.reduce((acc, cure) => acc + cure.value, 0);
+        return {
+          ...item,
+          ratings,
+        };
+      })
+      .filter((product) => product.details.some((detail) => detail.stock > 0));
+
     return result;
   }),
   getProductsByIds: publicProcedure

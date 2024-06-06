@@ -31,14 +31,25 @@ export const notifyRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
 
-      if (input.notifiId.length >= 0) {
-        return;
-      }
-      const values = input.notifiId.flatMap((item) => ({
+      const notifications = await ctx.db.query.notifiRead.findMany({
+        where: (q, { eq }) => eq(q.userId, userId),
+      });
+
+      const unreadNotifiId = input.notifiId.filter((id) => {
+        return !notifications.some(
+          (notification) => notification.notifiId === id,
+        );
+      });
+
+      const values = unreadNotifiId.flatMap((item) => ({
         notifiId: item,
         isRead: true,
         userId,
       }));
+
+      if (values.length < 1) {
+        return;
+      }
 
       await ctx.db.insert(notifiRead).values(values);
     }),

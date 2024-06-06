@@ -76,7 +76,7 @@ const ProductCard = ({ product, imageProduct, details }: Props) => {
             />
           </div>
         </div>
-        <div className="invisible absolute inset-x-1 bottom-0 z-10 justify-center gap-1 opacity-0 transition-all group-hover:visible group-hover:bottom-4 group-hover:opacity-100 lg:flex">
+        <div className="invisible absolute inset-x-1 bottom-0 z-10 hidden justify-center gap-1 opacity-0 transition-all group-hover:visible group-hover:bottom-4 group-hover:opacity-100 sm:flex">
           <Button
             className="h-min rounded-full bg-popover text-[12px] text-foreground hover:bg-secondary hover:text-foreground"
             disabled={isPending}
@@ -95,7 +95,7 @@ const ProductCard = ({ product, imageProduct, details }: Props) => {
         </div>
         {imageProduct.map((item) => (
           <div
-            className="relative m-1 aspect-square overflow-hidden rounded-lg"
+            className="relative aspect-square overflow-hidden rounded-lg"
             key={item.id}
           >
             <Link
@@ -109,12 +109,13 @@ const ProductCard = ({ product, imageProduct, details }: Props) => {
               fill
               placeholder="blur"
               className="object-cover"
+              sizes="(min-width: 1500px) 860px, (min-width: 1040px) 550px, calc(100vw - 64px)"
               blurDataURL={item.blur}
             />
           </div>
         ))}
       </CardContent>
-      <CardFooter className="flex-col items-start gap-1 p-1">
+      <CardFooter className="flex-col items-start gap-1 px-0 py-1">
         <p className="max-w-[calc(100%-10px)] truncate text-[15px] font-semibold text-muted-foreground">
           {product.title}
         </p>
