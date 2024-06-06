@@ -34,7 +34,7 @@ export const paymentRouter = createTRPCRouter({
         paymentId,
         productId: input.productId,
         totalPrice: input.price,
-        totlaProduct: input.amount,
+        totalProduct: input.amount,
         size: input.size,
       });
       return paymentId;
@@ -174,7 +174,7 @@ export const paymentRouter = createTRPCRouter({
         findPayment.items.map((item) =>
           ctx.db
             .update(details)
-            .set({ stock: sql`${details.stock} - ${item.totlaProduct}` })
+            .set({ stock: sql`${details.stock} - ${item.totalProduct}` })
             .where(eq(details.productId, item.productId)),
         ),
       );

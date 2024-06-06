@@ -134,7 +134,8 @@ export const productRouter = createTRPCRouter({
       const slug = slugify(input.title, {
         lower: true,
       });
-      const discount = parseInt(input.discount ?? "0");
+      const discount = stringToNumber(input.discount);
+      const price = stringToNumber(input.price);
       const products = await ctx.db
         .insert(product)
         .values({
@@ -144,7 +145,7 @@ export const productRouter = createTRPCRouter({
           categoryId: input.category,
           subCategoryId: input.subCategory,
           discount,
-          price: parseFloat(input.price),
+          price,
           userId: ctx.session.user.id,
         })
         .returning({ id: product.id, slug: product.slug });

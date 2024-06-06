@@ -41,7 +41,10 @@ const FieldCategories = ({ setValue }: Props) => {
             <ChevronDown size={15} />
             <span className="sr-only">Open</span>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-full">
+          <DropdownMenuContent
+            align="end"
+            className="w-full min-w-[350px] lg:min-w-[270px]"
+          >
             {data.map((item) => (
               <DropdownMenuItem
                 key={item.id}

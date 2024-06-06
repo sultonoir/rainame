@@ -149,7 +149,7 @@ const FormCreateProduct = () => {
           <Button variant="outline" size="icon" onClick={() => router.back()}>
             <ChevronLeft />
           </Button>
-          <p className="text-lg font-semibold">Create product</p>
+          <p className="text-xl font-semibold">Create product</p>
         </div>
         <div className="flex items-center gap-2">
           <Button
@@ -171,9 +171,9 @@ const FormCreateProduct = () => {
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-4 xl:grid-cols-4">
             {/* one */}
-            <div className="col-span-1 space-y-5 lg:col-span-3">
+            <div className="col-span-1 space-y-5 xl:col-span-3">
               <Card>
                 <CardHeader>
                   <CardTitle>Product details</CardTitle>
@@ -217,7 +217,7 @@ const FormCreateProduct = () => {
                 <CardHeader>
                   <CardTitle>Price</CardTitle>
                 </CardHeader>
-                <CardContent className="flex w-full flex-col gap-4 lg:flex-row">
+                <CardContent className="flex w-full flex-col gap-4 xl:flex-row">
                   <FormField
                     control={form.control}
                     name="price"
@@ -412,7 +412,7 @@ const FormCreateProduct = () => {
           <Button
             type="submit"
             disabled={form.formState.isSubmitting}
-            className="w-full lg:hidden"
+            className="w-full xl:hidden"
           >
             Submit
           </Button>
