@@ -18,11 +18,11 @@ const SearchItem = ({ close }: Props) => {
   return (
     <div className="absolute top-11 w-full">
       <div className="size-full min-h-[350px] space-y-2 rounded-lg border bg-popover p-4">
-        <div className="inline-flex items-center gap-2">
+        <div className="flex items-center justify-between">
           <p className="text-xl font-semibold">Last searched</p>
           <Button
-            variant="link"
-            className="text-destructive hover:no-underline"
+            variant="ghost"
+            className="text-red-600 hover:text-red-600 hover:no-underline"
             onClick={removeAll}
           >
             Remove all

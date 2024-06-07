@@ -22,7 +22,7 @@ const FormOauthButton = () => {
             redirect: true,
           })
         }
-        className="w-full justify-start pl-36"
+        className="w-full justify-center sm:justify-start sm:pl-36"
       >
         Continue with google
       </Button>
@@ -56,7 +56,7 @@ const FormOauthButton = () => {
             }
           });
         }}
-        className="w-full justify-start pl-36"
+        className="w-full justify-center sm:justify-start sm:pl-36"
       >
         Continue with facebook
       </Button>
@@ -90,7 +90,7 @@ const FormOauthButton = () => {
             }
           });
         }}
-        className="w-full justify-start pl-36"
+        className="w-full justify-center sm:justify-start sm:pl-36"
       >
         Continue with demo
       </Button>
