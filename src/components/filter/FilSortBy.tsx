@@ -20,7 +20,7 @@ export default function FilSortBy() {
   const searchParams = useSearchParams();
 
   React.useEffect(() => {
-    const params = new URLSearchParams(searchParams!);
+    const params = new URLSearchParams(searchParams);
     const selectedEvent = sorts.find((event) => event.value === select);
 
     if (selectedEvent) {

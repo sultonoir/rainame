@@ -63,7 +63,7 @@ const Page = async ({ params }: Props) => {
                         </p>
                         <p className="mt-1 text-sm text-muted-foreground">
                           <span className="capitalize">
-                            Qty : {item.totlaProduct}
+                            Qty : {item.totalProduct}
                           </span>
                           <span className="mx-2 h-4 border-l border-slate-200 dark:border-slate-700"></span>
                           <span className="uppercase">{item.size}</span>

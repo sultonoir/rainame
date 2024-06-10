@@ -15,7 +15,7 @@ const FilPrice = () => {
   const searchParams = useSearchParams();
 
   const handleClick = () => {
-    const params = new URLSearchParams(searchParams!.toString());
+    const params = new URLSearchParams(searchParams.toString());
     params.set("min", min);
     params.set("max", max);
     router.push(pathname + "?" + params.toString());

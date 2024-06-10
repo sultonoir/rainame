@@ -18,7 +18,7 @@ const FilSubCategory = () => {
       ? subCategory.filter((item) => item !== value)
       : [...subCategory, value];
 
-    const params = new URLSearchParams(searchParams!.toString());
+    const params = new URLSearchParams(searchParams.toString());
     if (newCategories.length > 0) {
       params.set(name, newCategories.join("+"));
     } else {
