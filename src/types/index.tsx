@@ -1,10 +1,10 @@
 export interface FilterProps {
   searchParams: {
-    category: string;
-    search: string;
-    subCategory: string;
-    min: string;
-    max: string;
-    size: string;
+    category: string | undefined;
+    search: string | undefined;
+    subCategory: string | undefined;
+    min: string | undefined;
+    max: string | undefined;
+    size: string | undefined;
   };
 }

@@ -4,7 +4,7 @@ import useSearch from "@/hook/useSearch";
 import useStore from "@/hook/useStore";
 import { HistoryIcon, XIcon } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "../ui/button";
 
 interface Props {
@@ -13,7 +13,12 @@ interface Props {
 
 const SearchItem = ({ close }: Props) => {
   const { removeItem, removeAll } = useSearch();
-  const searchLists = useStore(useSearch, (value) => value.searchLists);
+  const { searchLists } = useSearch();
+
+  useEffect(() => {
+    void useSearch.persist.rehydrate();
+  }, []);
+
   useLockBody();
   return (
     <div className="absolute top-11 w-full">

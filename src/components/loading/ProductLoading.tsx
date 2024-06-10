@@ -6,11 +6,14 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
   length?: number;
 }
 
-const ProductLoading = ({ className, length = 6 }: Props) => {
+const ProductLoading = ({ className, length = 4 }: Props) => {
   return (
     <div className="h-full space-y-5">
       <div
-        className={cn("grid grid-cols-1 lg:grid-cols-6 lg:gap-4", className)}
+        className={cn(
+          "grid grid-cols-1 gap-4 md:grid-cols-3 xl:grid-cols-4",
+          className,
+        )}
       >
         {Array.from({ length }).map((_, index) => (
           <div key={index} className="space-y-2">

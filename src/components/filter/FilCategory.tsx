@@ -6,15 +6,11 @@ import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-interface Props {
-  cate: string | undefined;
-}
-
-const FilCategory = ({ cate }: Props) => {
+const FilCategory = () => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const categories = cate?.split("+") ?? [];
+  const categories = searchParams?.get("category")?.split("+") ?? [];
 
   const createQueryString = (name: string, value: string) => {
     const newCategories = categories.includes(value)

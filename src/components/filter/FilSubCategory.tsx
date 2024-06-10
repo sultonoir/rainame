@@ -6,16 +6,12 @@ import { Label } from "../ui/label";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Button } from "../ui/button";
 
-interface Props {
-  subs: string;
-}
-
-const FilSubCategory = ({ subs }: Props) => {
+const FilSubCategory = () => {
   const [show, setShow] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const subCategory = subs?.split("+") ?? [];
+  const subCategory = searchParams?.get("subCategory")?.split("+") ?? [];
 
   const createQueryString = (name: string, value: string) => {
     const newCategories = subCategory.includes(value)

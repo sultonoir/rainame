@@ -8,7 +8,7 @@ import {
 import { product, imageProduct, details } from "@/server/db/schema";
 import { TRPCError } from "@trpc/server";
 import { stringToNumber } from "@/lib/stringtonumber";
-import { between, ilike, inArray, or, sql } from "drizzle-orm";
+import { between, gte, ilike, inArray, lte, or, sql } from "drizzle-orm";
 
 export const productRouter = createTRPCRouter({
   filterProduct: publicProcedure
@@ -40,6 +40,10 @@ export const productRouter = createTRPCRouter({
       const priceCondition =
         min && max ? between(product.price, min, max) : undefined;
 
+      const minPriceCondition = min ? gte(product.price, min) : undefined;
+
+      const maxPriceCondition = max ? lte(product.price, max) : undefined;
+
       const products = await ctx.db.query.product.findMany({
         with: {
           imageUrl: {
@@ -59,6 +63,8 @@ export const productRouter = createTRPCRouter({
           subCategoryCondition,
           titleCondition,
           priceCondition,
+          minPriceCondition,
+          maxPriceCondition,
         ),
         orderBy: (q, { desc }) => desc(q.createdAt),
         extras: {
