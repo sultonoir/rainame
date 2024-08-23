@@ -40,7 +40,7 @@ const FieldSubCategory = ({ setValue, id }: Props) => {
               }),
             )}
           >
-            {name !== "" ? name : "Category"}
+            {name !== "" ? name : "Sub category"}
             <ChevronDown size={15} />
             <span className="sr-only">Open</span>
           </DropdownMenuTrigger>

@@ -14,7 +14,7 @@ import FilPrice from "./FilPrice";
 const FilterBar = () => {
   return (
     <div className="relative hidden h-[calc(100dvh-65px)] w-[260px] flex-shrink-0 lg:flex">
-      <div className="absolute left-0 top-0 z-10 flex h-full w-full  flex-col overflow-y-auto px-4">
+      <div className="absolute left-0 top-0 z-10 flex h-full w-full  flex-col overflow-y-auto">
         <Accordion
           type="multiple"
           defaultValue={["item-1", "item-2", "item-3"]}

@@ -8,6 +8,10 @@ export default withAuth(
       return NextResponse.rewrite(new URL("/admin/dashboard", req.url));
     }
 
+    if (req.nextUrl.pathname === "/user") {
+      return NextResponse.rewrite(new URL("/user/settings", req.url));
+    }
+
     if (
       req.nextUrl.pathname.startsWith("/admin") &&
       req.nextauth.token?.role !== "admin"
@@ -26,4 +30,4 @@ export default withAuth(
   },
 );
 
-export const config = { matcher: ["/admin/:path*", "/cart"] };
+export const config = { matcher: ["/admin/:path*", "/cart", "/user/:path*"] };

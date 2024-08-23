@@ -445,6 +445,8 @@ export const message = createTable(
   }),
 );
 
+export type Message = typeof message.$inferSelect
+
 export const accounts = createTable(
   "account",
   {

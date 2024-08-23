@@ -126,7 +126,7 @@ const Footer = () => {
                 width={40}
                 height={40}
               />
-              Karcisku
+              Rainame
             </Link>
             <div className="ml-2 flex justify-start gap-2">
               {sosial.map((item) => (

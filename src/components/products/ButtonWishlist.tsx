@@ -40,9 +40,13 @@ const ButtonWishlist = ({
   });
   const handleClick = () => {
     if (!data) {
-      onOpen(true);
+      return onOpen(true);
+    }
+
+    if (data.user.role === "admin") {
       return;
     }
+
     mutate({
       productId: id,
     });

@@ -1,7 +1,12 @@
+import TestChat from "@/components/ui/TestChat";
 import React from "react";
 
 const Page = () => {
-  return <div>Page</div>;
+  return (
+    <div className="container">
+      <TestChat />
+    </div>
+  );
 };
 
 export default Page;

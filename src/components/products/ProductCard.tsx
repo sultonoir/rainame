@@ -53,7 +53,10 @@ const ProductCard = ({ product, imageProduct, details }: Props) => {
   });
   const handleClick = () => {
     if (!data) {
-      onOpen(true);
+      return onOpen(true);
+    }
+
+    if (data.user.role === "admin") {
       return;
     }
     mutate({
