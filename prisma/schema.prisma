@@ -1,20 +1,324 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+enum Role {
+  admin
+  user
+}
 
-    @@index([name])
+model User {
+  id                     String                   @id @unique @default(cuid())
+  name                   String
+  email                  String                   @unique
+  emailVerification      Boolean                  @default(false)
+  hashedPassword         String?
+  image                  String?
+  role                   Role                     @default(user)
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime                 @default(now())
+  Sessions               Sessions[]
+  EmailVerificationCodes EmailVerificationCodes[]
+  PasswordResetTokens    PasswordResetTokens[]
+  Oauth                  Oauth[]
+  Wishlist               Wishlist[]
+  Cart                   Cart[]
+  Checkout               Checkout[]
+  Notifi                 Notifi[]
+  Rating                 Rating[]
+  Complain               Complain[]
+  Member                 Member[]
+  Message                Message[]
+
+  @@index([email], type: Hash)
+  @@index([id], type: Hash)
+}
+
+model Sessions {
+  id        String   @id @unique @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  expiresAt DateTime
+
+  @@index([userId], type: Hash)
+}
+
+model EmailVerificationCodes {
+  id        String   @id
+  email     String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  code      String
+  expiresAt DateTime
+
+  @@index([userId], type: Hash)
+}
+
+model PasswordResetTokens {
+  id        String   @id @unique @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  expiresAt DateTime
+
+  @@index([userId], type: Hash)
+}
+
+model Oauth {
+  id             String   @id @unique @default(cuid())
+  provider       String
+  providerUserId String
+  accessToken    String   @db.Text
+  refreshToken   String?  @db.Text
+  expiresAt      DateTime
+  userId         String
+  user           User     @relation(fields: [userId], references: [id])
+
+  @@index([userId], type: Hash)
+}
+
+model Product {
+  id             String           @id @unique @default(cuid())
+  name           String
+  slug           String           @unique
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  price          Float
+  discount       Float
+  productImage   ProductImage[]
+  sizes          Size?
+  stocks         Stock?
+  productDetails ProductDetails[]
+  Wishlist       Wishlist[]
+  Cart           Cart[]
+  CheckoutItem   CheckoutItem[]
+  Rating         Rating[]
+  Complain       Complain[]
+
+  @@index([name], type: Hash) // Efisien untuk pencarian berdasarkan nama
+  @@index([price], type: BTree) // Efisien untuk pencarian berdasarkan rentang harga
+  @@index([slug], type: Hash)
+  @@index([discount], type: BTree)
+}
+
+model ProductImage {
+  id        String  @id @unique @default(cuid())
+  url       String  @db.Text
+  thumbnail String  @db.Text
+  caption   String?
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+
+  @@index([productId], type: Hash)
+  @@index([url], type: BTree)
+}
+
+model Size {
+  id             String           @id @unique @default(cuid())
+  name           String           @unique
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  productId      String           @unique
+  product        Product          @relation(fields: [productId], references: [id])
+  stocks         Stock?
+  productDetails ProductDetails[]
+
+  @@index([name], type: Hash) // Efisien untuk pencarian berdasarkan ukuran
+  @@index([productId], type: Hash)
+}
+
+model Stock {
+  id             String           @id @unique @default(cuid())
+  amount         BigInt
+  productId      String           @unique
+  sizeId         String           @unique
+  product        Product          @relation(fields: [productId], references: [id])
+  size           Size             @relation(fields: [sizeId], references: [id])
+  productDetails ProductDetails[]
+
+  @@index([productId], type: Hash)
+  @@index([sizeId], type: Hash)
+  @@index([amount], type: BTree)
+}
+
+model Category {
+  id             String           @id @unique @default(cuid())
+  name           String           @unique
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  subcategories  Subcategory[]
+  productDetails ProductDetails[]
+
+  @@index([name], type: Hash) // Efisien untuk pencarian berdasarkan nama kategori
+}
+
+model Subcategory {
+  id             String           @id @unique @default(cuid())
+  name           String           @unique
+  categoryId     String
+  category       Category         @relation(fields: [categoryId], references: [id])
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  productDetails ProductDetails[]
+
+  @@index([name], type: Hash) // Efisien untuk pencarian berdasarkan nama subkategori
+  @@index([categoryId], type: Hash)
+}
+
+model ProductDetails {
+  productId     String
+  categoryId    String
+  subcategoryId String
+  sizeId        String
+  stockId       String
+  size          Size        @relation(fields: [sizeId], references: [id])
+  stock         Stock       @relation(fields: [stockId], references: [id])
+  product       Product     @relation(fields: [productId], references: [id])
+  category      Category    @relation(fields: [categoryId], references: [id])
+  subcategory   Subcategory @relation(fields: [subcategoryId], references: [id])
+
+  @@id([productId, sizeId, stockId, subcategoryId, categoryId])
+  @@index([categoryId], type: Hash) // Indeks untuk pencarian berdasarkan kategori
+  @@index([subcategoryId], type: Hash) // Indeks untuk pencarian berdasarkan subkategori
+}
+
+model Wishlist {
+  id        String   @id @unique @default(cuid())
+  userId    String
+  productId String
+  user      User     @relation(fields: [userId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId], type: Hash)
+}
+
+model Cart {
+  id        String   @id @unique @default(cuid())
+  userId    String
+  productId String
+  amount    Int      @default(1)
+  user      User     @relation(fields: [userId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId], type: Hash)
+}
+
+enum NotificationStatus {
+  payment
+  promo
+  pending
+  recipient
+}
+
+enum CheckoutStatus {
+  pending
+  paid
+  cancel
+  success
+}
+
+model Checkout {
+  id       String         @id @unique @default(cuid())
+  userId   String
+  price    Float
+  quantity Int
+  status   CheckoutStatus @default(pending)
+  user     User           @relation(fields: [userId], references: [id])
+  Notifi   Notifi[]
+  Complain Complain[]
+
+  @@index([id], type: Hash) // Efisien untuk pencarian berdasarkan nama
+  @@index([userId], type: Hash)
+}
+
+model CheckoutItem {
+  id        String  @id @unique @default(cuid())
+  quantity  Int
+  price     Float
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+model Notifi {
+  id         String             @id @unique @default(cuid())
+  status     NotificationStatus @default(payment)
+  createdAt  DateTime           @default(now())
+  checkoutId String
+  chechout   Checkout           @relation(fields: [checkoutId], references: [id])
+  userId     String
+  user       User               @relation(fields: [userId], references: [id])
+
+  @@index([userId], type: Hash)
+}
+
+model Rating {
+  id        String  @id @unique @default(cuid())
+  value     Float
+  message   String
+  userId    String
+  user      User    @relation(fields: [userId], references: [id])
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+
+  @@index([userId], type: Hash)
+  @@index([id], type: Hash)
+  @@index([productId], type: Hash)
+}
+
+model Complain {
+  id         String   @id @unique @default(cuid())
+  message    String   @db.Text
+  userId     String
+  checkoutId String
+  checkout   Checkout @relation(fields: [checkoutId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
+  Product    Product? @relation(fields: [productId], references: [id])
+  productId  String?
+
+  @@index([userId], type: Hash)
+  @@index([checkoutId], type: Hash)
+}
+
+model Chat {
+  id        String    @id @unique @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now())
+  Member    Member[]
+  Message   Message[]
+
+  @@index([id], type: Hash)
+}
+
+model Member {
+  id     String @id @unique @default(cuid())
+  userId String
+  chatId String
+  chat   Chat   @relation(fields: [chatId], references: [id])
+  user   User   @relation(references: [id], fields: [userId])
+
+  @@index([id], type: Hash)
+  @@index([userId], type: Hash)
+  @@index([chatId], type: Hash)
+}
+
+model Message {
+  id     String  @id @unique @default(cuid())
+  value  String
+  images String?
+  userId String
+  chatId String
+  chat   Chat    @relation(fields: [chatId], references: [id])
+  user   User    @relation(references: [id], fields: [userId])
+
+  @@index([id], type: Hash)
+  @@index([userId], type: Hash)
+  @@index([chatId], type: Hash)
 }
