@@ -42,7 +42,7 @@ model User {
 model Sessions {
   id        String   @id @unique @default(cuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   expiresAt DateTime
 
   @@index([userId], type: Hash)
@@ -52,7 +52,7 @@ model EmailVerificationCodes {
   id        String   @id
   email     String
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   code      String
   expiresAt DateTime
 
@@ -62,7 +62,7 @@ model EmailVerificationCodes {
 model PasswordResetTokens {
   id        String   @id @unique @default(cuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   expiresAt DateTime
 
   @@index([userId], type: Hash)
@@ -76,7 +76,7 @@ model Oauth {
   refreshToken   String?  @db.Text
   expiresAt      DateTime
   userId         String
-  user           User     @relation(fields: [userId], references: [id])
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId], type: Hash)
 }
@@ -111,7 +111,7 @@ model ProductImage {
   thumbnail String  @db.Text
   caption   String?
   productId String
-  product   Product @relation(fields: [productId], references: [id])
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@index([productId], type: Hash)
   @@index([url], type: BTree)
@@ -136,8 +136,8 @@ model Stock {
   amount         BigInt
   productId      String           @unique
   sizeId         String           @unique
-  product        Product          @relation(fields: [productId], references: [id])
-  size           Size             @relation(fields: [sizeId], references: [id])
+  product        Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
+  size           Size             @relation(fields: [sizeId], references: [id], onDelete: Cascade)
   productDetails ProductDetails[]
 
   @@index([productId], type: Hash)
@@ -160,7 +160,7 @@ model Subcategory {
   id             String           @id @unique @default(cuid())
   name           String           @unique
   categoryId     String
-  category       Category         @relation(fields: [categoryId], references: [id])
+  category       Category         @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
   productDetails ProductDetails[]
@@ -175,8 +175,8 @@ model ProductDetails {
   subcategoryId String
   sizeId        String
   stockId       String
-  size          Size        @relation(fields: [sizeId], references: [id])
-  stock         Stock       @relation(fields: [stockId], references: [id])
+  size          Size        @relation(fields: [sizeId], references: [id], onDelete: Cascade)
+  stock         Stock       @relation(fields: [stockId], references: [id], onDelete: Cascade)
   product       Product     @relation(fields: [productId], references: [id])
   category      Category    @relation(fields: [categoryId], references: [id])
   subcategory   Subcategory @relation(fields: [subcategoryId], references: [id])
@@ -190,8 +190,8 @@ model Wishlist {
   id        String   @id @unique @default(cuid())
   userId    String
   productId String
-  user      User     @relation(fields: [userId], references: [id])
-  product   Product  @relation(fields: [productId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -203,8 +203,8 @@ model Cart {
   userId    String
   productId String
   amount    Int      @default(1)
-  user      User     @relation(fields: [userId], references: [id])
-  product   Product  @relation(fields: [productId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -231,7 +231,7 @@ model Checkout {
   price    Float
   quantity Int
   status   CheckoutStatus @default(pending)
-  user     User           @relation(fields: [userId], references: [id])
+  user     User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   Notifi   Notifi[]
   Complain Complain[]
 
@@ -244,7 +244,7 @@ model CheckoutItem {
   quantity  Int
   price     Float
   productId String
-  product   Product @relation(fields: [productId], references: [id])
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
 model Notifi {
@@ -264,9 +264,9 @@ model Rating {
   value     Float
   message   String
   userId    String
-  user      User    @relation(fields: [userId], references: [id])
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   productId String
-  product   Product @relation(fields: [productId], references: [id])
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@index([userId], type: Hash)
   @@index([id], type: Hash)
@@ -279,8 +279,8 @@ model Complain {
   userId     String
   checkoutId String
   checkout   Checkout @relation(fields: [checkoutId], references: [id])
-  user       User     @relation(fields: [userId], references: [id])
-  Product    Product? @relation(fields: [productId], references: [id])
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Product    Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId  String?
 
   @@index([userId], type: Hash)
@@ -301,8 +301,8 @@ model Member {
   id     String @id @unique @default(cuid())
   userId String
   chatId String
-  chat   Chat   @relation(fields: [chatId], references: [id])
-  user   User   @relation(references: [id], fields: [userId])
+  chat   Chat   @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  user   User   @relation(references: [id], fields: [userId], onDelete: Cascade)
 
   @@index([id], type: Hash)
   @@index([userId], type: Hash)
@@ -315,8 +315,8 @@ model Message {
   images String?
   userId String
   chatId String
-  chat   Chat    @relation(fields: [chatId], references: [id])
-  user   User    @relation(references: [id], fields: [userId])
+  chat   Chat    @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  user   User    @relation(references: [id], fields: [userId], onDelete: Cascade)
 
   @@index([id], type: Hash)
   @@index([userId], type: Hash)

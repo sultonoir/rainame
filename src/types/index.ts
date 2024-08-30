@@ -1,3 +1,5 @@
+import { type LucideProps } from "lucide-react";
+
 export type GithubData = {
   id: number;
   name: string;
@@ -26,4 +28,13 @@ export type GoogleUser = {
   given_name: string;
   picture: string;
   locale: string;
+};
+
+export type AdminMenuList = {
+  title: string;
+  path: string;
+  icon: React.ForwardRefExoticComponent<
+    Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>
+  >;
+  count: number | null;
 };
