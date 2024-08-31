@@ -1,6 +1,6 @@
 "use client";
 
-import { PlaceholdersAndVanishInput } from "../ui/placehorders-and-vanish-input";
+import { PlaceholdersAndVanishInput } from "@/components/ui/placehorders-and-vanish-input";
 
 export function SearchInput() {
   const placeholders = ["T-Shirt", "Shirt", "Pants", "Shoes", "Bag"];

@@ -1,74 +1,50 @@
-import { CommandGroup, CommandItem, CommandList } from "./command";
-import { Command as CommandPrimitive } from "cmdk";
-import React, {
-  useState,
-  useRef,
-  useCallback,
-  type KeyboardEvent,
-} from "react";
+"use client";
 
-import { Skeleton } from "./skeleton";
+import * as React from "react";
+import { Check } from "lucide-react";
 
-import { Check, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 
-export type Option = Record<"value" | "label", string> & Record<string, string>;
+import { type Option } from "@/types";
+import { CreateCategoryButton } from "../templates/button/create-category-button";
 
 type AutoCompleteProps = {
   options: Option[];
-  emptyMessage: string;
-  value?: Option;
-  onValueChange?: (value: Option) => void;
-  isLoading?: boolean;
-  disabled?: boolean;
+  id?: string;
+  value: Option;
+  onValueChange: (value: Option) => void;
   placeholder?: string;
 };
 
-const CommandInput = React.forwardRef<
-  React.ElementRef<typeof CommandPrimitive.Input>,
-  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>
->(({ className, ...props }, ref) => (
-  <div
-    className="flex items-center rounded-md border px-3"
-    cmdk-input-wrapper=""
-  >
-    <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
-    <CommandPrimitive.Input
-      ref={ref}
-      className={cn(
-        "flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
-        className,
-      )}
-      {...props}
-    />
-  </div>
-));
-CommandInput.displayName = CommandPrimitive.Input.displayName;
-
-export const AutoComplete = ({
+export function AutoComplete({
   options,
-  placeholder,
-  emptyMessage,
+  id,
   value,
   onValueChange,
-  disabled,
-  isLoading = false,
-}: AutoCompleteProps) => {
-  const inputRef = useRef<HTMLInputElement>(null);
+  placeholder,
+}: AutoCompleteProps) {
+  const inputRef = React.useRef<HTMLInputElement>(null);
+  const [open, setOpen] = React.useState(false);
+  const [selected, setSelected] = React.useState(value);
+  const [inputValue, setInputValue] = React.useState(value.label ?? "");
 
-  const [isOpen, setOpen] = useState(false);
-  const [selected, setSelected] = useState<Option>(value!);
-  const [inputValue, setInputValue] = useState<string>(value?.label ?? "");
-
-  const handleKeyDown = useCallback(
-    (event: KeyboardEvent<HTMLDivElement>) => {
+  const handleKeyDown = React.useCallback(
+    (event: React.KeyboardEvent<HTMLDivElement>) => {
       const input = inputRef.current;
       if (!input) {
         return;
       }
 
       // Keep the options displayed when the user is typing
-      if (!isOpen) {
+      if (!open) {
         setOpen(true);
       }
 
@@ -79,7 +55,7 @@ export const AutoComplete = ({
         );
         if (optionToSelect) {
           setSelected(optionToSelect);
-          onValueChange?.(optionToSelect);
+          onValueChange(optionToSelect);
         }
       }
 
@@ -87,20 +63,16 @@ export const AutoComplete = ({
         input.blur();
       }
     },
-    [isOpen, options, onValueChange],
+    [open, options, onValueChange],
   );
 
-  const handleBlur = useCallback(() => {
-    setOpen(false);
-    setInputValue(selected?.label);
-  }, [selected]);
-
-  const handleSelectOption = useCallback(
+  const handleSelectOption = React.useCallback(
     (selectedOption: Option) => {
       setInputValue(selectedOption.label);
 
       setSelected(selectedOption);
-      onValueChange?.(selectedOption);
+      onValueChange(selectedOption);
+      setOpen(false);
 
       // This is a hack to prevent the input from being focused after the user selects an option
       // We can call this hack: "The next tick"
@@ -112,67 +84,48 @@ export const AutoComplete = ({
   );
 
   return (
-    <CommandPrimitive onKeyDown={handleKeyDown}>
-      <React.Fragment>
-        <CommandInput
-          ref={inputRef}
-          value={inputValue}
-          onValueChange={isLoading ? undefined : setInputValue}
-          onBlur={handleBlur}
-          onFocus={() => setOpen(true)}
-          placeholder={placeholder}
-          disabled={disabled}
-          className="text-base"
-        />
-      </React.Fragment>
-      <div className="relative mt-1">
-        <div
-          className={cn(
-            "absolute top-0 z-10 w-full rounded-xl bg-background outline-none animate-in fade-in-0 zoom-in-95",
-            isOpen ? "block" : "hidden",
-          )}
-        >
-          <CommandList className="rounded-lg ring-1 ring-border">
-            {isLoading ? (
-              <CommandPrimitive.Loading>
-                <div className="p-1">
-                  <Skeleton className="h-8 w-full" />
-                </div>
-              </CommandPrimitive.Loading>
-            ) : null}
-            {options.length > 0 && !isLoading ? (
-              <CommandGroup>
-                {options.map((option) => {
-                  const isSelected = selected?.value === option.value;
-                  return (
-                    <CommandItem
-                      key={option.value}
-                      value={option.label}
-                      onMouseDown={(event) => {
-                        event.preventDefault();
-                        event.stopPropagation();
-                      }}
-                      onSelect={() => handleSelectOption(option)}
-                      className={cn(
-                        "flex w-full items-center gap-2",
-                        !isSelected ? "pl-8" : null,
-                      )}
-                    >
-                      {isSelected ? <Check className="w-4" /> : null}
-                      {option.label}
-                    </CommandItem>
-                  );
-                })}
-              </CommandGroup>
-            ) : null}
-            {!isLoading ? (
-              <CommandPrimitive.Empty className="select-none rounded-sm px-2 py-3 text-center text-sm">
-                {emptyMessage}
-              </CommandPrimitive.Empty>
-            ) : null}
-          </CommandList>
-        </div>
-      </div>
-    </CommandPrimitive>
+    <Command
+      onMouseLeave={() => setOpen(false)}
+      onKeyDown={handleKeyDown}
+      className="bg-transparent"
+    >
+      <CommandInput
+        ref={inputRef}
+        placeholder={placeholder}
+        value={inputValue}
+        onValueChange={setInputValue}
+        onMouseEnter={() => setOpen(true)}
+      />
+      <CommandList
+        className={cn("", {
+          hidden: open === false,
+        })}
+      >
+        <CommandEmpty asChild>
+          <CreateCategoryButton
+            onValueSelect={handleSelectOption}
+            id={id}
+            inputvalue={inputValue}
+          />
+        </CommandEmpty>
+        <CommandGroup>
+          {options.map((option) => (
+            <CommandItem
+              key={option.value}
+              value={option.label}
+              onSelect={() => handleSelectOption(option)}
+            >
+              <Check
+                className={cn(
+                  "mr-2 h-4 w-4",
+                  selected.label === option.label ? "opacity-100" : "opacity-0",
+                )}
+              />
+              {option.label}
+            </CommandItem>
+          ))}
+        </CommandGroup>
+      </CommandList>
+    </Command>
   );
-};
+}

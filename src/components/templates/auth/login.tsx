@@ -11,12 +11,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { PasswordInput } from "@/components/input/password-input";
+
 import { APP_TITLE } from "@/lib/constants";
 import { login } from "@/lib/auth/actions";
 import { Label } from "@/components/ui/label";
-import { SubmitButton } from "@/components/button/submit-button";
-import OauthButton from "@/components/button/oauth-button";
+import OauthButton from "../button/oauth-button";
+import { PasswordInput } from "../input/password-input";
+import { SubmitButton } from "../button/submit-button";
 
 export function Login() {
   const [state, formAction] = useFormState(login, null);

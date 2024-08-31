@@ -1,4 +1,4 @@
-import { SubmitButton } from "@/components/button/submit-button";
+import { SubmitButton } from "@/components/templates/button/submit-button";
 import JsonDisplay from "@/components/ui/json-ui";
 import { logout } from "@/lib/auth/actions";
 import { api } from "@/trpc/server";

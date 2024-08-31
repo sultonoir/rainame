@@ -38,3 +38,15 @@ export type AdminMenuList = {
   >;
   count: number | null;
 };
+
+type MenuListProfile = {
+  title: string;
+  path: string;
+  keybind: string;
+};
+
+export type MenuProfileProps = {
+  menulists: MenuListProfile[];
+};
+
+export type Option = Record<"value" | "label", string> & Record<string, string>;

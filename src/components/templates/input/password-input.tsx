@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { EyeOpenIcon, EyeCloseIcon } from "@/components/icons";
+import { EyeOpenIcon, EyeCloseIcon } from "@/components/templates/icons";
 import { Button } from "@/components/ui/button";
 import { Input, type InputProps } from "@/components/ui/input";
 

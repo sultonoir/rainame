@@ -8,9 +8,9 @@ import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { SubmitButton } from "@/components/button/submit-button";
+import { SubmitButton } from "@/components/templates/button/submit-button";
 import { sendPasswordResetLink } from "@/lib/auth/actions";
-import { ExclamationTriangleIcon } from "@/components/icons";
+import { ExclamationTriangleIcon } from "@/components/templates/icons";
 import { Paths } from "@/lib/constants";
 
 export function SendResetEmail() {

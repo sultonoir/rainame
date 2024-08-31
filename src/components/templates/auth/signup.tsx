@@ -2,7 +2,6 @@
 
 import { useFormState } from "react-dom";
 import Link from "next/link";
-import { PasswordInput } from "@/components/input/password-input";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -15,8 +14,9 @@ import { Input } from "@/components/ui/input";
 import { APP_TITLE } from "@/lib/constants";
 import { Label } from "@/components/ui/label";
 import { signup } from "@/lib/auth/actions";
-import { SubmitButton } from "@/components/button/submit-button";
-import OauthButton from "@/components/button/oauth-button";
+import OauthButton from "../button/oauth-button";
+import { PasswordInput } from "../input/password-input";
+import { SubmitButton } from "../button/submit-button";
 
 export function Signup() {
   const [state, formAction] = useFormState(signup, null);

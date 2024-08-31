@@ -4,13 +4,13 @@ import { Label } from "@radix-ui/react-label";
 import { useEffect, useRef } from "react";
 import { useFormState } from "react-dom";
 import { toast } from "sonner";
-import { ExclamationTriangleIcon } from "@/components/icons";
+import { ExclamationTriangleIcon } from "@/components/templates/icons";
 import {
   logout,
   verifyEmail,
   resendVerificationEmail as resendEmail,
 } from "@/lib/auth/actions";
-import { SubmitButton } from "@/components/button/submit-button";
+import { SubmitButton } from "@/components/templates/button/submit-button";
 import {
   InputOTP,
   InputOTPGroup,

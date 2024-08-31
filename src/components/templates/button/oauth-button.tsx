@@ -1,8 +1,8 @@
 import React from "react";
-import { Button } from "../ui/button";
 import Link from "next/link";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { Chrome, Facebook } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const OauthButton = () => {
   return (

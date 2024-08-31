@@ -1,8 +1,8 @@
 import React from "react";
 import Logo from "./logo";
 import { DemoNavbar } from "./demo-menu";
-import LoginButton from "@/components/button/login-button";
-import { SearchInput } from "@/components/input/search-input";
+import LoginButton from "@/components/templates/button/login-button";
+import { SearchInput } from "@/components/templates/input/search-input";
 
 const MainNavbar = () => {
   return (

@@ -3,11 +3,11 @@
 import { useEffect } from "react";
 import { useFormState } from "react-dom";
 import { toast } from "sonner";
-import { ExclamationTriangleIcon } from "@/components/icons";
-import { SubmitButton } from "@/components/button/submit-button";
+import { ExclamationTriangleIcon } from "@/components/templates/icons";
 import { Label } from "@/components/ui/label";
 import { resetPassword } from "@/lib/auth/actions";
-import { PasswordInput } from "@/components/input/password-input";
+import { PasswordInput } from "../input/password-input";
+import { SubmitButton } from "../button/submit-button";
 
 export function ResetPassword({ token }: { token: string }) {
   const [state, formAction] = useFormState(resetPassword, null);
