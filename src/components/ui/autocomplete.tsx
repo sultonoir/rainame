@@ -161,7 +161,7 @@ export const MenuItem = ({
           animate={active ? "open" : "closed"}
           transition={transition}
         >
-          <div className="absolute left-1/2 top-[calc(100%_+_0rem)] w-full -translate-x-1/2 transform">
+          <div className="absolute left-1/2 top-[calc(100%_+_0rem)] z-50 w-full -translate-x-1/2 transform">
             <motion.div
               layoutId="active" // layoutId ensures smooth animation
               className="overflow-hidden rounded-lg border bg-popover shadow-xl backdrop-blur-sm"
