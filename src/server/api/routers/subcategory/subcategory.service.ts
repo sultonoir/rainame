@@ -4,27 +4,17 @@ import {
   type GetByCategorySchema,
   type PostSubCategorySchema,
 } from "./subcategory.input";
-import { TRPCError } from "@trpc/server";
 
 export const createSubCategory = async (
   ctx: ProtectedTRPCContext,
   { category, name }: PostSubCategorySchema,
 ) => {
   const id = generateId(10);
-  const categories = await ctx.db.category.findUnique({
-    where: {
-      name: category,
-    },
-  });
-
-  if (!categories) {
-    throw new TRPCError({ code: "BAD_REQUEST", message: "category not found" });
-  }
 
   return await ctx.db.subcategory.create({
     data: {
       id,
-      categoryId: categories.id,
+      categoryId: category,
       name,
     },
   });

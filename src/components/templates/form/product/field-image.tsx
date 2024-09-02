@@ -4,10 +4,11 @@ import { UploadCloud, XIcon } from "lucide-react";
 import Image from "next/image";
 
 interface FieldImageProps {
+  values: string[];
   setValues: (values: string[]) => void;
 }
 
-const FieldImage = ({ setValues }: FieldImageProps) => {
+const FieldImage = ({ setValues, values }: FieldImageProps) => {
   const { setImages, images } = useImages();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -17,7 +18,7 @@ const FieldImage = ({ setValues }: FieldImageProps) => {
 
     const newFilesArray = Array.from(files);
     const currentImages = images; // State value for images
-    // const currentValues = values; // State value for values
+    const currentValues = values; // State value for values
 
     // Filter out files that already exist in the current images
     const uniqueNewFiles = newFilesArray.filter(
@@ -30,7 +31,7 @@ const FieldImage = ({ setValues }: FieldImageProps) => {
 
     // Filter out URLs that already exist in the current values
     const uniqueNewUrls = newFileUrls.filter(
-      (url) => !newFileUrls.includes(url),
+      (url) => !currentValues.includes(url),
     );
 
     // Update the state only if there are new unique files or URLs
@@ -39,7 +40,7 @@ const FieldImage = ({ setValues }: FieldImageProps) => {
     }
 
     if (uniqueNewUrls.length > 0) {
-      setValues([...newFileUrls, ...uniqueNewUrls]);
+      setValues([...currentValues, ...uniqueNewUrls]);
     }
   };
 
@@ -52,7 +53,11 @@ const FieldImage = ({ setValues }: FieldImageProps) => {
           action={handleFileChange}
         />
       ) : (
-        <ImageGrid images={images} onUpload={handleFileChange} />
+        <ImageGrid
+          values={values}
+          setValues={setValues}
+          onUpload={handleFileChange}
+        />
       )}
     </section>
   );
@@ -83,34 +88,42 @@ const EmptyState = ({
 );
 
 const ImageGrid = ({
-  images,
+  values,
   onUpload,
+  setValues,
 }: {
-  images: File[];
+  values: string[];
   onUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  setValues: (values: string[]) => void;
 }) => {
-  const { setImages } = useImages();
-  const removeFile = (fileName: string) => {
-    // Filter out the file to remove
-    const updatedImages = images.filter((file) => file.name !== fileName);
+  const { setImages, images } = useImages();
+  const removeFile = (index: number) => {
+    const newValues = [...values];
+    newValues.splice(index, 1);
 
+    const newImages = [...images];
+    newImages.splice(index, 1);
     // Update state with the filtered array
-    setImages(updatedImages);
+    setImages(newImages);
+    setValues(newValues);
   };
   return (
     <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-      {images.map((src, index) => (
-        <div key={index} className="relative overflow-hidden rounded-lg">
+      {values.map((src, index) => (
+        <div
+          key={index}
+          className="relative aspect-square overflow-hidden rounded-lg"
+        >
           <Button
             type="button"
-            onClick={() => removeFile(src.name)}
+            onClick={() => removeFile(index)}
             size="icon"
             className="absolute right-1 top-1 bg-destructive hover:bg-destructive/90"
           >
             <XIcon />
           </Button>
           <Image
-            src={URL.createObjectURL(src)}
+            src={src}
             alt={`Image ${index}`}
             layout="responsive"
             width={500}
@@ -121,7 +134,7 @@ const ImageGrid = ({
       ))}
       <label
         htmlFor="upload"
-        className="relative flex min-h-[377px] flex-col items-center justify-center gap-4 overflow-hidden border border-dashed"
+        className="relative flex aspect-square flex-col items-center justify-center gap-4 overflow-hidden border border-dashed"
       >
         <input
           type="file"

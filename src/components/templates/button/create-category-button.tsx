@@ -40,7 +40,7 @@ export const CreateCategoryButton = ({
         label: e.name,
         value: e.id,
       });
-      await ctx.subcategory.list.invalidate();
+      await ctx.subcategory.byCategoryId.invalidate();
     },
   });
 

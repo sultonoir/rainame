@@ -12,8 +12,10 @@ export const postProductInput = z.object({
   desc: z.string().min(10, {
     message: "Product must have 10 character",
   }),
-  discount: z.string(),
-  price: z.string(),
+  discount: z.number().max(90, {
+    message: "Max discount is 90%",
+  }),
+  price: z.number(),
   stockAdnSize: z
     .array(
       z.object({

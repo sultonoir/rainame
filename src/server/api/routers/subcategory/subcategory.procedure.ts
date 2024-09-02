@@ -3,7 +3,7 @@ import * as input from "./subcategory.input";
 import * as service from "./subcategory.service";
 
 export const subcategoryProcedure = createTRPCRouter({
-  categoryId: protectedProcedure
+  byCategoryId: protectedProcedure
     .input(input.getByCategoryInput)
     .query(({ ctx, input }) => service.getByCategoryId(ctx, input)),
 

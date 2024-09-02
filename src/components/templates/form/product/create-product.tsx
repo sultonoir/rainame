@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -24,6 +24,10 @@ import dynamic from "next/dynamic";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import FieldImage from "./field-image";
+import { cn } from "@/lib/utils";
+import { Trash2 } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import FieldSubcategory from "./field-subcategory";
 
 export function CreateProduct() {
   const Editor = React.useMemo(
@@ -44,6 +48,20 @@ export function CreateProduct() {
         label: "",
         value: "",
       },
+      images: [],
+      price: 0,
+      discount: 0,
+      desc: "",
+      stockAdnSize: [
+        {
+          stock: "",
+          size: "",
+        },
+      ],
+      subcategory: {
+        label: "",
+        value: "",
+      },
     },
   });
 
@@ -54,6 +72,13 @@ export function CreateProduct() {
       </pre>,
     );
   }
+
+  const category = form.watch("category");
+
+  const { fields, append, remove } = useFieldArray({
+    name: "stockAdnSize",
+    control: form.control,
+  });
 
   return (
     <div className="flex flex-col gap-2 py-10">
@@ -118,7 +143,15 @@ export function CreateProduct() {
                           type="number"
                           placeholder="0.00"
                           className="rounded-l-none border-none focus-visible:ring-0 focus-visible:ring-offset-0"
-                          {...field}
+                          value={field.value}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            const num = parseFloat(value);
+                            if (num <= 0) {
+                              return field.onChange(0);
+                            }
+                            field.onChange(value);
+                          }}
                         />
                       </div>
                     </FormControl>
@@ -143,7 +176,10 @@ export function CreateProduct() {
                             const value = e.target.value;
                             const num = parseFloat(value);
                             if (num > 100) {
-                              return field.onChange("100");
+                              return field.onChange(100);
+                            }
+                            if (num <= 0) {
+                              return field.onChange(0);
                             }
                             field.onChange(value);
                           }}
@@ -157,6 +193,48 @@ export function CreateProduct() {
                   </FormItem>
                 )}
               />
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Categories</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-row gap-2">
+              <FormField
+                control={form.control}
+                name="category"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Category {field.value.value}</FormLabel>
+                    <FormControl>
+                      <FieldCategory
+                        value={field.value}
+                        setValue={field.onChange}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {category.label && (
+                <FormField
+                  control={form.control}
+                  name="subcategory"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel>Sub Category {field.value.value}</FormLabel>
+                      <FormControl>
+                        <FieldSubcategory
+                          id={category.value}
+                          value={field.value}
+                          setValue={field.onChange}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
             </CardContent>
           </Card>
           <Card>
@@ -180,6 +258,68 @@ export function CreateProduct() {
                 )}
               />
             </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Stocks</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {fields.map((field, index) => (
+                <div className="flex w-full items-end gap-2" key={field.id}>
+                  <FormField
+                    control={form.control}
+                    name={`stockAdnSize.${index}.stock`}
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        <FormLabel className={cn(index !== 0 && "sr-only")}>
+                          Stock
+                        </FormLabel>
+                        <FormMessage />
+                        <FormControl>
+                          <Input type="number" {...field} />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name={`stockAdnSize.${index}.size`}
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        <FormLabel className={cn(index !== 0 && "sr-only")}>
+                          Size
+                        </FormLabel>
+                        <FormMessage />
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="icon"
+                    className="mt-2 size-9 flex-shrink-0"
+                    onClick={() => remove(index)}
+                  >
+                    <Trash2 />
+                  </Button>
+                </div>
+              ))}
+            </CardContent>
+            <Separator />
+            <div className="flex items-center justify-center pb-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="mt-2"
+                onClick={() => append({ stock: "", size: "" })}
+              >
+                Add more...
+              </Button>
+            </div>
           </Card>
           <Button type="submit">Submit</Button>
         </form>
