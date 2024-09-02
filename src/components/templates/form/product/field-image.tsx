@@ -48,8 +48,8 @@ const FieldImage = ({ setValues, values }: FieldImageProps) => {
     <section className="flex min-h-[150px] gap-4 p-2 md:min-h-[400px] lg:gap-6">
       {images.length === 0 ? (
         <EmptyState
-          title="You have no products"
-          description="You can start selling as soon as you add a product."
+          title="You have no images"
+          description="You can start selling as soon as you add a images"
           action={handleFileChange}
         />
       ) : (
@@ -72,7 +72,10 @@ const EmptyState = ({
   description: string;
   action: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }) => (
-  <label className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm">
+  <label
+    className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm"
+    htmlFor="upload"
+  >
     <div className="flex flex-col items-center gap-1 text-center">
       <h3 className="text-2xl font-bold tracking-tight">{title}</h3>
       <p className="text-sm text-muted-foreground">{description}</p>
@@ -133,13 +136,13 @@ const ImageGrid = ({
         </div>
       ))}
       <label
-        htmlFor="upload"
+        htmlFor="uploads"
         className="relative flex aspect-square flex-col items-center justify-center gap-4 overflow-hidden border border-dashed"
       >
         <input
           type="file"
           multiple
-          id="upload"
+          id="uploads"
           onChange={onUpload}
           className="hidden"
         />

@@ -29,8 +29,13 @@ import { Trash2 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import FieldSubcategory from "./field-subcategory";
 import Link from "next/link";
+import { useUploadThing } from "@/lib/uploadthing";
+import useImages from "@/hooks/useImages";
+import { useRouter } from "next/navigation";
+import { api } from "@/trpc/react";
 
 export function CreateProduct() {
+  const { images } = useImages();
   const Editor = React.useMemo(
     () =>
       dynamic(() => import("@/components/ui/editor"), {
@@ -66,12 +71,28 @@ export function CreateProduct() {
     },
   });
 
-  function onSubmit(data: PostProductSchema) {
-    toast(
-      <pre className="mt-2 w-[340px] rounded-md bg-accent p-4">
-        <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-      </pre>,
-    );
+  const { startUpload } = useUploadThing("media");
+  const router = useRouter();
+
+  const addProduct = api.product.post.useMutation({
+    onError: (e) => {
+      toast.error(e.message);
+    },
+    onSuccess: (e) => {
+      router.push(`/products/${e}`);
+    },
+  });
+  async function onSubmit(data: PostProductSchema) {
+    let resultImages = data.images;
+    const uploadimages = await startUpload(images);
+    if (uploadimages) {
+      resultImages = uploadimages.map((item) => item.url);
+    }
+
+    addProduct.mutate({
+      ...data,
+      images: resultImages,
+    });
   }
 
   const category = form.watch("category");
@@ -182,7 +203,7 @@ export function CreateProduct() {
                             if (num <= 0) {
                               return field.onChange(0);
                             }
-                            field.onChange(value);
+                            field.onChange(num);
                           }}
                         />
                         <div className="flex size-9 items-center justify-center rounded-r bg-secondary">
@@ -330,7 +351,13 @@ export function CreateProduct() {
             <Button type="button" asChild variant="outline">
               <Link href="/dashboard/products">Discard</Link>
             </Button>
-            <Button type="submit">Submit</Button>
+            <Button
+              type="submit"
+              disabled={form.formState.isSubmitting}
+              onClick={form.handleSubmit(onSubmit)}
+            >
+              Submit
+            </Button>
           </div>
         </form>
       </Form>

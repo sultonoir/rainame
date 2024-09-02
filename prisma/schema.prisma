@@ -87,11 +87,11 @@ model Product {
   slug           String           @unique
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
+  desc           String           @db.Text
   price          Float
   discount       Float
   productImage   ProductImage[]
-  sizes          Size?
-  stocks         Stock?
+  stockandsize   StockAndSize[]
   productDetails ProductDetails[]
   Wishlist       Wishlist[]
   Cart           Cart[]
@@ -117,32 +117,18 @@ model ProductImage {
   @@index([url], type: BTree)
 }
 
-model Size {
+model StockAndSize {
   id             String           @id @unique @default(cuid())
-  name           String           @unique
+  name           String
+  amount         Int
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
-  productId      String           @unique
-  product        Product          @relation(fields: [productId], references: [id])
-  stocks         Stock?
+  productId      String
+  product        Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
   productDetails ProductDetails[]
 
   @@index([name], type: Hash) // Efisien untuk pencarian berdasarkan ukuran
   @@index([productId], type: Hash)
-}
-
-model Stock {
-  id             String           @id @unique @default(cuid())
-  amount         BigInt
-  productId      String           @unique
-  sizeId         String           @unique
-  product        Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
-  size           Size             @relation(fields: [sizeId], references: [id], onDelete: Cascade)
-  productDetails ProductDetails[]
-
-  @@index([productId], type: Hash)
-  @@index([sizeId], type: Hash)
-  @@index([amount], type: BTree)
 }
 
 model Category {
@@ -170,18 +156,16 @@ model Subcategory {
 }
 
 model ProductDetails {
-  productId     String
-  categoryId    String
-  subcategoryId String
-  sizeId        String
-  stockId       String
-  size          Size        @relation(fields: [sizeId], references: [id], onDelete: Cascade)
-  stock         Stock       @relation(fields: [stockId], references: [id], onDelete: Cascade)
-  product       Product     @relation(fields: [productId], references: [id])
-  category      Category    @relation(fields: [categoryId], references: [id])
-  subcategory   Subcategory @relation(fields: [subcategoryId], references: [id])
+  productId      String
+  categoryId     String
+  subcategoryId  String
+  stockandsizeId String
+  stockandsize   StockAndSize @relation(fields: [stockandsizeId], references: [id], onDelete: Cascade)
+  product        Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  category       Category     @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  subcategory    Subcategory  @relation(fields: [subcategoryId], references: [id], onDelete: Cascade)
 
-  @@id([productId, sizeId, stockId, subcategoryId, categoryId])
+  @@id([productId, stockandsizeId, subcategoryId, categoryId])
   @@index([categoryId], type: Hash) // Indeks untuk pencarian berdasarkan kategori
   @@index([subcategoryId], type: Hash) // Indeks untuk pencarian berdasarkan subkategori
 }
