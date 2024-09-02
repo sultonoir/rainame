@@ -28,6 +28,7 @@ import { cn } from "@/lib/utils";
 import { Trash2 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import FieldSubcategory from "./field-subcategory";
+import Link from "next/link";
 
 export function CreateProduct() {
   const Editor = React.useMemo(
@@ -150,7 +151,7 @@ export function CreateProduct() {
                             if (num <= 0) {
                               return field.onChange(0);
                             }
-                            field.onChange(value);
+                            field.onChange(num);
                           }}
                         />
                       </div>
@@ -205,7 +206,9 @@ export function CreateProduct() {
                 name="category"
                 render={({ field }) => (
                   <FormItem className="w-full">
-                    <FormLabel>Category {field.value.value}</FormLabel>
+                    <FormLabel className="capitalize">
+                      Category {field.value.label}
+                    </FormLabel>
                     <FormControl>
                       <FieldCategory
                         value={field.value}
@@ -222,7 +225,9 @@ export function CreateProduct() {
                   name="subcategory"
                   render={({ field }) => (
                     <FormItem className="w-full">
-                      <FormLabel>Sub Category {field.value.value}</FormLabel>
+                      <FormLabel className="capitalize">
+                        Sub Category {field.value.label}
+                      </FormLabel>
                       <FormControl>
                         <FieldSubcategory
                           id={category.value}
@@ -321,7 +326,12 @@ export function CreateProduct() {
               </Button>
             </div>
           </Card>
-          <Button type="submit">Submit</Button>
+          <div className="flex gap-2">
+            <Button type="button" asChild variant="outline">
+              <Link href="/dashboard/products">Discard</Link>
+            </Button>
+            <Button type="submit">Submit</Button>
+          </div>
         </form>
       </Form>
     </div>
