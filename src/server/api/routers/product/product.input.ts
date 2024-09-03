@@ -38,3 +38,9 @@ export const postProductInput = z.object({
 });
 
 export type PostProductSchema = z.infer<typeof postProductInput>;
+
+export const slugProductInput = z.object({
+  slug: z.string(),
+});
+
+export type SlugProductSchema = z.infer<typeof slugProductInput>;

@@ -1,6 +1,9 @@
 import { generateId } from "lucia";
-import { type ProtectedTRPCContext } from "../../trpc";
-import { type PostProductSchema } from "./product.input";
+import { type TRPCContext, type ProtectedTRPCContext } from "../../trpc";
+import {
+  type SlugProductSchema,
+  type PostProductSchema,
+} from "./product.input";
 import slugify from "slugify";
 import { createBlurHash } from "@/lib/blur";
 import { TRPCError } from "@trpc/server";
@@ -73,12 +76,11 @@ export const postProduct = async (
   }
 
   const productDetail = await ctx.db.productDetails.createManyAndReturn({
-    data: stocks.map((item) => ({
-      stockandsizeId: item.id,
-      productId: item.productId,
+    data: {
+      productId: product.id,
       categoryId: category.value,
       subcategoryId: subcategory.value,
-    })),
+    },
   });
 
   if (productDetail.length === 0) {
@@ -89,4 +91,26 @@ export const postProduct = async (
   }
 
   return product.slug;
+};
+
+export const getBySlug = async (
+  ctx: TRPCContext,
+  { slug }: SlugProductSchema,
+) => {
+  return ctx.db.productDetails.findFirst({
+    where: {
+      product: {
+        slug,
+      },
+    },
+    include: {
+      product: {
+        include: {
+          productImage: true,
+        },
+      },
+      subcategory: true,
+      category: true,
+    },
+  });
 };
