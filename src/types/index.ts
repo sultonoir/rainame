@@ -55,4 +55,5 @@ export type Option = Record<"value" | "label", string> & Record<string, string>;
 export type ProductCard = Product & {
   productImage: ProductImage;
   rating: number;
+  wishlist: boolean;
 };

@@ -125,15 +125,36 @@ export const listProduct = async (ctx: TRPCContext) => {
     },
   });
 
-  return products.map((item) => {
-    const totalRating = item.rating.reduce((acc, cur) => acc + cur.value, 0);
+  const checkWishlist = async (productId: string) => {
+    const userId = ctx.user?.id;
+    if (!userId) {
+      return false; // or throw an error, depending on your use case
+    }
 
-    const averageRating = totalRating / item.rating.length;
+    const wishlist = await ctx.db.wishlist.findFirst({
+      where: {
+        userId,
+        productId,
+      },
+    });
 
-    return {
-      ...item,
-      rating: averageRating,
-      productImage: item.productImage[0]!,
-    };
-  });
+    return !!wishlist; // returns true if wishlist is found, false otherwise
+  };
+
+  const newProducts = await Promise.all(
+    products.map(async (item) => {
+      const totalRating = item.rating.reduce((acc, cur) => acc + cur.value, 0);
+      const averageRating = totalRating / item.rating.length;
+      const wishlistExists = await checkWishlist(item.id);
+
+      return {
+        ...item,
+        rating: averageRating,
+        productImage: item.productImage[0]!,
+        wishlist: wishlistExists,
+      };
+    }),
+  );
+
+  return newProducts;
 };

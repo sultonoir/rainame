@@ -10,7 +10,8 @@ import { type ProductCard } from "@/types";
 import Image from "next/image";
 import { calculateTotalPrice, cn } from "@/lib/utils";
 import Link from "next/link";
-import { HeartIcon, Star, Stars } from "lucide-react";
+import { Star, Stars } from "lucide-react";
+import WishlistButton from "../button/wishlist-button";
 
 type Props = {
   product: ProductCard;
@@ -53,11 +54,13 @@ const CardProduct = ({ product }: Props) => {
                   "font-bold": product.discount > 0,
                 })}
               >
-                ${product.price}
-              </CardDescription>
-              <CardDescription className="text-lg line-through">
                 ${discountedPrice}
               </CardDescription>
+              {product.discount > 0 && (
+                <CardDescription className="text-lg line-through">
+                  ${product.price}
+                </CardDescription>
+              )}
             </div>
             <div className="flex-shrink-0">
               {product.rating > 0 ? (
@@ -74,9 +77,13 @@ const CardProduct = ({ product }: Props) => {
             </div>
           </div>
         </Link>
-        <div className="absolute right-0 top-0">
-          <HeartIcon className="!size-8 fill-rose-600 stroke-red-600" />
-        </div>
+        <WishlistButton
+          variant="ghost"
+          size="icon"
+          className="absolute -top-1 right-0 hover:bg-transparent"
+          isWislist={product.wishlist}
+          productId={product.id}
+        />
       </CardContent>
     </Card>
   );
