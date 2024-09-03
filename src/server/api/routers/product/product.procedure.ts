@@ -13,4 +13,6 @@ export const productProcedure = createTRPCRouter({
   slug: publicProcedure
     .input(input.slugProductInput)
     .query(({ ctx, input }) => service.getBySlug(ctx, input)),
+
+  list: publicProcedure.query(({ ctx }) => service.listProduct(ctx)),
 });

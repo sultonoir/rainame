@@ -1,3 +1,4 @@
+import { type Product, type ProductImage } from "@prisma/client";
 import { type LucideProps } from "lucide-react";
 
 export type GithubData = {
@@ -50,3 +51,8 @@ export type MenuProfileProps = {
 };
 
 export type Option = Record<"value" | "label", string> & Record<string, string>;
+
+export type ProductCard = Product & {
+  productImage: ProductImage;
+  rating: number;
+};

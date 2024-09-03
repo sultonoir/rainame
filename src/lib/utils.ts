@@ -63,3 +63,18 @@ export function extractUsername(email: string) {
     return email; // or throw an error, depending on your requirements
   }
 }
+
+interface PropsCall {
+  price: number;
+  discount: number | null;
+}
+
+export const calculateTotalPrice = ({ price, discount }: PropsCall) => {
+  let discountedPrice = price;
+  if (discount && discount > 0) {
+    const discountAmount = (price * discount) / 100;
+    discountedPrice = price - discountAmount;
+  }
+  discountedPrice = parseFloat(discountedPrice.toFixed(2));
+  return discountedPrice;
+};

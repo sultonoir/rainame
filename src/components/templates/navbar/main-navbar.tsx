@@ -1,8 +1,8 @@
 import React from "react";
 import Logo from "./logo";
-import { DemoNavbar } from "./demo-menu";
 import LoginButton from "@/components/templates/button/login-button";
 import { SearchInput } from "@/components/templates/input/search-input";
+import { MenuNavbar } from "./menu-navabar";
 
 const MainNavbar = () => {
   return (
@@ -11,7 +11,7 @@ const MainNavbar = () => {
         <div className="flex items-center justify-between">
           <Logo />
           <div className="flex items-center gap-2">
-            <DemoNavbar />
+            <MenuNavbar />
           </div>
           <div className="flex flex-shrink-0 items-center gap-2">
             <SearchInput />

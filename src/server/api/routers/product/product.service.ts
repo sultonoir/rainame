@@ -114,3 +114,26 @@ export const getBySlug = async (
     },
   });
 };
+
+export const listProduct = async (ctx: TRPCContext) => {
+  const products = await ctx.db.product.findMany({
+    include: {
+      productImage: {
+        take: 1,
+      },
+      rating: true,
+    },
+  });
+
+  return products.map((item) => {
+    const totalRating = item.rating.reduce((acc, cur) => acc + cur.value, 0);
+
+    const averageRating = totalRating / item.rating.length;
+
+    return {
+      ...item,
+      rating: averageRating,
+      productImage: item.productImage[0]!,
+    };
+  });
+};

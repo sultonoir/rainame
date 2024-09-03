@@ -82,22 +82,23 @@ model Oauth {
 }
 
 model Product {
-  id             String           @id @unique @default(cuid())
+  id             String            @id @unique @default(cuid())
   name           String
-  slug           String           @unique
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  desc           String           @db.Text
+  slug           String            @unique
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  desc           String            @db.Text
   price          Float
   discount       Float
   productImage   ProductImage[]
   stockandsize   StockAndSize[]
   productDetails ProductDetails[]
-  Wishlist       Wishlist[]
-  Cart           Cart[]
-  CheckoutItem   CheckoutItem[]
-  Rating         Rating[]
-  Complain       Complain[]
+  wishlist       Wishlist[]
+  cart           Cart[]
+  checkoutItem   CheckoutItem[]
+  rating         Rating[]
+  complain       Complain[]
+  promo          PromoAndProduct[]
 
   @@index([name], type: Hash) // Efisien untuk pencarian berdasarkan nama
   @@index([price], type: BTree) // Efisien untuk pencarian berdasarkan rentang harga
@@ -302,4 +303,32 @@ model Message {
   @@index([id], type: Hash)
   @@index([userId], type: Hash)
   @@index([chatId], type: Hash)
+}
+
+model Promo {
+  id        String            @id @unique @default(uuid())
+  title     String
+  image     String
+  slug      String
+  desc      String
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+  product   PromoAndProduct[]
+}
+
+model PromoAndProduct {
+  promoId   String
+  promo     Promo   @relation(fields: [promoId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@id([productId, promoId])
+}
+
+model Coupon {
+  id        String   @id @unique @default(uuid())
+  code      String
+  amount    Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

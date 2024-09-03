@@ -1,23 +1,16 @@
-import { SubmitButton } from "@/components/templates/button/submit-button";
-import ImageUpload from "@/components/ui/image-upload";
-import JsonDisplay from "@/components/ui/json-ui";
-import { logout } from "@/lib/auth/actions";
+import CardProduct from "@/components/templates/product/card-product";
 import { api } from "@/trpc/server";
 import React from "react";
 
 const Page = async () => {
-  const data = await api.user.list();
+  const products = await api.product.list();
   return (
-    <div className="container h-screen space-y-2 py-4">
-      <ImageUpload />
-      <div className="flex flex-wrap gap-2">
-        {data.map((item) => (
-          <JsonDisplay data={item} key={item.id} />
+    <div className="container py-10">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+        {products.map((item) => (
+          <CardProduct product={item} key={item.id} />
         ))}
       </div>
-      <form action={logout}>
-        <SubmitButton>Logout</SubmitButton>
-      </form>
     </div>
   );
 };
