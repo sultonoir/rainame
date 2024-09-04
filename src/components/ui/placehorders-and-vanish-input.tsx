@@ -188,14 +188,14 @@ export function PlaceholdersAndVanishInput({
   return (
     <form
       className={cn(
-        "relative mx-auto h-10 w-full overflow-hidden rounded-lg border bg-background shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),_0px_1px_0px_0px_rgba(25,28,33,0.02),_0px_0px_0px_1px_rgba(25,28,33,0.08)] transition duration-200",
+        "relative mx-auto h-11 w-full overflow-hidden rounded-lg border bg-background shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),_0px_1px_0px_0px_rgba(25,28,33,0.02),_0px_0px_0px_1px_rgba(25,28,33,0.08)] transition duration-200",
         value && "bg-background",
       )}
       onSubmit={handleSubmit}
     >
       <canvas
         className={cn(
-          "pointer-events-none absolute left-2 top-[20%] origin-top-left scale-50 transform pr-20 text-base invert filter dark:invert-0 sm:left-8",
+          "pointer-events-none absolute left-3 top-1.5 origin-top-left scale-50 transform pr-20 text-base invert filter dark:invert-0",
           !animating ? "opacity-0" : "opacity-100",
         )}
         ref={canvasRef}
@@ -212,7 +212,7 @@ export function PlaceholdersAndVanishInput({
         value={value}
         type="text"
         className={cn(
-          "relative z-50 h-full w-full rounded-full border-none bg-transparent pl-4 pr-20 text-sm text-black focus:outline-none focus:ring-0 dark:text-white sm:pl-10 sm:text-base",
+          "relative z-50 h-full w-full rounded-full border-none bg-transparent pl-4 pr-20 text-sm text-black focus:outline-none focus:ring-0 dark:text-white sm:pl-5 sm:text-base",
           animating && "text-transparent dark:text-transparent",
         )}
       />
@@ -275,7 +275,7 @@ export function PlaceholdersAndVanishInput({
                 duration: 0.3,
                 ease: "linear",
               }}
-              className="w-[calc(100%-2rem)] truncate pl-4 text-left text-sm font-normal text-neutral-500 dark:text-zinc-500 sm:pl-12 sm:text-base"
+              className="w-[calc(100%-2rem)] truncate pl-4 text-left text-sm font-normal text-neutral-500 dark:text-zinc-500 sm:pl-5 sm:text-base"
             >
               {placeholders[currentPlaceholder]}
             </motion.p>
