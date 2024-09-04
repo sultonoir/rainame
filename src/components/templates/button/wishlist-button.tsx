@@ -1,8 +1,10 @@
 "use client";
 import { buttonVariants, type ButtonProps } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useSession } from "@/provider/session-provider";
 import { api } from "@/trpc/react";
 import { HeartIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { toast } from "sonner";
 
@@ -12,6 +14,7 @@ interface Props extends ButtonProps {
 }
 
 const WishlistButton = ({ variant, size, className, ...props }: Props) => {
+  const { user } = useSession();
   const [isExist, setisExist] = React.useState(props.isWislist);
   const toggleWishlish = api.wishlist.toggle.useMutation({
     onError: (e) => {
@@ -28,7 +31,11 @@ const WishlistButton = ({ variant, size, className, ...props }: Props) => {
     },
   });
 
+  const router = useRouter();
   const handleToggle = () => {
+    if (!user) {
+      return router.push("/login");
+    }
     return toggleWishlish.mutate({
       productId: props.productId,
     });
@@ -39,7 +46,7 @@ const WishlistButton = ({ variant, size, className, ...props }: Props) => {
       onClick={handleToggle}
     >
       <HeartIcon
-        className={cn("transition-all", {
+        className={cn("stroke-muted-foreground transition-all", {
           "fill-rose-600 stroke-red-600": isExist === true,
         })}
       />

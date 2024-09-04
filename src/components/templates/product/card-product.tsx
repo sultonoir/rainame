@@ -1,4 +1,6 @@
+"use client";
 import React from "react";
+
 import {
   Card,
   CardContent,
@@ -12,12 +14,14 @@ import { calculateTotalPrice, cn } from "@/lib/utils";
 import Link from "next/link";
 import { Star, Stars } from "lucide-react";
 import WishlistButton from "../button/wishlist-button";
+import { Lens } from "@/components/ui/lens";
 
 type Props = {
   product: ProductCard;
 };
 
 const CardProduct = ({ product }: Props) => {
+  const [hovering, setHovering] = React.useState(false);
   const discountedPrice = calculateTotalPrice({
     price: product.price,
     discount: product.discount,
@@ -27,15 +31,17 @@ const CardProduct = ({ product }: Props) => {
     <Card className="border-none bg-transparent shadow-none">
       <Link href={`/products/${product.slug}`}>
         <CardHeader className="aspect-square overflow-hidden rounded-lg p-0">
-          <Image
-            alt={product.name}
-            src={product.productImage.url}
-            width={500}
-            height={200}
-            blurDataURL={product.productImage.thumbnail}
-            placeholder="blur"
-            className="relative -z-10 aspect-square object-cover"
-          />
+          <Lens hovering={hovering} setHovering={setHovering}>
+            <Image
+              alt={product.name}
+              src={product.productImage.url}
+              width={500}
+              height={500}
+              blurDataURL={product.productImage.thumbnail}
+              placeholder="blur"
+              className="relative -z-10 aspect-square object-cover"
+            />
+          </Lens>
         </CardHeader>
       </Link>
       <CardContent className="relative mt-4 p-0">
