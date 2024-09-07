@@ -1,4 +1,10 @@
-import { type Product, type ProductImage } from "@prisma/client";
+import {
+  type StockAndSize,
+  type Product,
+  type ProductImage,
+  type Coupon,
+  type Rating,
+} from "@prisma/client";
 import { type LucideProps } from "lucide-react";
 
 export type GithubData = {
@@ -56,4 +62,13 @@ export type ProductCard = Product & {
   productImage: ProductImage;
   rating: number;
   wishlist: boolean;
+};
+
+export type ProductPage = Product & {
+  productImage: ProductImage[];
+  rating: Rating[];
+  stockandsize: StockAndSize[];
+  coupon: Coupon[];
+  categories: string;
+  subcategories: string;
 };

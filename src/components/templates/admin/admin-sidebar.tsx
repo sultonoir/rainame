@@ -8,9 +8,12 @@ import {
 import {
   Home,
   MessageSquareText,
+  MessageSquareWarning,
   Package,
   Settings,
   ShoppingCart,
+  TicketPercent,
+  TicketsIcon,
   Users2,
 } from "lucide-react";
 import Link from "next/link";
@@ -48,6 +51,24 @@ const AdminSidebar = () => {
       title: "Customers",
       path: "/dashboard/customers",
       icon: Users2,
+      count: 0,
+    },
+    {
+      title: "Coupon",
+      path: "/dashboard/coupon",
+      icon: TicketPercent,
+      count: 0,
+    },
+    {
+      title: "Promo",
+      path: "/dashboard/promo",
+      icon: TicketsIcon,
+      count: 0,
+    },
+    {
+      title: "Complain",
+      path: "/dashboard/complain",
+      icon: MessageSquareWarning,
       count: 0,
     },
   ];

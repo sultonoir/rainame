@@ -1,6 +1,10 @@
 import { api } from "@/trpc/server";
 import { type Metadata } from "next";
 import React from "react";
+import { notFound } from "next/navigation";
+import DialogTermsCoupon from "@/components/templates/coupon/dialog-terms-coupon";
+import { SheetCoupon } from "@/components/templates/coupon/sheet-coupon";
+import PageProduct from "@/components/templates/product/page-product";
 
 type Props = {
   params: { slug: string };
@@ -10,9 +14,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const data = await api.product.slug({
     slug: params.slug,
   });
-
+  if (!data) notFound();
   return {
-    title: data?.product.name ?? "Rainame",
+    title: data.name ?? "Rainame",
     generator: "nextjs,Trpc,e-commerce",
     description:
       "Rainame is a leading online fashion retailer that offers the latest trends and styles in clothing, shoes, and accessories for men and women. Our mission is to provide our customers with a seamless and enjoyable shopping experience, allowing them to stay ahead of the fashion curve without breaking the bank.",
@@ -25,19 +29,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
     },
     openGraph: {
-      title: data?.product.name ?? "Rainame",
+      title: data.name ?? "Rainame",
       description:
         "Rainame is a leading online fashion retailer that offers the latest trends and styles in clothing, shoes, and accessories for men and women. Our mission is to provide our customers with a seamless and enjoyable shopping experience, allowing them to stay ahead of the fashion curve without breaking the bank.",
       url: "https://rainame.vercel.app/",
       siteName: "KyouShop",
       images: [
         {
-          url: data?.product.productImage[0]?.url ?? "",
+          url: data.productImage[0]?.url ?? "",
           width: 800,
           height: 600,
         },
         {
-          url: data?.product.productImage[0]?.url ?? "",
+          url: data.productImage[0]?.url ?? "",
 
           width: 1800,
           height: 1600,
@@ -53,13 +57,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: "KyouShop easy shopping for everyone",
       images: [
         {
-          url: data?.product.productImage[0]?.url ?? "",
+          url: data.productImage[0]?.url ?? "",
 
           width: 800,
           height: 600,
         },
         {
-          url: data?.product.productImage[0]?.url ?? "",
+          url: data.productImage[0]?.url ?? "",
 
           width: 1800,
           height: 1600,
@@ -74,8 +78,16 @@ const Page = async ({ params }: Props) => {
   const data = await api.product.slug({
     slug: params.slug,
   });
-  console.log(data);
-  return <div className="container py-4"></div>;
+
+  if (!data) notFound();
+
+  return (
+    <React.Fragment>
+      <PageProduct data={data} />
+      <DialogTermsCoupon />
+      <SheetCoupon coupons={data.coupon} type="show" />
+    </React.Fragment>
+  );
 };
 
 export default Page;

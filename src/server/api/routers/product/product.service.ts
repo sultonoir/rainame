@@ -7,6 +7,7 @@ import {
 import slugify from "slugify";
 import { createBlurHash } from "@/lib/blur";
 import { TRPCError } from "@trpc/server";
+import { getTotalRating } from "@/lib/total-rating";
 
 export const postProduct = async (
   ctx: ProtectedTRPCContext,
@@ -97,7 +98,7 @@ export const getBySlug = async (
   ctx: TRPCContext,
   { slug }: SlugProductSchema,
 ) => {
-  return ctx.db.productDetails.findFirst({
+  const product = await ctx.db.productDetails.findFirst({
     where: {
       product: {
         slug,
@@ -107,12 +108,40 @@ export const getBySlug = async (
       product: {
         include: {
           productImage: true,
+          stockandsize: true,
+          rating: true,
         },
       },
       subcategory: true,
       category: true,
     },
   });
+
+  const coupon = await ctx.db.coupon.findMany({
+    where: {
+      OR: [
+        {
+          minOrder: 0,
+        },
+        {
+          minOrder: {
+            lte: product?.product.price,
+          },
+        },
+      ],
+    },
+  });
+  if (!product) {
+    return null;
+  }
+  const newProduct = {
+    ...product?.product,
+    categories: product?.category.name,
+    subcategories: product?.subcategory.name,
+    coupon: coupon,
+  };
+
+  return newProduct;
 };
 
 export const listProduct = async (ctx: TRPCContext) => {
@@ -143,7 +172,7 @@ export const listProduct = async (ctx: TRPCContext) => {
 
   const newProducts = await Promise.all(
     products.map(async (item) => {
-      const totalRating = item.rating.reduce((acc, cur) => acc + cur.value, 0);
+      const totalRating = getTotalRating(item.rating);
       const averageRating = totalRating / item.rating.length;
       const wishlistExists = await checkWishlist(item.id);
 

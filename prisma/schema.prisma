@@ -99,6 +99,7 @@ model Product {
   rating         Rating[]
   complain       Complain[]
   promo          PromoAndProduct[]
+  selling        Selling[]
 
   @@index([name], type: Hash) // Efisien untuk pencarian berdasarkan nama
   @@index([price], type: BTree) // Efisien untuk pencarian berdasarkan rentang harga
@@ -184,6 +185,7 @@ model Cart {
   id        String   @id @unique @default(cuid())
   userId    String
   productId String
+  size      String
   amount    Int      @default(1)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
@@ -225,6 +227,7 @@ model CheckoutItem {
   id        String  @id @unique @default(cuid())
   quantity  Int
   price     Float
+  size      String
   productId String
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
@@ -328,14 +331,22 @@ model PromoAndProduct {
 model Coupon {
   id        String   @id @unique @default(uuid())
   code      String
+  title     String
   amount    Int?
+  minOrder  Int      @default(0)
+  desc      String
+  tac       String
+  expiresAt DateTime
   discount  Int      @default(10)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model selling {
-  id        String @id @unique @default(uuid())
+model Selling {
+  id        String  @id @unique @default(uuid())
   amount    Int
   productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId], type: Hash)
 }
