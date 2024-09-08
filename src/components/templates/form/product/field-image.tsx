@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import useImages from "@/hooks/useImages";
 import { UploadCloud, XIcon } from "lucide-react";
 import Image from "next/image";
+import { type DragEvent } from "react";
 
 interface FieldImageProps {
   values: string[];
@@ -110,13 +111,57 @@ const ImageGrid = ({
     setImages(newImages);
     setValues(newValues);
   };
+
+  const handleDragStart = (index: number, event: DragEvent<HTMLDivElement>) => {
+    event.dataTransfer.setData("text/plain", index.toString());
+  };
+
+  const handleDragOver = (event: DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+  };
+
+  const handleDrop = (
+    targetIndex: number,
+    event: DragEvent<HTMLDivElement>,
+  ) => {
+    event.preventDefault();
+    const sourceIndex = parseInt(event.dataTransfer.getData("text/plain"), 10);
+
+    if (sourceIndex !== targetIndex) {
+      const newValues = [...values];
+      const newImages = [...images];
+
+      const [movedValue] = newValues.splice(sourceIndex, 1);
+      newValues.splice(targetIndex, 0, movedValue!);
+
+      const [movedImage] = newImages.splice(sourceIndex, 1);
+      newImages.splice(targetIndex, 0, movedImage!);
+
+      setValues(newValues);
+      setImages(newImages);
+    }
+  };
+
+  console.log({ images: images });
+
   return (
     <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       {values.map((src, index) => (
         <div
           key={index}
-          className="relative aspect-square overflow-hidden rounded-lg"
+          className="relative aspect-square cursor-move overflow-hidden rounded-lg"
+          draggable
+          onDragStart={(e) =>
+            handleDragStart(index, e as unknown as DragEvent<HTMLDivElement>)
+          }
+          onDragOver={handleDragOver}
+          onDrop={(e) => handleDrop(index, e)}
         >
+          {index === 0 && (
+            <span className="absolute left-1 top-1 rounded-lg bg-blue-100 px-2 py-0.5 text-blue-800">
+              Thumbnail
+            </span>
+          )}
           <Button
             type="button"
             onClick={() => removeFile(index)}
@@ -125,6 +170,7 @@ const ImageGrid = ({
           >
             <XIcon />
           </Button>
+
           <Image
             src={src}
             alt={`Image ${index}`}
@@ -136,13 +182,13 @@ const ImageGrid = ({
         </div>
       ))}
       <label
-        htmlFor="uploads"
+        htmlFor="upload"
         className="relative flex aspect-square flex-col items-center justify-center gap-4 overflow-hidden border border-dashed"
       >
         <input
           type="file"
           multiple
-          id="uploads"
+          id="upload"
           onChange={onUpload}
           className="hidden"
         />
