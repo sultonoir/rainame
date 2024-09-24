@@ -12,7 +12,7 @@ const ImagesProduct = ({ images }: Props) => {
   const [picture, setPicture] = React.useState(images[0]!);
   return (
     <div className="sticky top-24 flex flex-col gap-5">
-      <div className="aspect-9/16 flex max-h-[600px] justify-center">
+      <div className="flex aspect-9/16 max-h-[600px] justify-center">
         <Lens>
           <Image
             src={picture.url}
@@ -21,7 +21,7 @@ const ImagesProduct = ({ images }: Props) => {
             height={600}
             placeholder="blur"
             blurDataURL={picture.thumbnail}
-            className="object-cover"
+            className="rounded-lg object-cover"
           />
         </Lens>
       </div>

@@ -73,7 +73,7 @@ export function SearchInput() {
               ease: "easeInOut", // menetapkan jenis transisi
             }}
           >
-            <div className="absolute left-1/2 top-[calc(100%_+_0rem)] z-50 w-full -translate-x-1/2 transform lg:w-[600px]">
+            <div className="absolute left-1/2 top-[calc(100%_+_0rem)] z-[60] w-full -translate-x-1/2 transform lg:w-[600px]">
               <div className="mt-2 h-max rounded-lg border bg-background p-2">
                 <div className="space-y-2">
                   <div className="space-y-2 rounded-sm bg-popover p-2">

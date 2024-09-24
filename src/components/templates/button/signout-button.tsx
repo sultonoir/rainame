@@ -40,7 +40,7 @@ export const SignoutButton = () => {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger
-        className="flex w-full items-center justify-between px-2 py-1.5 text-sm outline-none hover:bg-accent"
+        className="flex w-full items-center justify-between rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent"
         asChild
       >
         <button>
