@@ -7,6 +7,7 @@ import { TRPCReactProvider } from "@/trpc/react";
 import { ThemeProvider } from "@/provider/theme-provider";
 import { validateRequest } from "@/lib/auth/validate-request";
 import { SessionProvider } from "@/provider/session-provider";
+import { SocketProvider } from "@/provider/socket-provider";
 
 export const metadata: Metadata = {
   title: "Rainame",
@@ -28,8 +29,10 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <SessionProvider value={{user,session}}>
-          <TRPCReactProvider>{children}</TRPCReactProvider>
+          <SessionProvider value={{ user, session }}>
+            <TRPCReactProvider>
+              <SocketProvider>{children}</SocketProvider>
+            </TRPCReactProvider>
           </SessionProvider>
         </ThemeProvider>
       </body>

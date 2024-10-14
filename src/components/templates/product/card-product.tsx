@@ -6,7 +6,6 @@ import { type ProductCard } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
 import WishlistButton from "../button/wishlist-button";
-import { Lens } from "@/components/ui/lens";
 import TotalRating from "../rating/total-rating";
 import PriceProduct from "./price-product";
 
@@ -15,23 +14,19 @@ type Props = {
 };
 
 const CardProduct = ({ product }: Props) => {
-  const [hovering, setHovering] = React.useState(false);
-
   return (
     <Card className="border-none bg-transparent shadow-none">
       <Link href={`/products/${product.slug}`}>
-        <CardHeader className="aspect-square overflow-hidden rounded-lg p-0">
-          <Lens hovering={hovering} setHovering={setHovering}>
-            <Image
-              alt={product.name}
-              src={product.productImage.url}
-              width={500}
-              height={500}
-              blurDataURL={product.productImage.thumbnail}
-              placeholder="blur"
-              className="relative -z-10 aspect-square object-cover"
-            />
-          </Lens>
+        <CardHeader className="relative aspect-9/16 overflow-hidden rounded-lg p-0">
+          <Image
+            alt={product.name}
+            src={product.productImage.url}
+            fill
+            sizes="(min-width: 1540px) 309px, (min-width: 1280px) 500px, (min-width: 1040px) calc(25vw - 28px), (min-width: 780px) calc(33.33vw - 32px), calc(50vw - 40px"
+            blurDataURL={product.productImage.thumbnail}
+            placeholder="blur"
+            className="object-cover"
+          />
         </CardHeader>
       </Link>
       <CardContent className="relative mt-4 p-0">

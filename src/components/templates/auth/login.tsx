@@ -27,7 +27,7 @@ export function Login() {
       <CardHeader className="text-center">
         <CardTitle>{APP_TITLE} Log In</CardTitle>
         <CardDescription>
-          Log in to your account to access your dashboard
+          Log in to your account to coutinue shopping
         </CardDescription>
       </CardHeader>
       <CardContent>

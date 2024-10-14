@@ -34,6 +34,7 @@ model User {
   Complain               Complain[]
   Member                 Member[]
   Message                Message[]
+  CouponConsume          CouponConsume[]
 
   @@index([email], type: Hash)
   @@index([id], type: Hash)
@@ -84,6 +85,7 @@ model Oauth {
 model Product {
   id             String            @id @unique @default(cuid())
   name           String
+  summary        String            @db.Text
   slug           String            @unique
   createdAt      DateTime          @default(now())
   updatedAt      DateTime          @updatedAt
@@ -108,12 +110,14 @@ model Product {
 }
 
 model ProductImage {
-  id        String  @id @unique @default(cuid())
-  url       String  @db.Text
-  thumbnail String  @db.Text
+  id        String   @id @unique @default(cuid())
+  url       String   @db.Text
+  thumbnail String   @db.Text
   caption   String?
   productId String
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([productId], type: Hash)
   @@index([url], type: BTree)
@@ -210,36 +214,44 @@ enum CheckoutStatus {
 }
 
 model Checkout {
-  id       String         @id @unique @default(cuid())
-  userId   String
-  price    Float
-  quantity Int
-  status   CheckoutStatus @default(pending)
-  user     User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  Notifi   Notifi[]
-  Complain Complain[]
+  id          String         @id @unique @default(cuid())
+  userId      String
+  price       Float
+  quantity    Int
+  status      CheckoutStatus @default(pending)
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Notifi      Notifi[]
+  Complain    Complain[]
+  checoutItem CheckoutItem[]
 
   @@index([id], type: Hash) // Efisien untuk pencarian berdasarkan nama
   @@index([userId], type: Hash)
 }
 
 model CheckoutItem {
-  id        String  @id @unique @default(cuid())
-  quantity  Int
-  price     Float
-  size      String
-  productId String
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  id         String   @id @unique @default(cuid())
+  quantity   Int
+  price      Float
+  size       String
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  checkoutId String
+  checkout   Checkout @relation(fields: [checkoutId], references: [id], onDelete: Cascade)
+
+  @@index([checkoutId], type: Hash)
+  @@index([productId], type: Hash)
+  @@index([id], type: Hash)
 }
 
 model Notifi {
   id         String             @id @unique @default(cuid())
   status     NotificationStatus @default(payment)
   createdAt  DateTime           @default(now())
-  checkoutId String
-  chechout   Checkout           @relation(fields: [checkoutId], references: [id])
+  message    String
+  checkoutId String?
+  chechout   Checkout?          @relation(fields: [checkoutId], references: [id], onDelete: Cascade)
   userId     String
-  user       User               @relation(fields: [userId], references: [id])
+  user       User               @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId], type: Hash)
 }
@@ -329,24 +341,41 @@ model PromoAndProduct {
 }
 
 model Coupon {
-  id        String   @id @unique @default(uuid())
-  code      String
-  title     String
-  amount    Int?
-  minOrder  Int      @default(0)
-  desc      String
-  tac       String
-  expiresAt DateTime
-  discount  Int      @default(10)
+  id            String          @id @unique @default(uuid())
+  code          String
+  title         String
+  amount        Int?
+  minOrder      Int             @default(0)
+  desc          String
+  tac           String
+  expiresAt     DateTime
+  discount      Decimal         @default(0.1)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  couponConsume CouponConsume[]
+}
+
+model CouponConsume {
+  id       String @id @unique @default(cuid())
+  couponId String
+  coupon   Coupon @relation(fields: [couponId], references: [id], onDelete: Cascade)
+  userId   String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([couponId], type: Hash)
+  @@index([userId], type: Hash)
+  @@index([id], type: Hash)
 }
 
 model Selling {
-  id        String  @id @unique @default(uuid())
+  id        String   @id @unique @default(uuid())
   amount    Int
   productId String
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  updatedAt DateTime @updatedAt
 
   @@index([productId], type: Hash)
 }

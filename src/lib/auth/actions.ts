@@ -337,7 +337,7 @@ export async function resetPassword(
     sessionCookie.value,
     sessionCookie.attributes,
   );
-  redirect(Paths.Dashboard);
+  redirect(Paths.Home);
 }
 
 const timeFromNow = (time: Date) => {

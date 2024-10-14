@@ -73,10 +73,11 @@ const config = {
         "accordion-up": "accordion-up 0.2s ease-out",
       },
       aspectRatio: {
-        "9/16": "9 / 16",
+        "9/16": "3 / 4",
       },
     },
   },
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;
 

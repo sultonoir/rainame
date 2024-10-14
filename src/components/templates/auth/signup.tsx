@@ -25,7 +25,7 @@ export function Signup() {
     <Card className="w-full max-w-md">
       <CardHeader className="text-center">
         <CardTitle>{APP_TITLE} Sign Up</CardTitle>
-        <CardDescription>Sign up to start using the app</CardDescription>
+        <CardDescription>Sign up to coutinue shopping</CardDescription>
       </CardHeader>
       <CardContent>
         <OauthButton />
@@ -71,12 +71,13 @@ export function Signup() {
               {state?.formError}
             </p>
           ) : null}
-          <div>
-            <Link href={"/login"}>
-              <span className="p-0 text-xs font-medium underline-offset-4 hover:underline">
-                Already signed up? Login instead.
-              </span>
-            </Link>
+          <div className="flex flex-wrap justify-between">
+            <Button variant={"link"} size={"sm"} className="p-0" asChild>
+              <Link href={"/login"}>Already signed up? Login instead.</Link>
+            </Button>
+            <Button variant={"link"} size={"sm"} className="p-0" asChild>
+              <Link href={"/reset-password"}>Forgot password?</Link>
+            </Button>
           </div>
 
           <SubmitButton className="w-full" aria-label="submit-btn">
