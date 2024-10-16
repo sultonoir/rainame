@@ -5,7 +5,14 @@ import React from "react";
 const Logo = () => {
   return (
     <Link href="/">
-      <Image width={40} height={40} src="/logo.png" alt="logo" priority />
+      <Image
+        width={40}
+        height={40}
+        src="/logo.png"
+        alt="logo"
+        priority
+        className="rounded-lg"
+      />
     </Link>
   );
 };
