@@ -49,7 +49,7 @@ export const NavigasiFloating = ({ className, children, ...props }: Props) => {
           duration: 0.2,
         }}
         className={cn(
-          "container sticky inset-x-0 top-0 z-[10] w-full max-w-[1800px] border-border/40 bg-background/95 p-2 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+          "container sticky inset-x-0 top-0 z-[10] w-full max-w-[1800px]",
           className,
           { ...props },
         )}
