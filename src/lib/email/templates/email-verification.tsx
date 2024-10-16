@@ -14,16 +14,16 @@ import {
 } from "@react-email/components";
 import * as React from "react";
 
-interface BetterAuthResetPasswordEmailProps {
+interface EmailVerificationTemplateProps {
   username?: string;
   resetLink?: string;
 }
 
-export const ResetPasswordEmail = ({
+export const EmailVerificationTemplate = ({
   username,
   resetLink,
-}: BetterAuthResetPasswordEmailProps) => {
-  const previewText = `Reset your BetterAuth password`;
+}: EmailVerificationTemplateProps) => {
+  const previewText = `Verify your email address to complete your Rainame registration`;
   return (
     <Html>
       <Head />
@@ -32,22 +32,22 @@ export const ResetPasswordEmail = ({
         <Body className="mx-auto my-auto bg-white px-2 font-sans">
           <Container className="mx-auto my-[40px] max-w-[465px] rounded border border-solid border-[#eaeaea] p-[20px]">
             <Heading className="mx-0 my-[30px] p-0 text-center text-[24px] font-normal text-black">
-              Reset your <strong>Better Auth</strong> password
+              verification your <strong>Rainame</strong> account
             </Heading>
             <Text className="text-[14px] leading-[24px] text-black">
               Hello {username},
             </Text>
             <Text className="text-[14px] leading-[24px] text-black">
-              We received a request to reset your password for your Better Auth
-              account. If you didn&apos;t make this request, you can safely
-              ignore this email.
+              Thank you for registering for an account on Rainame. To complete
+              your registration, please verify your your account by click this
+              button
             </Text>
             <Section className="mb-[32px] mt-[32px] text-center">
               <Button
                 className="rounded bg-[#000000] px-5 py-3 text-center text-[12px] font-semibold text-white no-underline"
                 href={resetLink}
               >
-                Reset Password
+                verification
               </Button>
             </Section>
             <Text className="text-[14px] leading-[24px] text-black">
@@ -67,10 +67,3 @@ export const ResetPasswordEmail = ({
     </Html>
   );
 };
-
-export function reactResetPasswordEmail(
-  props: BetterAuthResetPasswordEmailProps,
-) {
-  console.log(props);
-  return <ResetPasswordEmail {...props} />;
-}
