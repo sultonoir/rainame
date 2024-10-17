@@ -6,11 +6,11 @@
  * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
  * need to use are documented accordingly near the end.
  */
-import { initTRPC } from "@trpc/server";
+import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
-
 import { db } from "@/server/db";
+import { auth } from "@/lib/auth";
 
 /**
  * 1. CONTEXT
@@ -25,8 +25,13 @@ import { db } from "@/server/db";
  * @see https://trpc.io/docs/server/context
  */
 export const createTRPCContext = async (opts: { headers: Headers }) => {
+  const data = await auth.api.getSession({
+    headers: opts.headers,
+  });
   return {
     db,
+    user: data?.user,
+    session: data?.session,
     ...opts,
   };
 };
@@ -104,3 +109,23 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
  * are logged in.
  */
 export const publicProcedure = t.procedure.use(timingMiddleware);
+
+export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
+  if (!ctx.session || !ctx.user) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+  return next({
+    ctx: {
+      // infers the `session` and `user` as non-nullable
+      session: { ...ctx.session },
+      user: { ...ctx.user },
+    },
+  });
+});
+
+export type PublicTRPCContext = Awaited<ReturnType<typeof createTRPCContext>>;
+
+export type ProtectedTRPCContext = PublicTRPCContext & {
+  user: NonNullable<PublicTRPCContext["user"]>;
+  session: NonNullable<PublicTRPCContext["session"]>;
+};

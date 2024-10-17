@@ -23,11 +23,14 @@ const NavigasiLayout = async () => {
           <SearchInput />
         </div>
         <div className="hidden items-center space-x-2 md:flex">
-          <ButtonTheme />
           {!session ? (
-            <ButtonSignin />
+            <>
+              <ButtonSignin />
+              <ButtonTheme />
+            </>
           ) : (
             <>
+              <ButtonTheme />
               <div>
                 <ButtonNotification />
                 <ButtonChat />
