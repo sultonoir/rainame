@@ -6,7 +6,7 @@ export default function Provider({ children }: { children: React.ReactNode }) {
     <Fragment>
       <ThemeProvider
         attribute="class"
-        defaultTheme="system"
+        defaultTheme="light"
         enableSystem
         disableTransitionOnChange
       >

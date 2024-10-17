@@ -1,8 +1,13 @@
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-const Logo = () => {
+interface LogoProps {
+  className?: string;
+}
+
+const Logo = ({ className }: LogoProps) => {
   return (
     <Link href="/">
       <Image
@@ -11,7 +16,7 @@ const Logo = () => {
         src="/logo.png"
         alt="logo"
         priority
-        className="rounded-lg"
+        className={cn("rounded-lg", className)}
       />
     </Link>
   );
