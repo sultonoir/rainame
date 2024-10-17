@@ -22,8 +22,9 @@ const NavigasiLayout = async () => {
         <div className="mx-2 max-w-[800px] flex-grow">
           <SearchInput />
         </div>
-        <ButtonTheme />
+
         <div className="hidden items-center space-x-2 md:flex">
+          <ButtonTheme />
           {!session ? (
             <ButtonSignin />
           ) : (
