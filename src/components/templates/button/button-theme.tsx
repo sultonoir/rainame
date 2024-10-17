@@ -14,8 +14,13 @@ export const ButtonTheme = () => {
     }
   };
   return (
-    <Button onClick={handleClick} variant="ghost" size="icon">
-      {theme === "dark" ? <SunIcon /> : <MoonIcon />}
+    <Button
+      size="icon"
+      variant="ghost"
+      className="size-fit rounded-full p-3"
+      onClick={handleClick}
+    >
+      {theme === "dark" ? <SunIcon size={20} /> : <MoonIcon size={20} />}
     </Button>
   );
 };
