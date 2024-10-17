@@ -14,33 +14,29 @@ import {
 import { Input } from "@/components/ui/input";
 import { useAuthDialog } from "@/hooks/useAuthDialog";
 import { ButtonLoading } from "@/components/templates/button/button-loading";
-import { signUp } from "@/lib/auth-client";
+import { client } from "@/lib/auth-client";
 import { ApiError } from "next/dist/server/api-utils";
 import { toast } from "sonner";
-import { PasswordInput } from "@/components/ui/password-input";
 
-export const SignupFormSchema = z.object({
-  name: z.string().min(1, {
-    message: "Please enter a valid name",
-  }),
+export const ForgetPasswordSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email." }),
-  password: z.string().min(1, { message: "Password field must not be empty." }),
 });
 
-export function FormSignup() {
+export function FormForgetPassword() {
   const { setIsOpen } = useAuthDialog();
-  const form = useForm<z.infer<typeof SignupFormSchema>>({
-    resolver: zodResolver(SignupFormSchema),
+  const form = useForm<z.infer<typeof ForgetPasswordSchema>>({
+    resolver: zodResolver(ForgetPasswordSchema),
     defaultValues: {
-      name: "",
       email: "",
-      password: "",
     },
   });
 
-  async function onSubmit(data: z.infer<typeof SignupFormSchema>) {
+  async function onSubmit(data: z.infer<typeof ForgetPasswordSchema>) {
     try {
-      const { error } = await signUp.email(data);
+      const { error } = await client.forgetPassword({
+        email: data.email,
+        redirectTo: "/reset-password",
+      });
       if (error) {
         return toast.error(error.message);
       }
@@ -49,7 +45,9 @@ export function FormSignup() {
         toast.error(error.message);
       }
     }
-    toast.success("We've sent a verification link to your email.");
+    toast.success(
+      "We've sent a password reset link to your email or check your spam.",
+    );
     form.reset();
     setIsOpen(false);
   }
@@ -57,19 +55,6 @@ export function FormSignup() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Full name</FormLabel>
-              <FormControl>
-                <Input placeholder="name" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <FormField
           control={form.control}
           name="email"
@@ -83,20 +68,6 @@ export function FormSignup() {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <PasswordInput placeholder="*********" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
         <ButtonLoading
           disabled={form.formState.isSubmitting}
           loading={form.formState.isSubmitting}

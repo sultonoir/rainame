@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef } from "react";
+import { forwardRef, Fragment } from "react";
 import { Button, type ButtonProps } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -30,29 +30,14 @@ const ButtonLoading = forwardRef<HTMLButtonElement, ButtonLoadingProps>(
         disabled={props.disabled ? props.disabled : loading}
         className={cn(className, "relative")}
       >
-        {startContent && (
-          <span
-            className={cn("mr-2", {
-              "opacity-0": loading,
-            })}
-          >
-            {startContent}
-          </span>
-        )}
-        <span className={cn(loading ? "opacity-0" : "")}>{children}</span>
         {loading ? (
-          <div className="absolute inset-0 grid place-items-center">
-            <Loader2 className="h-6 w-6 animate-spin" />
-          </div>
-        ) : null}
-        {endContent && (
-          <span
-            className={cn("ml-2", {
-              "opacity-0": loading,
-            })}
-          >
-            {endContent}
-          </span>
+          <Loader2 className="h-6 w-6 animate-spin" />
+        ) : (
+          <Fragment>
+            {startContent && <span className={cn("mr-2")}>{startContent}</span>}
+            {children}
+            {endContent && <span className={cn("ml-2")}>{endContent}</span>}
+          </Fragment>
         )}
       </Button>
     );

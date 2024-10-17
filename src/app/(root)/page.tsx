@@ -1,13 +1,7 @@
 import React from "react";
 
 const Page = () => {
-  return (
-    <div>
-      Page
-      <div className="min-h-screen">hallo</div>
-      <div className="min-h-screen">hallo</div>
-    </div>
-  );
+  return <div>Page</div>;
 };
 
 export default Page;
