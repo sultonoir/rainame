@@ -15,10 +15,11 @@ import { Input } from "@/components/ui/input";
 import { useAuthDialog } from "@/hooks/useAuthDialog";
 import { ButtonLoading } from "@/components/templates/button/button-loading";
 import { signIn } from "@/lib/auth-client";
-import { ApiError } from "next/dist/server/api-utils";
 import { toast } from "sonner";
 import { PasswordInput } from "@/components/ui/password-input";
 import { Checkbox } from "@/components/ui/checkbox";
+import { APIError } from "better-auth/api";
+import { useRouter } from "next/navigation";
 
 export const SigninFormSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email." }),
@@ -27,6 +28,7 @@ export const SigninFormSchema = z.object({
 });
 
 export function FormSignin() {
+  const router = useRouter();
   const { setIsOpen, setType } = useAuthDialog();
   const form = useForm<z.infer<typeof SigninFormSchema>>({
     resolver: zodResolver(SigninFormSchema),
@@ -39,18 +41,22 @@ export function FormSignin() {
 
   async function onSubmit(data: z.infer<typeof SigninFormSchema>) {
     try {
-      const { error } = await signIn.email({
+      const { error, data: session } = await signIn.email({
         email: data.email,
         password: data.password,
       });
       if (error) {
         return toast.error(error.message);
       }
+      if (session.user.role === "admin") {
+        router.push("/dashboard");
+      }
     } catch (error) {
-      if (error instanceof ApiError) {
+      if (error instanceof APIError) {
         toast.error(error.message);
       }
     }
+    router.refresh();
     form.reset();
     setIsOpen(false);
   }

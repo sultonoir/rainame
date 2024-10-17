@@ -2,6 +2,7 @@
 import React from "react";
 import { ButtonLoading } from "./button-loading";
 import { ChromeIcon, GithubIcon } from "lucide-react";
+import { signIn } from "@/lib/auth-client";
 
 export default function ButtonOauth() {
   return (
@@ -9,7 +10,15 @@ export default function ButtonOauth() {
       <ButtonLoading variant="outline">
         <GithubIcon />
       </ButtonLoading>
-      <ButtonLoading variant="outline">
+      <ButtonLoading
+        variant="outline"
+        onClick={async () => {
+          await signIn.social({
+            provider: "google",
+            callbackURL: "/",
+          });
+        }}
+      >
         <ChromeIcon />
       </ButtonLoading>
     </div>

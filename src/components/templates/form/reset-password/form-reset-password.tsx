@@ -11,12 +11,19 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useAuthDialog } from "@/hooks/useAuthDialog";
 import { ButtonLoading } from "@/components/templates/button/button-loading";
 import { client } from "@/lib/auth-client";
 import { ApiError } from "next/dist/server/api-utils";
 import { toast } from "sonner";
 import { PasswordInput } from "@/components/ui/password-input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { useRouter } from "next/navigation";
 
 export const ResetPasswordSchema = z
   .object({
@@ -33,7 +40,7 @@ export const ResetPasswordSchema = z
   });
 
 export function FormResetPassword() {
-  const { setIsOpen } = useAuthDialog();
+  const router = useRouter();
   const form = useForm<z.infer<typeof ResetPasswordSchema>>({
     resolver: zodResolver(ResetPasswordSchema),
     defaultValues: {
@@ -58,47 +65,57 @@ export function FormResetPassword() {
       "We've sent a password reset link to your email or check your spam.",
     );
     form.reset();
-    setIsOpen(false);
+    router.push("/");
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>New password</FormLabel>
-              <FormControl>
-                <PasswordInput placeholder="email@mail.com" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="confirmPassword"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Confirm password</FormLabel>
-              <FormControl>
-                <PasswordInput placeholder="email@mail.com" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <ButtonLoading
-          disabled={form.formState.isSubmitting}
-          loading={form.formState.isSubmitting}
-          className="w-full"
-          type="submit"
-        >
-          Submit
-        </ButtonLoading>
-      </form>
-    </Form>
+    <Card className="w-full max-w-sm">
+      <CardHeader className="items-center justify-center">
+        <CardTitle>Reset your password</CardTitle>
+        <CardDescription>
+          Enter your new password to continue shopping
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>New password</FormLabel>
+                  <FormControl>
+                    <PasswordInput placeholder="*******" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirm password</FormLabel>
+                  <FormControl>
+                    <PasswordInput placeholder="*******" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <ButtonLoading
+              disabled={form.formState.isSubmitting}
+              loading={form.formState.isSubmitting}
+              className="w-full"
+              type="submit"
+            >
+              Submit
+            </ButtonLoading>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   );
 }

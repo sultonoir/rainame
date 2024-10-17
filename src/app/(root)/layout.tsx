@@ -7,7 +7,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <React.Fragment>
       <NavigasiLayout />
-      <main className="container min-h-screen py-10">{children}</main>
+      <main className="container min-h-screen py-5">{children}</main>
       <Toaster richColors position="top-center" />
       <AuthDialog />
     </React.Fragment>
