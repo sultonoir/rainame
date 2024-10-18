@@ -9,7 +9,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useSession } from "@/lib/auth-client";
 import { FormSignin } from "../templates/form/signin/form-signin";
 import ButtonOauth from "../templates/button/button-oauth";
 import ButtonToggleAuthService from "../templates/button/button-toggle-auth-service";
@@ -70,8 +69,6 @@ const AuthContent = ({ type }: { type: string }) => {
 };
 
 const AuthDialog = () => {
-  const { data } = useSession();
-  console.log(data);
   const { setIsOpen, isOpen, type } = useAuthDialog();
 
   const { title, description, content, toggle } = AuthContent({ type });
