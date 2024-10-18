@@ -9,15 +9,12 @@ interface LogoProps {
 
 const Logo = ({ className }: LogoProps) => {
   return (
-    <Link href="/">
-      <Image
-        width={40}
-        height={40}
-        src="/logo.png"
-        alt="logo"
-        priority
-        className={cn("rounded-lg", className)}
-      />
+    <Link
+      href="/"
+      title="Rainame"
+      className={cn("relative aspect-square size-10", className)}
+    >
+      <Image fill src="/logo.png" alt="logo" quality={100} priority />
     </Link>
   );
 };

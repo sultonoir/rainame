@@ -89,8 +89,8 @@ const AdminSidebar = () => {
     >
       <TooltipProvider>
         <nav className={cn("space-y-2 p-2", {})}>
-          <Logo className="mb-4 hidden lg:block" />
-          <ButtonCollapsed className="block lg:hidden" />
+          <Logo className="mb-4 hidden md:block" />
+          <ButtonCollapsed className="block md:hidden" />
           {lists.map((item) => (
             <AdminSidebarMenu
               key={item.title}
@@ -100,7 +100,7 @@ const AdminSidebar = () => {
           ))}
         </nav>
         <section className="mt-auto flex flex-col items-center gap-4 px-2 py-2 sm:py-5">
-          <Tooltip>
+          <Tooltip delayDuration={0}>
             <TooltipTrigger asChild>
               <Link
                 href="/dashboard/settings"
@@ -124,9 +124,9 @@ const AdminSidebar = () => {
             </TooltipTrigger>
             <TooltipContent
               side="right"
-              className={cn({
-                "block md:hidden": isCollapsed,
-                block: !isCollapsed,
+              className={cn("text-white", {
+                "hidden md:block": isCollapsed,
+                "md:hidden": !isCollapsed,
               })}
             >
               Settings

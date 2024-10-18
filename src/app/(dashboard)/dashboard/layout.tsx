@@ -14,7 +14,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         className={`relative overflow-x-hidden pt-2 transition-[margin] md:overflow-y-hidden md:pt-0 ${isCollapsed ? "md:ml-14" : "md:ml-64"} h-full`}
       >
         <AdminNavbar />
-        <div className="container min-h-screen rounded-2xl bg-accent p-4 dark:bg-accent/50">
+        <div className="min-h-screen rounded-2xl bg-accent p-4 dark:bg-accent/50">
           {children}
         </div>
       </div>

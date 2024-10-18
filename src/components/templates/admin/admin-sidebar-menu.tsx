@@ -44,8 +44,8 @@ export function AdminSidebarMenu({ isCollapsed, item }: Props) {
           </div>
           <span
             className={cn({
-              "block md:hidden": isCollapsed,
-              block: !isCollapsed,
+              "block md:hidden": isCollapsed === true,
+              block: isCollapsed === false,
             })}
           >
             {item.title}
@@ -54,12 +54,12 @@ export function AdminSidebarMenu({ isCollapsed, item }: Props) {
       </TooltipTrigger>
       <TooltipContent
         side="right"
-        className={cn({
-          hidden: isCollapsed,
-          block: !isCollapsed,
+        className={cn("text-white", {
+          "hidden md:block": isCollapsed,
+          "bg-background md:hidden": !isCollapsed,
         })}
       >
-        Settings
+        {item.title}
       </TooltipContent>
     </Tooltip>
   );
