@@ -1,7 +1,10 @@
+import { type Metadata } from "next";
 import React from "react";
 
-const Page = () => {
-  return <div>Page</div>;
+export const metadata: Metadata = {
+  title: "Home",
 };
 
-export default Page;
+export default function Page() {
+  return <div>Page</div>;
+}

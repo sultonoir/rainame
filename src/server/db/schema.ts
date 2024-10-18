@@ -226,8 +226,8 @@ export const category = pgTable(
       .primaryKey()
       .$defaultFn(() => createId()),
     name: varchar("name").notNull(),
-    createdAt: timestamp("created_at").notNull(),
-    updatedAt: timestamp("updated_at").notNull(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
   },
   (table) => ({
     nameIdx: index("category_name_idx").on(table.name),
