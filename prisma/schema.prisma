@@ -217,10 +217,13 @@ model Cart {
 }
 
 enum NotificationStatus {
-  payment
-  promo
-  pending
-  recipient
+  PaymentUpdate // Pembaruan atau notifikasi terkait pembayaran
+  Promo // Promosi atau penawaran
+  OrderPending // Pesanan sedang menunggu proses atau konfirmasi
+  OrderShipped // Barang sudah dikirim atau pembaruan penerima
+  Rating // Notifikasi untuk rating produk atau layanan
+  ComplaintFiled // Keluhan telah diajukan atau pembaruan keluhan
+  OrderCanceled // Pesanan dibatalkan
 }
 
 enum CheckoutStatus {
@@ -228,6 +231,7 @@ enum CheckoutStatus {
   paid
   cancel
   success
+  shipped
 }
 
 model Checkout {
@@ -262,7 +266,7 @@ model CheckoutItem {
 
 model Notifi {
   id         String             @id @unique @default(cuid())
-  status     NotificationStatus @default(payment)
+  status     NotificationStatus @default(OrderPending)
   createdAt  DateTime           @default(now())
   message    String
   checkoutId String?
