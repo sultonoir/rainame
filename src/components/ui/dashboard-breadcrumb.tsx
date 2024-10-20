@@ -12,11 +12,11 @@ import { usePathname } from "next/navigation";
 
 const DashboardBreadcrumb = () => {
   const pathname = usePathname();
-  const pathSegments = pathname.split("/").slice(1);
+  const pathSegments = pathname?.split("/").slice(1);
   return (
     <Breadcrumb>
       <BreadcrumbList>
-        {pathSegments.map((item, index) => (
+        {pathSegments?.map((item, index) => (
           <React.Fragment key={item}>
             {index === pathSegments.length - 1 ? (
               <BreadcrumbItem>
