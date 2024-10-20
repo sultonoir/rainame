@@ -1,13 +1,18 @@
 import DashboardBreadcrumb from "@/components/ui/dashboard-breadcrumb";
 import React from "react";
-import { ButtonProfile } from "../profile/button-profile";
+import { Separator } from "@/components/ui/separator";
+
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 const AdminNavbar = () => {
   return (
-    <div className="flex w-full items-center justify-between">
-      <DashboardBreadcrumb />
-      <ButtonProfile />
-    </div>
+    <header className="flex h-16 shrink-0 items-center gap-2 border-b border-border backdrop-blur-lg">
+      <div className="flex items-center gap-2 px-4">
+        <SidebarTrigger className="-ml-1" />
+        <Separator orientation="vertical" className="mr-2 h-4" />
+        <DashboardBreadcrumb />
+      </div>
+    </header>
   );
 };
 

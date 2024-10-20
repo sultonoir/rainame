@@ -103,10 +103,10 @@ export function CreateProduct() {
   });
 
   return (
-    <div className="flex flex-col gap-2 py-10">
+    <div className="flex flex-col gap-2">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-          <Card>
+          <Card className="bg-muted/50">
             <CardHeader>
               <CardTitle>Product details</CardTitle>
             </CardHeader>
@@ -145,7 +145,7 @@ export function CreateProduct() {
               />
             </CardContent>
           </Card>
-          <Card>
+          <Card className="bg-muted/50">
             <CardHeader>
               <CardTitle>Price</CardTitle>
             </CardHeader>
@@ -217,7 +217,7 @@ export function CreateProduct() {
               />
             </CardContent>
           </Card>
-          <Card>
+          <Card className="bg-muted/50">
             <CardHeader>
               <CardTitle>Categories</CardTitle>
             </CardHeader>
@@ -263,7 +263,7 @@ export function CreateProduct() {
               )}
             </CardContent>
           </Card>
-          <Card>
+          <Card className="bg-muted/50">
             <CardHeader>
               <CardTitle>Product Images</CardTitle>
             </CardHeader>
@@ -285,7 +285,7 @@ export function CreateProduct() {
               />
             </CardContent>
           </Card>
-          <Card>
+          <Card className="bg-muted/50">
             <CardHeader>
               <CardTitle>Stocks</CardTitle>
             </CardHeader>
