@@ -1,8 +1,7 @@
 "use client";
 
 import { Label } from "@radix-ui/react-label";
-import { useEffect, useRef } from "react";
-import { useFormState } from "react-dom";
+import { useRef } from "react";
 import { toast } from "sonner";
 import { ExclamationTriangleIcon } from "@/components/templates/icons";
 import {
@@ -16,34 +15,36 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { useFormStatus } from "react-dom";
+import { Button } from "@/components/ui/button";
 
 export const VerifyCode = () => {
-  const [verifyEmailState, verifyEmailAction] = useFormState(verifyEmail, null);
-  const [resendState, resendAction] = useFormState(resendEmail, null);
   const codeFormRef = useRef<HTMLFormElement>(null);
 
-  useEffect(() => {
-    if (resendState?.success) {
-      toast("Email sent!");
+  const handleResendEmail = async () => {
+    const res = await resendEmail();
+    if (res?.success) {
+      toast.success("Email sent!");
     }
-    if (resendState?.error) {
-      toast(resendState.error, {
+    if (res?.error) {
+      toast.error(res.error, {
         icon: <ExclamationTriangleIcon className="h-5 w-5 text-destructive" />,
       });
     }
-  }, [resendState?.error, resendState?.success]);
+  };
 
-  useEffect(() => {
-    if (verifyEmailState?.error) {
-      toast(verifyEmailState.error, {
+  const handleVerifyEmail = async (formData: FormData) => {
+    const res = await verifyEmail(undefined, formData);
+    if (res?.error) {
+      toast.error(res.error, {
         icon: <ExclamationTriangleIcon className="h-5 w-5 text-destructive" />,
       });
     }
-  }, [verifyEmailState?.error]);
+  };
 
   return (
     <div className="flex flex-col gap-2">
-      <form ref={codeFormRef} action={verifyEmailAction}>
+      <form ref={codeFormRef} action={handleVerifyEmail}>
         <Label htmlFor="code">Verification Code</Label>
         <InputOTP maxLength={6} id="code" name="code">
           <InputOTPGroup className="w-full justify-center">
@@ -59,16 +60,29 @@ export const VerifyCode = () => {
           Verify
         </SubmitButton>
       </form>
-      <form action={resendAction}>
+      <form action={handleResendEmail}>
         <SubmitButton className="w-full" variant="secondary">
           Resend Code
         </SubmitButton>
       </form>
       <form action={logout}>
-        <SubmitButton variant="link" className="p-0 font-normal">
-          want to use another email? Log out now.
-        </SubmitButton>
+        <ButtonLogout/>
       </form>
     </div>
   );
 };
+
+function ButtonLogout() {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button
+      variant="link"
+      type="submit"
+      className="p-0 font-normal"
+      disabled={pending}
+    >
+      Want to use another email? Log out now.
+    </Button>
+  );
+}

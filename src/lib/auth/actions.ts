@@ -20,7 +20,6 @@ import {
 import { validateRequest } from "@/lib/auth/validate-request";
 import { Paths } from "../constants";
 import { env } from "@/env";
-import { extractUsername } from "../utils";
 import { EmailTemplate, sendMail } from "../email";
 
 export interface ActionResponse<T> {
@@ -97,12 +96,12 @@ export async function signup(
       fieldError: {
         email: err.fieldErrors.email?.[0],
         password: err.fieldErrors.password?.[0],
+        name: err.fieldErrors.name?.[0],
       },
     };
   }
 
-  const { email, password } = parsed.data;
-  const name = extractUsername(email);
+  const { email, password, name } = parsed.data;
 
   const existingUser = await db.user.findUnique({
     where: {

@@ -34,8 +34,18 @@ export function Signup() {
           <div className="mx-2 text-muted-foreground">or</div>
           <div className="flex-grow border-t border-secondary" />
         </div>
-
         <form action={formAction} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="name">Full Name</Label>
+            <Input
+              id="name"
+              required
+              placeholder="name@example.com"
+              autoComplete="name"
+              name="name"
+              type="name"
+            />
+          </div>
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -71,6 +81,7 @@ export function Signup() {
               {state?.formError}
             </p>
           ) : null}
+
           <div className="flex flex-wrap justify-between">
             <Button variant={"link"} size={"sm"} className="p-0" asChild>
               <Link href={"/login"}>Already signed up? Login instead.</Link>

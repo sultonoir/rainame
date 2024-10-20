@@ -1,8 +1,12 @@
-import type { ReactNode } from "react";
+import { Toaster } from "@/components/ui/sonner";
+import { Fragment, type ReactNode } from "react";
 
 const AuthLayout = ({ children }: { children: ReactNode }) => {
   return (
-    <div className="grid min-h-screen place-items-center p-4">{children}</div>
+    <Fragment>
+      <div className="grid min-h-screen place-items-center p-4">{children}</div>
+      <Toaster richColors position="top-center" />
+    </Fragment>
   );
 };
 

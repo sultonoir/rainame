@@ -1,6 +1,7 @@
 import { google, lucia } from "@/lib/auth";
 import { Paths } from "@/lib/constants";
 import { db } from "@/server/db";
+import { generateId } from "lucia";
 import { cookies } from "next/headers";
 import { type NextRequest } from "next/server";
 
@@ -48,15 +49,20 @@ export const GET = async (req: NextRequest) => {
     );
 
     const googleData = (await googleRes.json()) as GoogleUser;
+    console.log(googleData);
 
-    await db.$transaction(async (trx) => {
-      const user = await trx.user.findUnique({ where: { id: googleData.id } });
+    const transactionRes = await db.$transaction(async (trx) => {
+      const user = await trx.user.findUnique({
+        where: { email: googleData.email },
+      });
 
       if (!user) {
+        const id = generateId(10);
+
         await trx.user.create({
           data: {
             email: googleData.email,
-            id: googleData.id,
+            id,
             name: googleData.name,
             image: googleData.picture,
           },
@@ -69,23 +75,40 @@ export const GET = async (req: NextRequest) => {
             id: googleData.id,
             provider: "google",
             providerUserId: googleData.id,
-            userId: googleData.id,
+            userId: id,
             refreshToken,
           },
         });
+
+        return {
+          id,
+        };
       } else {
-        await trx.oauth.update({
+        await trx.oauth.upsert({
           where: { id: googleData.id },
-          data: {
+          update: {
             accessToken,
             expiresAt: accessTokenExpiresAt,
+            userId: user.id,
+          },
+          create: {
+            id: googleData.id,
+            provider: "google",
+            providerUserId: googleData.id,
             refreshToken,
+            accessToken,
+            userId: user.id,
+            expiresAt: accessTokenExpiresAt,
           },
         });
+
+        return {
+          id: user.id,
+        };
       }
     });
 
-    const session = await lucia.createSession(googleData.id, {});
+    const session = await lucia.createSession(transactionRes.id, {});
     const sessionCookie = lucia.createSessionCookie(session.id);
 
     cookies().set(

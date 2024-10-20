@@ -33,6 +33,7 @@ export const postProduct = async (
       price,
       discount,
       desc,
+      summary: "",
     },
   });
 

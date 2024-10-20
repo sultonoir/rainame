@@ -23,6 +23,7 @@ export const lucia = new Lucia(adapter, {
       email: attributes.email,
       image: attributes.image,
       role: attributes.role,
+      verify: attributes.emailVerification,
     };
   },
   sessionExpiresIn: new TimeSpan(30, "d"),
