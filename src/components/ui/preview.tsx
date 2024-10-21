@@ -40,6 +40,7 @@ const Preview = ({ values }: Props) => {
       },
     },
     content: values,
+    immediatelyRender: false,
   });
 
   return (

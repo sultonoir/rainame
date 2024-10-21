@@ -6,18 +6,14 @@ type Props = {
   about: string;
 };
 
-const AboutProduct = ({ about }: Props) => {
-  const Preview = React.useMemo(
-    () =>
-      dynamic(() => import("@/components/ui/preview"), {
-        ssr: false,
-        loading: () => (
-          <Skeleton className="flex min-h-[300px] w-full items-center justify-center" />
-        ),
-      }),
-    [],
-  );
+const Preview = dynamic(() => import("@/components/ui/preview"), {
+  ssr: false,
+  loading: () => (
+    <Skeleton className="flex min-h-[300px] w-full items-center justify-center" />
+  ),
+});
 
+const AboutProduct = ({ about }: Props) => {
   return (
     <div className="space-y-2">
       <h3 className="text-lg font-semibold">About product</h3>
