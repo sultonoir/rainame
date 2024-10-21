@@ -11,8 +11,8 @@ type Props = {
 const ImagesProduct = ({ images }: Props) => {
   const [picture, setPicture] = React.useState(images[0]!);
   return (
-    <div className="flex flex-col gap-5">
-      <Lens className="aspect-square max-w-[660px]">
+    <div className="flex flex-col gap-5 md:flex-row lg:flex-col">
+      <Lens className="aspect-square h-auto w-full lg:max-w-[660px]">
         <Image
           src={picture.url}
           alt={picture.id}
@@ -22,7 +22,7 @@ const ImagesProduct = ({ images }: Props) => {
           className="rounded-lg object-cover"
         />
       </Lens>
-      <div className="flex w-full max-w-[660px] flex-row justify-between">
+      <div className="flex w-full max-w-[660px] flex-row justify-between gap-2 md:w-fit md:flex-col lg:w-full lg:flex-row">
         {images.map((image) => (
           <div key={image.id} className="overflow-hidden rounded-lg">
             <Image
