@@ -41,7 +41,6 @@ const WishlistButton = ({ variant, size, className, ...props }: Props) => {
     });
   };
 
-  console.log({ isExist, props: props.isWislist });
   return (
     <button
       className={cn(buttonVariants({ variant, size, className }))}

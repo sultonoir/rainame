@@ -1,10 +1,10 @@
 "use client";
 
-import { forwardRef, Fragment, type ReactNode } from "react";
-import { AnimatedSpinner } from "@/components/templates/icons";
+import { forwardRef, type ReactNode } from "react";
 import { Button, type ButtonProps } from "@/components/ui/button";
 
 import { cn } from "@/lib/utils";
+import { Loader2 } from "lucide-react";
 
 export interface LoadingButtonProps extends ButtonProps {
   loading?: boolean;
@@ -24,6 +24,11 @@ const LoadingButton = forwardRef<HTMLButtonElement, LoadingButtonProps>(
     },
     ref,
   ) => {
+    const contentStart = loading ? (
+      <Loader2 className="size-4 animate-spin" />
+    ) : (
+      startContent
+    );
     return (
       <Button
         ref={ref}
@@ -31,17 +36,9 @@ const LoadingButton = forwardRef<HTMLButtonElement, LoadingButtonProps>(
         disabled={props.disabled ? props.disabled : loading}
         className={cn(className, "relative")}
       >
-        {loading ? (
-          <div className="absolute inset-0 grid place-items-center">
-            <AnimatedSpinner className="h-6 w-6 animate-spin" />
-          </div>
-        ) : (
-          <Fragment>
-            {startContent && <span className="mr-1">{startContent}</span>}
-            {children}
-            {endContent && <span className="mr-1">{startContent}</span>}
-          </Fragment>
-        )}
+        {contentStart && <span className="mr-2">{contentStart}</span>}
+        {children}
+        {!loading && endContent && <span className="ml-2">{endContent}</span>}
       </Button>
     );
   },

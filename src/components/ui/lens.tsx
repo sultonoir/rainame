@@ -2,6 +2,7 @@
 
 import React, { useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 interface LensProps {
   children: React.ReactNode;
@@ -15,6 +16,7 @@ interface LensProps {
   isFocusing?: () => void;
   hovering?: boolean;
   setHovering?: (hovering: boolean) => void;
+  className?: string;
 }
 
 export const Lens: React.FC<LensProps> = ({
@@ -25,6 +27,7 @@ export const Lens: React.FC<LensProps> = ({
   position = { x: 200, y: 150 },
   hovering,
   setHovering,
+  className
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -46,7 +49,7 @@ export const Lens: React.FC<LensProps> = ({
   return (
     <div
       ref={containerRef}
-      className="relative overflow-hidden rounded-lg"
+      className={cn("relative overflow-hidden rounded-lg",className)}
       onMouseEnter={() => {
         setIsHovering(true);
       }}

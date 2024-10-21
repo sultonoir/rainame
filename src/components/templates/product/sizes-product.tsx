@@ -12,7 +12,10 @@ const SizesProduct = (props: Props) => {
   const { sizes, setSizes } = useSizes();
   return (
     <div className="flex flex-col space-y-2">
-      <h3 className="text-lg font-semibold">Sizes</h3>
+      <h3 className="text-lg font-semibold">
+        Sizes •{" "}
+        <span className="text-base text-muted-foreground">International</span>
+      </h3>
       <div className="flex flex-row flex-wrap gap-3">
         {props.sizes.map((size) => (
           <Button

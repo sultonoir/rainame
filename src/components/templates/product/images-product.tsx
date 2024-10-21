@@ -11,22 +11,18 @@ type Props = {
 const ImagesProduct = ({ images }: Props) => {
   const [picture, setPicture] = React.useState(images[0]!);
   return (
-    <div className="sticky top-24 flex flex-col gap-5">
-      <div className="flex aspect-9/16 max-h-[600px] justify-center">
-        <Lens>
-          <Image
-            src={picture.url}
-            alt={picture.id}
-            width={500}
-            height={600}
-            placeholder="blur"
-            blurDataURL={picture.thumbnail}
-            className="rounded-lg object-cover"
-          />
-        </Lens>
-      </div>
-
-      <div className="flex w-full flex-row justify-center gap-x-5">
+    <div className="flex flex-col gap-5">
+      <Lens className="aspect-square max-w-[660px]">
+        <Image
+          src={picture.url}
+          alt={picture.id}
+          fill
+          placeholder="blur"
+          blurDataURL={picture.thumbnail}
+          className="rounded-lg object-cover"
+        />
+      </Lens>
+      <div className="flex w-full max-w-[660px] flex-row justify-between">
         {images.map((image) => (
           <div key={image.id} className="overflow-hidden rounded-lg">
             <Image
