@@ -20,6 +20,7 @@ export const postProduct = async (
     discount,
     price,
     stockAdnSize,
+    sumary,
   }: PostProductSchema,
 ) => {
   const slug = slugify(title, {
@@ -33,7 +34,7 @@ export const postProduct = async (
       price,
       discount,
       desc,
-      summary: "",
+      summary: sumary,
     },
   });
 

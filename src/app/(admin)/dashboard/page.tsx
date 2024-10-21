@@ -1,7 +1,13 @@
+import { ReorderTest } from "@/components/ui/reorder";
 import React from "react";
 
 const Page = () => {
-  return <div>page</div>;
+  return (
+    <div>
+      <ReorderTest />
+      hallo
+    </div>
+  );
 };
 
 export default Page;

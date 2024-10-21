@@ -1,8 +1,7 @@
 "use client";
 
 import { PlaceholdersAndVanishInput } from "@/components/ui/placehorders-and-vanish-input";
-import { useSearch } from "@/hooks/useSerch";
-import { generateId } from "lucia";
+import { useSearch } from "@/hooks/useSearch";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useStore } from "zustand";
@@ -28,7 +27,7 @@ export function SearchInput() {
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     add({
-      id: generateId(10),
+      id: new Date().getTime().toString(),
       name: inputvalue,
     });
     router.push("/products" + "?" + createQueryString("search", inputvalue));
@@ -53,7 +52,7 @@ export function SearchInput() {
 
   return (
     <div
-      className="relative hidden sm:flex sm:flex-grow"
+      className="relative hidden md:flex md:flex-grow"
       onClick={() => setActive(true)}
       ref={ref}
     >
@@ -65,42 +64,41 @@ export function SearchInput() {
       <AnimatePresence>
         {active && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
+            initial={{ opacity: 0, y: 20, x: "-50%" }} // translateX(-50%) dan translateY(20px)
+            animate={{ opacity: 1, y: 0, x: "-50%" }} // tetap translateX(-50%) dan translateY(0px)
+            exit={{ opacity: 0, y: 20, x: "-50%" }} // tetap translateX(-50%) dan translateY(20px)
             transition={{
-              duration: 0.5, // mengatur durasi transisi
-              ease: "easeInOut", // menetapkan jenis transisi
+              duration: 0.5, // durasi transisi
+              ease: "easeInOut", // jenis transisi
             }}
+            className="absolute left-1/2 top-[calc(100%_+_0rem)] z-[60] w-full transform"
           >
-            <div className="absolute left-1/2 top-[calc(100%_+_0rem)] z-[60] w-full -translate-x-1/2 transform lg:w-[600px]">
-              <div className="mt-2 h-max rounded-lg border bg-background p-2">
-                <div className="space-y-2">
-                  <div className="space-y-2 rounded-sm bg-popover p-2">
-                    <div className="flex justify-between">
-                      <p className="text-lg capitalize">previous search:</p>
-                    </div>
-                    <div className="flex flex-wrap gap-1">
-                      {search?.map((item) => (
-                        <Link
-                          href={{
-                            pathname: "/products",
-                            query: {
-                              q: item.name,
-                            },
-                          }}
-                          key={item.id}
-                          className="relative flex cursor-default select-none items-center rounded-sm border px-2 py-1.5 text-sm outline-none hover:bg-accent"
-                          onClick={handleClick}
-                        >
-                          {item.name}
-                        </Link>
-                      ))}
-                    </div>
+            <div className="mt-2 h-max rounded-lg border bg-background p-2">
+              <div className="space-y-2">
+                <div className="space-y-2 rounded-sm bg-accent/60 p-2">
+                  <div className="flex justify-between">
+                    <p className="text-lg capitalize">previous search :</p>
                   </div>
-                  <div className="p-2">
-                    <p className="text-lg capitalize">previous search:</p>
+                  <div className="flex flex-wrap gap-1">
+                    {search?.map((item) => (
+                      <Link
+                        href={{
+                          pathname: "/products",
+                          query: {
+                            q: item.name,
+                          },
+                        }}
+                        key={item.id}
+                        className="relative flex select-none items-center rounded-sm border px-2 py-1.5 text-sm outline-none hover:bg-accent"
+                        onClick={handleClick}
+                      >
+                        {item.name}
+                      </Link>
+                    ))}
                   </div>
+                </div>
+                <div className="p-2">
+                  <p className="text-lg capitalize">Recomendations for you :</p>
                 </div>
               </div>
             </div>

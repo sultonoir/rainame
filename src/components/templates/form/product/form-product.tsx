@@ -15,10 +15,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { FieldCategory } from "./field-category";
-import {
-  postProductInput,
-  type PostProductSchema,
-} from "@/server/api/routers/product/product.input";
 import React from "react";
 import dynamic from "next/dynamic";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -30,12 +26,12 @@ import { Separator } from "@/components/ui/separator";
 import FieldSubcategory from "./field-subcategory";
 import Link from "next/link";
 import { useUploadThing } from "@/lib/uploadthing";
-import useImages from "@/hooks/useImages";
 import { useRouter } from "next/navigation";
 import { api } from "@/trpc/react";
+import { CreateProductSchema } from "@/server/api/routers/product/product.input";
+import { Textarea } from "@/components/ui/textarea";
 
-export function CreateProduct() {
-  const { images } = useImages();
+export function FormProduct() {
   const Editor = React.useMemo(
     () =>
       dynamic(() => import("@/components/ui/editor"), {
@@ -46,8 +42,8 @@ export function CreateProduct() {
       }),
     [],
   );
-  const form = useForm<PostProductSchema>({
-    resolver: zodResolver(postProductInput),
+  const form = useForm<CreateProductSchema>({
+    resolver: zodResolver(CreateProductSchema),
     defaultValues: {
       title: "",
       category: {
@@ -82,9 +78,9 @@ export function CreateProduct() {
       router.push(`/products/${e}`);
     },
   });
-  async function onSubmit(data: PostProductSchema) {
-    let resultImages = data.images;
-    const uploadimages = await startUpload(images);
+  async function onSubmit(data: CreateProductSchema) {
+    let resultImages: string[] = [];
+    const uploadimages = await startUpload(data.images);
     if (uploadimages) {
       resultImages = uploadimages.map((item) => item.url);
     }
@@ -106,7 +102,7 @@ export function CreateProduct() {
     <div className="flex flex-col gap-2">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-          <Card className="bg-muted/50">
+          <Card>
             <CardHeader>
               <CardTitle>Product details</CardTitle>
             </CardHeader>
@@ -132,10 +128,26 @@ export function CreateProduct() {
               />
               <FormField
                 control={form.control}
+                name="sumary"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Descriptions</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Rainame T-Shirt Basic Meghan Black"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
                 name="desc"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Desctiptions</FormLabel>
+                    <FormLabel>Details</FormLabel>
                     <FormControl>
                       <Editor onChange={field.onChange} />
                     </FormControl>
@@ -145,7 +157,7 @@ export function CreateProduct() {
               />
             </CardContent>
           </Card>
-          <Card className="bg-muted/50">
+          <Card>
             <CardHeader>
               <CardTitle>Price</CardTitle>
             </CardHeader>
@@ -217,7 +229,7 @@ export function CreateProduct() {
               />
             </CardContent>
           </Card>
-          <Card className="bg-muted/50">
+          <Card>
             <CardHeader>
               <CardTitle>Categories</CardTitle>
             </CardHeader>
@@ -263,7 +275,7 @@ export function CreateProduct() {
               )}
             </CardContent>
           </Card>
-          <Card className="bg-muted/50">
+          <Card>
             <CardHeader>
               <CardTitle>Product Images</CardTitle>
             </CardHeader>
@@ -275,8 +287,8 @@ export function CreateProduct() {
                   <FormItem>
                     <FormControl>
                       <FieldImage
-                        values={field.value}
-                        setValues={field.onChange}
+                        images={field.value}
+                        setImages={field.onChange}
                       />
                     </FormControl>
                     <FormMessage />
@@ -285,7 +297,7 @@ export function CreateProduct() {
               />
             </CardContent>
           </Card>
-          <Card className="bg-muted/50">
+          <Card>
             <CardHeader>
               <CardTitle>Stocks</CardTitle>
             </CardHeader>

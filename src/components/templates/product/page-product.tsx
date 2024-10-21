@@ -22,11 +22,11 @@ const PageProduct = ({ data }: Props) => {
         <div className="basis-5/12 space-y-4">
           <TitleProduct title={data.name} rating={data.rating} />
           <PriceProduct discount={data.discount} price={data.price} />
-          <CouponProduct
+          {/* <CouponProduct
             coupon={data.coupon[0]!}
             amount={data.coupon.length}
             type="multiple"
-          />
+          /> */}
           <AboutProduct about={data.desc} />
           <SizesProduct sizes={data.stockandsize} />
           <PaymentProduct id={data.id} />

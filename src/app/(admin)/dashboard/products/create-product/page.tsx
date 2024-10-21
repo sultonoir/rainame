@@ -1,4 +1,4 @@
-import { CreateProduct } from "@/components/templates/form/product/create-product";
+import { FormProduct } from "@/components/templates/form/product/form-product";
 import { type Metadata } from "next";
 import React from "react";
 
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 const Page = () => {
   return (
     <React.Fragment>
-      <CreateProduct />
+      <FormProduct />
     </React.Fragment>
   );
 };

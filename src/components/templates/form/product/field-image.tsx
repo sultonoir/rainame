@@ -1,202 +1,100 @@
-import { Button } from "@/components/ui/button";
-import useImages from "@/hooks/useImages";
-import { UploadCloud, XIcon } from "lucide-react";
+"use client";
+
+import { AnimatePresence, Reorder } from "framer-motion";
 import Image from "next/image";
-import { type DragEvent } from "react";
+import React, { useCallback } from "react";
+import { useDropzone } from "react-dropzone";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { X, Upload } from "lucide-react";
 
 interface FieldImageProps {
-  values: string[];
-  setValues: (values: string[]) => void;
+  images: File[];
+  setImages: (values: File[]) => void;
 }
 
-const FieldImage = ({ setValues, values }: FieldImageProps) => {
-  const { setImages, images } = useImages();
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-
-    if (!files) return;
-
-    const newFilesArray = Array.from(files);
-    const currentImages = images; // State value for images
-    const currentValues = values; // State value for values
-
-    // Filter out files that already exist in the current images
-    const uniqueNewFiles = newFilesArray.filter(
-      (file) =>
-        !currentImages.some((existingFile) => existingFile.name === file.name),
-    );
-
-    // Generate URLs for unique new files
-    const newFileUrls = uniqueNewFiles.map((file) => URL.createObjectURL(file));
-
-    // Filter out URLs that already exist in the current values
-    const uniqueNewUrls = newFileUrls.filter(
-      (url) => !currentValues.includes(url),
-    );
-
-    // Update the state only if there are new unique files or URLs
-    if (uniqueNewFiles.length > 0) {
-      setImages([...currentImages, ...uniqueNewFiles]);
-    }
-
-    if (uniqueNewUrls.length > 0) {
-      setValues([...currentValues, ...uniqueNewUrls]);
-    }
-  };
-
-  return (
-    <section className="flex min-h-[150px] gap-4 p-2 md:min-h-[400px] lg:gap-6">
-      {images.length === 0 ? (
-        <EmptyState
-          title="You have no images"
-          description="You can start selling as soon as you add a images"
-          action={handleFileChange}
-        />
-      ) : (
-        <ImageGrid
-          values={values}
-          setValues={setValues}
-          onUpload={handleFileChange}
-        />
-      )}
-    </section>
+export default function FieldImage({ images, setImages }: FieldImageProps) {
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      const uniqueNewFiles = acceptedFiles.filter(
+        (file) =>
+          !images.some((existingFile) => existingFile.name === file.name),
+      );
+      // Menambahkan file baru langsung tanpa menggunakan prev
+      setImages([...images, ...uniqueNewFiles]);
+    },
+    [images, setImages], // Menjaga agar setImages tetap diperbarui
   );
-};
 
-const EmptyState = ({
-  title,
-  description,
-  action,
-}: {
-  title: string;
-  description: string;
-  action: (event: React.ChangeEvent<HTMLInputElement>) => void;
-}) => (
-  <label
-    className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm"
-    htmlFor="upload"
-  >
-    <div className="flex flex-col items-center gap-1 text-center">
-      <h3 className="text-2xl font-bold tracking-tight">{title}</h3>
-      <p className="text-sm text-muted-foreground">{description}</p>
-      <input
-        type="file"
-        multiple
-        className="hidden"
-        id="upload"
-        onChange={action}
-      />
-    </div>
-  </label>
-);
-
-const ImageGrid = ({
-  values,
-  onUpload,
-  setValues,
-}: {
-  values: string[];
-  onUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  setValues: (values: string[]) => void;
-}) => {
-  const { setImages, images } = useImages();
-  const removeFile = (index: number) => {
-    const newValues = [...values];
-    newValues.splice(index, 1);
-
-    const newImages = [...images];
-    newImages.splice(index, 1);
-    // Update state with the filtered array
-    setImages(newImages);
-    setValues(newValues);
-  };
-
-  const handleDragStart = (index: number, event: DragEvent<HTMLDivElement>) => {
-    event.dataTransfer.setData("text/plain", index.toString());
-  };
-
-  const handleDragOver = (event: DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-  };
-
-  const handleDrop = (
-    targetIndex: number,
-    event: DragEvent<HTMLDivElement>,
-  ) => {
-    event.preventDefault();
-    const sourceIndex = parseInt(event.dataTransfer.getData("text/plain"), 10);
-
-    if (sourceIndex !== targetIndex) {
-      const newValues = [...values];
-      const newImages = [...images];
-
-      const [movedValue] = newValues.splice(sourceIndex, 1);
-      newValues.splice(targetIndex, 0, movedValue!);
-
-      const [movedImage] = newImages.splice(sourceIndex, 1);
-      newImages.splice(targetIndex, 0, movedImage!);
-
-      setValues(newValues);
-      setImages(newImages);
-    }
-  };
-
-  console.log({ images: images });
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   return (
-    <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-      {values.map((src, index) => (
-        <div
-          key={index}
-          className="relative aspect-square cursor-move overflow-hidden rounded-lg"
-          draggable
-          onDragStart={(e) =>
-            handleDragStart(index, e as unknown as DragEvent<HTMLDivElement>)
-          }
-          onDragOver={handleDragOver}
-          onDrop={(e) => handleDrop(index, e)}
-        >
-          {index === 0 && (
-            <span className="absolute left-1 top-1 rounded-lg bg-blue-100 px-2 py-0.5 text-blue-800">
-              Thumbnail
-            </span>
-          )}
-          <Button
-            type="button"
-            onClick={() => removeFile(index)}
-            size="icon"
-            className="absolute right-1 top-1 bg-destructive hover:bg-destructive/90"
-          >
-            <XIcon />
-          </Button>
-
-          <Image
-            src={src}
-            alt={`Image ${index}`}
-            layout="responsive"
-            width={500}
-            height={300}
-            className="object-cover"
-          />
-        </div>
-      ))}
-      <label
-        htmlFor="upload"
-        className="relative flex aspect-square flex-col items-center justify-center gap-4 overflow-hidden border border-dashed"
+    <div className="space-y-4">
+      <div
+        {...getRootProps()}
+        className={`cursor-pointer rounded-lg border-2 border-dashed p-8 text-center transition-colors ${
+          isDragActive ? "border-primary bg-primary/10" : "border-border"
+        }`}
       >
-        <input
-          type="file"
-          multiple
-          id="upload"
-          onChange={onUpload}
-          className="hidden"
-        />
-        <UploadCloud size={40} />
-        <p className="font-bold capitalize">Upload file</p>
-      </label>
+        <Input type="file" className="hidden" {...getInputProps()} />
+        <Upload className="mx-auto h-12 w-12" />
+        <p className="mt-2 text-sm">
+          {isDragActive
+            ? "Drop the images here ..."
+            : "Drag 'n' drop some images here, or click to select images"}
+        </p>
+      </div>
+      <h4 className="text-lg font-semibold">Files List (Drag to Reorder)</h4>
+      <Reorder.Group
+        axis="y"
+        values={images}
+        onReorder={setImages}
+        layout
+        className="flex max-h-[500px] flex-col space-y-2 overflow-auto"
+      >
+        <AnimatePresence>
+          {images.map((file, index) => (
+            <Reorder.Item
+              key={file.name}
+              value={file}
+              initial={{ opacity: 0, x: 30 }}
+              animate={{
+                opacity: 1,
+                x: 0,
+                transition: { duration: 0.15, delay: index * 0.1 },
+              }}
+              exit={{ opacity: 0, x: 20, transition: { duration: 0.3 } }}
+              className="flex cursor-move items-center space-x-2 rounded-lg bg-secondary p-2"
+            >
+              <div className="relative size-12 overflow-hidden rounded-sm lg:size-20">
+                <Image
+                  alt={file.name}
+                  src={URL.createObjectURL(file)}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              {index === 0 && (
+                <span className="text-pretty rounded-sm bg-blue-100 px-3 py-1 font-semibold text-primary">
+                  Thumbnail
+                </span>
+              )}
+
+              <span className="flex-grow truncate">{file.name}</span>
+              <Button
+                variant="ghost"
+                type="button"
+                size="icon"
+                onClick={
+                  () => setImages(images.filter((f) => f !== file)) // Menghapus file dari daftar
+                }
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </Reorder.Item>
+          ))}
+        </AnimatePresence>
+      </Reorder.Group>
     </div>
   );
-};
-
-export default FieldImage;
+}
