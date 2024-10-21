@@ -1,4 +1,5 @@
 import MainNavbar from "@/components/templates/navbar/main-navbar";
+import { Toaster } from "@/components/ui/sonner";
 import type { ReactNode } from "react";
 
 const AuthLayout = ({ children }: { children: ReactNode }) => {
@@ -6,6 +7,7 @@ const AuthLayout = ({ children }: { children: ReactNode }) => {
     <>
       <MainNavbar />
       {children}
+      <Toaster richColors position="top-center" />
     </>
   );
 };

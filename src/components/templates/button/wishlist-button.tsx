@@ -40,6 +40,8 @@ const WishlistButton = ({ variant, size, className, ...props }: Props) => {
       productId: props.productId,
     });
   };
+
+  console.log({ isExist, props: props.isWislist });
   return (
     <button
       className={cn(buttonVariants({ variant, size, className }))}

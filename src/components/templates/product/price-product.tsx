@@ -4,12 +4,16 @@ import React, { type HTMLAttributes } from "react";
 interface PriceProductProps extends HTMLAttributes<HTMLDivElement> {
   discount: number;
   price: number;
+  priceClassName?: string;
+  discountClassName?: string;
 }
 
 const PriceProduct = ({
   price,
   discount,
   className,
+  priceClassName,
+  discountClassName,
   ...props
 }: PriceProductProps) => {
   const discountedPrice = calculateTotalPrice({
@@ -18,24 +22,19 @@ const PriceProduct = ({
   });
   return (
     <div
-      className={cn("flex items-center gap-2 text-sm lg:text-lg", className)}
+      className={cn(
+        "flex items-center gap-2 text-sm lg:text-[16px]",
+        className,
+      )}
       {...props}
     >
-      <div className="rounded-sm border border-green-500 px-2 py-0.5 font-bold text-green-500">
-        ${discountedPrice}
-      </div>
+      <div className={cn("font-bold", priceClassName)}>${discountedPrice}</div>
       {discount > 0 && (
-        <>
-          <p className="text-muted-foreground line-through">${price}</p>
-          <p
-            className={cn("hidden lg:block", {
-              "text-foreground": discount > 0,
-              "font-bold": discount > 0,
-            })}
-          >
-            -{discount}%
-          </p>
-        </>
+        <p
+          className={cn("text-sm text-red-600 line-through", discountClassName)}
+        >
+          ${price}
+        </p>
       )}
     </div>
   );
