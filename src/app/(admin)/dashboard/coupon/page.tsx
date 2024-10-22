@@ -18,7 +18,7 @@ const Page = () => {
             You can start selling as soon as you add a product.
           </p>
           <Button className="mt-4" asChild>
-            <Link href="/dashboard/products/create-coupon">Create coupon</Link>
+            <Link href="/dashboard/coupon/create-coupon">Create coupon</Link>
           </Button>
         </div>
       </div>

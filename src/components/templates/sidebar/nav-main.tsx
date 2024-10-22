@@ -73,11 +73,11 @@ const items = [
     items: [
       {
         title: "Promo",
-        url: "/dashboard/Promo",
+        url: "/dashboard/promo",
       },
       {
         title: "Coupon",
-        url: "/dashboard/Coupon",
+        url: "/dashboard/coupon",
       },
     ],
   },
