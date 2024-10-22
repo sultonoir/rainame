@@ -11,6 +11,7 @@ import {
 import CartCard from "./cart-card";
 import Link from "next/link";
 import CartSkeleton from "./cart-skeleton";
+import CartEmpty from "./cart-empty";
 
 export default function CartButton() {
   const { data: count } = api.cart.getCount.useQuery();
@@ -19,7 +20,7 @@ export default function CartButton() {
     <HoverCard>
       <HoverCardTrigger asChild>
         <Button variant="ghost" size="icon" className="relative">
-          <ShoppingBag />
+          <ShoppingBag size={19} />
           {!!count && count !== 0 && (
             <div className="absolute -right-1 top-0 flex size-5 items-center justify-center rounded-full bg-primary text-xs text-white">
               {count < 99 ? count : 99}
@@ -69,10 +70,7 @@ function CartContent() {
       return (
         <React.Fragment>
           {carts.length < 1 ? (
-            <div className="flex flex-col place-items-center">
-              <ShoppingBag size={40} />
-              <p>Your cart is empty</p>
-            </div>
+            <CartEmpty />
           ) : (
             <React.Fragment>
               {carts.map((cart) => (
