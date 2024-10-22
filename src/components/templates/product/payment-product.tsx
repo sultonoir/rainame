@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 
 type Props = {
   id: string;
+  isWishlist : boolean;
 };
 
 const PaymentProduct = (props: Props) => {
@@ -90,7 +91,7 @@ const PaymentProduct = (props: Props) => {
       <WishlistButton
         variant="outline"
         className="h-auto"
-        isWislist={false}
+        isWislist={props.isWishlist}
         productId={props.id}
       />
     </div>

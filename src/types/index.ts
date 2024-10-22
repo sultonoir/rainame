@@ -75,6 +75,7 @@ export type ProductPage = Product & {
   coupon: Coupon[];
   categories: string;
   subcategories: string;
+  wishlist : boolean;
 };
 
 export type NextApiResponseServerIo = NextApiResponse & {

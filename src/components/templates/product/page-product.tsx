@@ -37,7 +37,7 @@ const PageProduct = ({ data }: Props) => {
           /> */}
           <SizesProduct sizes={data.stockandsize} />
           <QtyProduct />
-          <PaymentProduct id={data.id} />
+          <PaymentProduct id={data.id} isWishlist={data.wishlist} />
           <AboutProduct about={data.desc} />
           <BenefitProduct />
           <div className="h-screen"></div>

@@ -112,6 +112,7 @@ export const getBySlug = async (
           productImage: true,
           stockandsize: true,
           rating: true,
+          wishlist: true,
         },
       },
       subcategory: true,
@@ -141,6 +142,9 @@ export const getBySlug = async (
     categories: product?.category.name,
     subcategories: product?.subcategory.name,
     coupon: coupon,
+    wishlist: product.product.wishlist.some(
+      (item) => item.userId === ctx.user?.id,
+    ),
   };
 
   return newProduct;
@@ -152,40 +156,22 @@ export const listProduct = async (ctx: TRPCContext) => {
       productImage: {
         take: 1,
       },
+      wishlist: true,
       rating: true,
     },
   });
 
-  const checkWishlist = async (productId: string) => {
-    const userId = ctx.user?.id;
-    if (!userId) {
-      return false; // or throw an error, depending on your use case
-    }
+  const newProducts = products.map((item) => {
+    const totalRating = getTotalRating(item.rating);
+    const averageRating = totalRating / item.rating.length;
 
-    const wishlist = await ctx.db.wishlist.findFirst({
-      where: {
-        userId,
-        productId,
-      },
-    });
-
-    return !!wishlist; // returns true if wishlist is found, false otherwise
-  };
-
-  const newProducts = await Promise.all(
-    products.map(async (item) => {
-      const totalRating = getTotalRating(item.rating);
-      const averageRating = totalRating / item.rating.length;
-      const wishlistExists = await checkWishlist(item.id);
-
-      return {
-        ...item,
-        rating: averageRating,
-        productImage: item.productImage[0]!,
-        wishlist: wishlistExists,
-      };
-    }),
-  );
+    return {
+      ...item,
+      rating: averageRating,
+      productImage: item.productImage[0]!,
+      wishlist: item.wishlist.some((item) => item.userId === ctx.user?.id),
+    };
+  });
 
   return newProducts;
 };
