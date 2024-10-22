@@ -10,12 +10,12 @@ export default function QtyProduct() {
   return (
     <div className="flex flex-col space-y-2">
       <h3 className="text-lg font-semibold">Quantity</h3>
-      <div className="flex w-fit rounded-2xl bg-muted/50 p-3">
+      <div className="flex w-fit rounded-lg bg-muted/50 p-2">
         <Button
           size="icon"
           variant="outline"
           disabled={count === 1}
-          className="size-7 rounded-lg"
+          className="size-7 rounded-lg border-none"
           onClick={decrement}
         >
           <MinusIcon size={20} />
@@ -27,7 +27,7 @@ export default function QtyProduct() {
           size="icon"
           disabled={count === 10}
           variant="outline"
-          className="size-7"
+          className="size-7 rounded-lg border-none"
           onClick={increment}
         >
           <PlusIcon size={20} />
