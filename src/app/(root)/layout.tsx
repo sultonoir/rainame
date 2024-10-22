@@ -6,7 +6,7 @@ const AuthLayout = ({ children }: { children: ReactNode }) => {
   return (
     <>
       <MainNavbar />
-      {children}
+      <div className="relative z-0 min-h-screen">{children}</div>
       <Toaster richColors position="top-center" />
     </>
   );

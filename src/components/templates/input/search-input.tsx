@@ -52,7 +52,7 @@ export function SearchInput() {
 
   return (
     <div
-      className="relative hidden md:flex md:flex-grow"
+      className="relative flex flex-grow"
       onClick={() => setActive(true)}
       ref={ref}
     >

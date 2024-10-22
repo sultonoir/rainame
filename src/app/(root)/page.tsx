@@ -11,6 +11,7 @@ const Page = async () => {
           <CardProduct product={item} key={item.id} />
         ))}
       </div>
+      <div className="min-h-screen">1</div>
     </main>
   );
 };

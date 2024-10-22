@@ -195,3 +195,16 @@ export const categories = [
     ],
   },
 ];
+
+export const categoriesMobile = [
+  ...categories.map((category) => ({
+    id: category.id,
+    name: category.name,
+  })),
+  ...categories.flatMap((category) =>
+    category.subcategories.map((subcategory) => ({
+      id: subcategory.id,
+      name: subcategory.name,
+    })),
+  ),
+];

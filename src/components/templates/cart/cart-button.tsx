@@ -21,7 +21,7 @@ export default function CartButton() {
         <Button variant="ghost" size="icon" className="relative">
           <ShoppingBag />
           {!!count && count !== 0 && (
-            <div className="absolute -right-1 top-0 flex size-5 items-center justify-center rounded-full bg-primary text-xs">
+            <div className="absolute -right-1 top-0 flex size-5 items-center justify-center rounded-full bg-primary text-xs text-white">
               {count < 99 ? count : 99}
             </div>
           )}

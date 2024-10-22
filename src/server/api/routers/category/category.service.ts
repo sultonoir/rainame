@@ -16,7 +16,18 @@ export const createCategory = async (
 };
 
 export const getAllCategory = async (ctx: ProtectedTRPCContext) => {
-  return await ctx.db.category.findMany();
+  return await ctx.db.category.findMany({
+    select: {
+      id: true,
+      name: true,
+      subcategories: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  });
 };
 
 export const withSub = async (ctx: TRPCContext) => {

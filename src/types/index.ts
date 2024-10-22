@@ -75,7 +75,7 @@ export type ProductPage = Product & {
   coupon: Coupon[];
   categories: string;
   subcategories: string;
-  wishlist : boolean;
+  wishlist: boolean;
 };
 
 export type NextApiResponseServerIo = NextApiResponse & {
@@ -95,4 +95,13 @@ export type FormatCart = Cart & {
     discount: number;
     productImage: ProductImage[];
   };
+};
+
+export type Categories = {
+  name: string;
+  id: string;
+  subcategories: {
+    name: string;
+    id: string;
+  }[];
 };
