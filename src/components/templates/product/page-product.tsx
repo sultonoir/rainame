@@ -16,7 +16,6 @@ interface Props {
 }
 
 const PageProduct = ({ data }: Props) => {
-  console.log({ data });
   return (
     <div className="container my-10 min-h-screen space-y-4">
       <div className="flex flex-col gap-4 lg:flex-row lg:gap-10">
@@ -31,11 +30,13 @@ const PageProduct = ({ data }: Props) => {
             price={data.price}
             priceClassName="text-lg lg:text-2xl"
           />
-          <CouponProduct
-            coupon={data.coupon[0]!}
-            amount={data.coupon.length}
-            type="multiple"
-          />
+          {data.coupon.length > 0 && (
+            <CouponProduct
+              coupon={data.coupon[0]!}
+              amount={data.coupon.length}
+              type="multiple"
+            />
+          )}
           <SizesProduct sizes={data.stockandsize} />
           <QtyProduct />
           <PaymentProduct id={data.id} isWishlist={data.wishlist} />

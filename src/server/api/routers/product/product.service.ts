@@ -128,7 +128,7 @@ export const getBySlug = async (
         },
         {
           minOrder: {
-            gte: product?.product.price,
+            lte: product?.product.price,
           },
         },
       ],

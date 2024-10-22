@@ -42,7 +42,7 @@ const CouponProduct = (props: Props) => {
           </button>
         </div>
       </div>
-      {props.type === "multiple" && (
+      {props.type === "multiple" && props.amount> 1 && (
         <div className="flex flex-shrink-0 flex-col items-center justify-center rounded-sm bg-sky-100 p-3 text-sky-800">
           <strong className="text-sm">+{props.amount - 1} more</strong>
           <button onClick={openSheet} className="text-[12px] underline">

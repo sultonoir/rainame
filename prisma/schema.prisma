@@ -370,7 +370,7 @@ model Coupon {
   desc          String
   tac           String
   expiresAt     DateTime
-  discount      Decimal         @default(0.1)
+  discount      Float           @default(0.1)
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   couponConsume CouponConsume[]
