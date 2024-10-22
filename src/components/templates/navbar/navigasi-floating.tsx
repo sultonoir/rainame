@@ -48,11 +48,9 @@ export const NavigasiFloating = ({ className, children, ...props }: Props) => {
         transition={{
           duration: 0.2,
         }}
-        className={cn(
-          "sticky inset-x-0 top-0 z-[10] w-full max-w-[2000px]",
-          className,
-          { ...props },
-        )}
+        className={cn("sticky inset-x-0 top-0 z-[10] w-full", className, {
+          ...props,
+        })}
       >
         {children}
       </motion.div>

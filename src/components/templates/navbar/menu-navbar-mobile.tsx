@@ -15,9 +15,11 @@ type Props = React.HTMLAttributes<HTMLDivElement>;
 export function MenuNavbarMobile({ className }: Props) {
   return (
     <Carousel className={cn("", className)}>
-      <div className="relative w-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <CarouselPrevious className="bg-background/10 backdrop-blur-lg" />
-      </div>
+      <CarouselPrevious
+        isShadow
+        className="bg-background/10 backdrop-blur-lg"
+      />
+      <CarouselNext isShadow className="bg-background/10 backdrop-blur-lg" />
       <CarouselContent className="space-x-2 py-2">
         {categoriesMobile.map((item) => (
           <Link
@@ -34,10 +36,6 @@ export function MenuNavbarMobile({ className }: Props) {
           </Link>
         ))}
       </CarouselContent>
-
-      <div className="relative w-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <CarouselNext className="" />
-      </div>
     </Carousel>
   );
 }

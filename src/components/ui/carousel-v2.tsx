@@ -47,11 +47,10 @@ const Carousel = ({
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    if (carouselRef.current) {
-      carouselRef.current.scrollLeft = initialScroll;
-      checkScrollability();
-    }
-  }, [initialScroll]);
+    checkScrollability();
+    window.addEventListener("resize", checkScrollability);
+    return () => window.removeEventListener("resize", checkScrollability);
+  }, []);
 
   const checkScrollability = () => {
     if (carouselRef.current) {
@@ -108,20 +107,22 @@ const Carousel = ({
 const CarouselContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
->(({ className, children, ...props }) => {
+>(({ className, children, ...props }, ref) => {
   const { carouselRef, checkScrollability } = useCarousel();
 
   return (
-    <div
-      className={cn(
-        "flex w-full flex-grow items-center overflow-x-scroll overscroll-x-auto scroll-smooth py-4 [scrollbar-width:none]",
-        className,
-      )}
-      ref={carouselRef}
-      onScroll={checkScrollability}
-      {...props}
-    >
-      {children}
+    <div className="overflow-hidden" ref={ref}>
+      <div
+        className={cn(
+          "flex w-full flex-grow items-center overflow-x-scroll overscroll-x-auto scroll-smooth py-4 [scrollbar-width:none]",
+          className,
+        )}
+        ref={carouselRef}
+        onScroll={checkScrollability}
+        {...props}
+      >
+        {children}
+      </div>
     </div>
   );
 });
@@ -129,54 +130,103 @@ CarouselContent.displayName = "CarouselContent";
 
 const CarouselPrevious = React.forwardRef<
   HTMLButtonElement,
-  React.ComponentProps<typeof Button>
->(({ className, variant = "outline", size = "icon", ...props }, ref) => {
-  const { scrollPrev, canScrollPrev } = useCarousel();
+  React.ComponentProps<typeof Button> & { isShadow?: boolean }
+>(
+  (
+    { className, variant = "outline", size = "icon", isShadow, ...props },
+    ref,
+  ) => {
+    const { scrollPrev, canScrollPrev } = useCarousel();
+    const buttonElement = (
+      <Button
+        ref={ref}
+        variant={variant}
+        size={size}
+        className={cn(
+          "absolute left-0 top-1/2 z-10 size-8 -translate-y-1/2 rounded-full",
+          {
+            hidden: !canScrollPrev,
+          },
+          className,
+        )}
+        disabled={!canScrollPrev}
+        onClick={scrollPrev}
+        {...props}
+      >
+        <ArrowLeft className="h-4 w-4" />
+        <span className="sr-only">Previous slide</span>
+      </Button>
+    );
 
-  return (
-    <Button
-      ref={ref}
-      variant={variant}
-      size={size}
-      className={cn(
-        "absolute left-0 top-1/2 z-10 size-8 -translate-y-1/2 rounded-full",
-        className,
-      )}
-      disabled={!canScrollPrev}
-      onClick={scrollPrev}
-      {...props}
-    >
-      <ArrowLeft className="h-4 w-4" />
-      <span className="sr-only">Previous slide</span>
-    </Button>
-  );
-});
+    if (isShadow) {
+      return (
+        <div
+          className={cn(
+            "absolute left-0 h-full w-20 flex-shrink-0 bg-gradient-to-r from-background via-background/80 to-transparent",
+            {
+              hidden: !canScrollPrev,
+            },
+          )}
+        >
+          {buttonElement}
+        </div>
+      );
+    }
+
+    return buttonElement;
+  },
+);
 CarouselPrevious.displayName = "CarouselPrevious";
 
 const CarouselNext = React.forwardRef<
   HTMLButtonElement,
-  React.ComponentProps<typeof Button>
->(({ className, variant = "outline", size = "icon", ...props }, ref) => {
-  const { scrollNext, canScrollNext } = useCarousel();
+  React.ComponentProps<typeof Button> & { isShadow?: boolean }
+>(
+  (
+    { className, variant = "outline", size = "icon", isShadow, ...props },
+    ref,
+  ) => {
+    const { scrollNext, canScrollNext } = useCarousel();
 
-  return (
-    <Button
-      ref={ref}
-      variant={variant}
-      size={size}
-      className={cn(
-        "absolute right-0 top-1/2 z-10 size-8 -translate-y-1/2 rounded-full",
-        className,
-      )}
-      disabled={!canScrollNext}
-      onClick={scrollNext}
-      {...props}
-    >
-      <ArrowRight className="size-4" />
-      <span className="sr-only">Next slide</span>
-    </Button>
-  );
-});
+    const buttonElement = (
+      <Button
+        ref={ref}
+        variant={variant}
+        size={size}
+        className={cn(
+          "absolute right-0 top-1/2 z-10 size-8 -translate-y-1/2 rounded-full",
+          {
+            hidden: !canScrollNext,
+          },
+          className,
+        )}
+        disabled={!canScrollNext}
+        onClick={scrollNext}
+        {...props}
+      >
+        <ArrowRight className="size-4" />
+        <span className="sr-only">Next slide</span>
+      </Button>
+    );
+
+    if (isShadow) {
+      return (
+        <div
+          className={cn(
+            "absolute right-0 h-full w-20 flex-shrink-0 bg-gradient-to-l from-background via-background to-transparent",
+            {
+              hidden: !canScrollNext,
+            },
+          )}
+        >
+          {buttonElement}
+        </div>
+      );
+    }
+
+    return buttonElement;
+  },
+);
 CarouselNext.displayName = "CarouselNext";
 
 export { Carousel, CarouselPrevious, CarouselNext, CarouselContent };
