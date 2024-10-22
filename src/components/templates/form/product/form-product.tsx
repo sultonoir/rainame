@@ -75,7 +75,7 @@ export function FormProduct() {
       toast.error(e.message);
     },
     onSuccess: (e) => {
-      router.push(`/products/${e}`);
+      router.push(`/product/${e}`);
     },
   });
   async function onSubmit(data: CreateProductSchema) {

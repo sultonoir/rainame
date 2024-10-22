@@ -5,6 +5,7 @@ import { MenuNavbar } from "./menu-navabar";
 import { ButtonProfile } from "../profile/button-profile";
 import { ThemeButton } from "../button/theme-button";
 import { NavigasiFloating } from "./navigasi-floating";
+import CartButton from "../cart/cart-button";
 
 const MainNavbar = () => {
   return (
@@ -18,6 +19,7 @@ const MainNavbar = () => {
           <div className="flex items-center gap-2 sm:ml-2 sm:flex-grow lg:flex-grow-0">
             <SearchInput />
             <ThemeButton />
+            <CartButton />
             <ButtonProfile />
           </div>
         </div>

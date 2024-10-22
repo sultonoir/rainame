@@ -3,12 +3,12 @@ import { create } from "zustand";
 
 interface SizesStore {
   sizes: StockAndSize | undefined;
-  setSizes: (values: StockAndSize) => void;
+  setSizes: (values: StockAndSize | undefined) => void;
 }
 
 const useSizes = create<SizesStore>((set) => ({
   sizes: undefined,
-  setSizes: (values: StockAndSize) => set({ sizes: values }),
+  setSizes: (values: StockAndSize | undefined) => set({ sizes: values }),
 }));
 
 export default useSizes;

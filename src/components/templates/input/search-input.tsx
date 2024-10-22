@@ -30,7 +30,7 @@ export function SearchInput() {
       id: new Date().getTime().toString(),
       name: inputvalue,
     });
-    router.push("/products" + "?" + createQueryString("search", inputvalue));
+    router.push("/product" + "?" + createQueryString("search", inputvalue));
   };
 
   const handleClick = () => {

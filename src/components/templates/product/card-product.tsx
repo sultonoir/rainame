@@ -1,10 +1,6 @@
 import React from "react";
 
-import {
-  Card,
-  CardContent,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { type ProductCard } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,7 +16,7 @@ const CardProduct = ({ product }: Props) => {
   return (
     <Card className="relative rounded-2xl border border-border/50 p-2 shadow-lg dark:bg-muted/50">
       <Link
-        href={`/products/${product.slug}`}
+        href={`/product/${product.slug}`}
         className="absolute inset-0 z-10"
         title={product.name}
       />

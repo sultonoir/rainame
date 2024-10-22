@@ -5,6 +5,7 @@ import { subcategoryProcedure } from "./routers/subcategory/subcategory.procedur
 import { productProcedure } from "./routers/product/product.procedure";
 import { wishlistProcedure } from "./routers/wishlist/wishlist.procedure";
 import { couponProcedure } from "./routers/coupon/coupon.procedure";
+import { cartProcedure } from "./routers/cart/cart.prosedure";
 
 /**
  * This is the primary router for your server.
@@ -18,6 +19,7 @@ export const appRouter = createTRPCRouter({
   product: productProcedure,
   wishlist: wishlistProcedure,
   coupon: couponProcedure,
+  cart: cartProcedure,
 });
 
 // export type definition of API

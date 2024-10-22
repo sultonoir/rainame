@@ -9,6 +9,7 @@ import PaymentProduct from "./payment-product";
 import TitleProduct from "./title-product";
 import TotalRating from "../rating/total-rating";
 import BenefitProduct from "./benefit-product";
+import QtyProduct from "./qty-product";
 
 interface Props {
   data: ProductPage;
@@ -35,6 +36,7 @@ const PageProduct = ({ data }: Props) => {
             type="multiple"
           /> */}
           <SizesProduct sizes={data.stockandsize} />
+          <QtyProduct />
           <PaymentProduct id={data.id} />
           <AboutProduct about={data.desc} />
           <BenefitProduct />

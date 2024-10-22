@@ -4,6 +4,7 @@ import {
   type ProductImage,
   type Coupon,
   type Rating,
+  type Cart,
 } from "@prisma/client";
 import { type LucideProps } from "lucide-react";
 import { type Socket, type Server as NetServer } from "net";
@@ -81,5 +82,16 @@ export type NextApiResponseServerIo = NextApiResponse & {
     server: NetServer & {
       io: SocketIOServer;
     };
+  };
+};
+
+export type FormatCart = Cart & {
+  product: {
+    id: string;
+    name: string;
+    slug: string;
+    price: number;
+    discount: number;
+    productImage: ProductImage[];
   };
 };
