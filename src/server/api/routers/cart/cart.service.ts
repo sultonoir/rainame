@@ -98,6 +98,33 @@ export async function getCart({
   };
 }
 
+export async function removeCart({
+  ctx,
+  input,
+}: {
+  ctx: ProtectedTRPCContext;
+  input: input.CartRemoveInput;
+}) {
+  const remove = await ctx.db.cart.delete({
+    where: {
+      id: input.cartId,
+    },
+    include,
+  });
+
+  return remove;
+}
+
+export async function removeAllCart(ctx: ProtectedTRPCContext) {
+  const remove = await ctx.db.cart.deleteMany({
+    where: {
+      userId: ctx.user.id,
+    },
+  });
+
+  return remove;
+}
+
 const include = {
   product: {
     select: {

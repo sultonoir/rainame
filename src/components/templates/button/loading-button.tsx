@@ -36,7 +36,15 @@ const LoadingButton = forwardRef<HTMLButtonElement, LoadingButtonProps>(
         disabled={props.disabled ? props.disabled : loading}
         className={cn(className, "relative")}
       >
-        {contentStart && <span className="mr-2">{contentStart}</span>}
+        {contentStart && (
+          <span
+            className={cn("mr-2", {
+              "mr-0": !children,
+            })}
+          >
+            {contentStart}
+          </span>
+        )}
         {children}
         {!loading && endContent && <span className="ml-2">{endContent}</span>}
       </Button>

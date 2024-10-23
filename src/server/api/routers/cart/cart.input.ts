@@ -15,3 +15,9 @@ export const CartItemInput = z.object({
 });
 
 export type CartItemInput = z.infer<typeof CartItemInput>;
+
+export const CartRemoveInput = z.object({
+  cartId: z.string(),
+});
+
+export type CartRemoveInput = z.infer<typeof CartRemoveInput>;

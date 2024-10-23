@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 
 type Props = {
   id: string;
-  isWishlist : boolean;
+  isWishlist: boolean;
 };
 
 const PaymentProduct = (props: Props) => {
@@ -24,19 +24,24 @@ const PaymentProduct = (props: Props) => {
 
   const utils = api.useUtils();
   const { mutate, isPending } = api.cart.create.useMutation({
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       toast(<CartCard cart={data} />);
       reset();
       setSizes(undefined);
 
       // Update count
+      await Promise.all([
+        utils.cart.getCount.cancel(),
+        utils.cart.getCart.cancel(),
+      ]);
       utils.cart.getCount.setData(undefined, (oldData) => {
-        if (!oldData) return 1;
+        if (!oldData) return data.amount;
         return oldData + count;
       });
 
       // Update cart with infinite data
       utils.cart.getCart.setInfiniteData({ limit: 10 }, (oldData) => {
+        console.log(oldData);
         if (!oldData) {
           return {
             pages: [],

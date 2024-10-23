@@ -1,6 +1,11 @@
 import CardProduct from "@/components/templates/product/card-product";
 import { api } from "@/trpc/server";
+import { type Metadata } from "next";
 import React from "react";
+
+export const metadata : Metadata ={
+  title : "Home"
+}
 
 const Page = async () => {
   const products = await api.product.list();
@@ -11,7 +16,6 @@ const Page = async () => {
           <CardProduct product={item} key={item.id} />
         ))}
       </div>
-      <div className="min-h-screen">1</div>
     </main>
   );
 };
