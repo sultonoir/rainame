@@ -27,6 +27,32 @@ export interface ActionResponse<T> {
   formError?: string;
 }
 
+export async function loginDemoUser(): Promise<{ error: string } | void> {
+  const existingUser = await db.user.findUnique({
+    where: {
+      email: env.DEMO_USER_EMAIL,
+    },
+  });
+
+  if (!existingUser) {
+    return {
+      error: "User not found",
+    };
+  }
+
+  const session = await lucia.createSession(existingUser.id, {});
+  const sessionCookie = lucia.createSessionCookie(session.id);
+  cookies().set({
+    name: sessionCookie.name,
+    value: sessionCookie.value,
+    httpOnly: true,
+    path: "/",
+    maxAge: 24 * 60 * 60 * 7,
+  });
+
+  return redirect(Paths.Home);
+}
+
 export async function login(
   _: any,
   formData: FormData,

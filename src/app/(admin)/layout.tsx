@@ -2,9 +2,20 @@ import AdminNavbar from "@/components/templates/admin/admin-navbar";
 import { AppSidebar } from "@/components/templates/sidebar/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
+import { validateRequest } from "@/lib/auth/validate-request";
+import { redirect } from "next/navigation";
 import React from "react";
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
+const Layout = async ({ children }: { children: React.ReactNode }) => {
+  const { user } = await validateRequest();
+  if (!user) {
+    redirect("/login");
+  }
+
+  if (user.role === "user") {
+    redirect("/");
+  }
+
   return (
     <SidebarProvider>
       <AppSidebar />
