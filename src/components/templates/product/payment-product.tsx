@@ -32,7 +32,7 @@ const PaymentProduct = (props: Props) => {
       // Update count
       await Promise.all([
         utils.cart.getCount.cancel(),
-        utils.cart.getCart.cancel(),
+        utils.cart.getCartInfinite.cancel(),
       ]);
       utils.cart.getCount.setData(undefined, (oldData) => {
         if (!oldData) return data.amount;
@@ -40,24 +40,16 @@ const PaymentProduct = (props: Props) => {
       });
 
       // Update cart with infinite data
-      utils.cart.getCart.setInfiniteData({ limit: 10 }, (oldData) => {
-        console.log(oldData);
-        if (!oldData) {
+      utils.cart.getCart.setData(undefined, (olData) => {
+        if (!olData) {
           return {
-            pages: [],
-            pageParams: [],
+            carts: [data],
+            count: data.amount,
           };
         }
         return {
-          ...oldData,
-          pages: oldData.pages.map((page) => ({
-            ...page,
-            cart: page.cart.some((item) => item.id === data.id)
-              ? page.cart.map((item) =>
-                  item.id === data.id ? { ...item, ...data } : item,
-                ) // Update jika item sudah ada
-              : [data, ...page.cart],
-          })),
+          carts: [data, ...olData.carts],
+          count: data.amount,
         };
       });
     },

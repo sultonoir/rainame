@@ -1,6 +1,6 @@
 import React from "react";
 import { LoadingButton } from "../button/loading-button";
-import { Trash2 } from "lucide-react";
+import { X } from "lucide-react";
 import { api } from "@/trpc/react";
 
 type Props = {
@@ -18,8 +18,8 @@ export default function CartRemoveButton({ cartId }: Props) {
       });
 
       // Update cart with infinite data
-      await utils.cart.getCart.cancel();
-      utils.cart.getCart.setInfiniteData({ limit: 10 }, (oldData) => {
+      await utils.cart.getCartInfinite.cancel();
+      utils.cart.getCartInfinite.setInfiniteData({ limit: 10 }, (oldData) => {
         if (!oldData) {
           return {
             pages: [],
@@ -46,9 +46,10 @@ export default function CartRemoveButton({ cartId }: Props) {
       disabled={isPending}
       loading={isPending}
       onClick={handleClick}
-      variant="outline"
+      variant="ghost"
       size="icon"
-      startContent={<Trash2 size={19} />}
+      className="size-6"
+      startContent={<X className="size-4" />}
     />
   );
 }

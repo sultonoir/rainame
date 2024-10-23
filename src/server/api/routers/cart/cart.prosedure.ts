@@ -12,9 +12,11 @@ export const cartProcedure = createTRPCRouter({
     .mutation(service.createCart),
   getCount: publicProcedure.query(async ({ ctx }) => service.getCount(ctx)),
 
-  getCart: publicProcedure
+  getCart: protectedProcedure.query(service.getCart),
+
+  getCartInfinite: publicProcedure
     .input(input.CartItemInput)
-    .query(async ({ ctx, input }) => service.getCart({ ctx, input })),
+    .query(async ({ ctx, input }) => service.getInviteCart({ ctx, input })),
 
   removeById: protectedProcedure
     .input(input.CartRemoveInput)

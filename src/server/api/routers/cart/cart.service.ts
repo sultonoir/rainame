@@ -63,7 +63,7 @@ export async function getCount(ctx: TRPCContext) {
   return result;
 }
 
-export async function getCart({
+export async function getInviteCart({
   input,
   ctx,
 }: {
@@ -123,6 +123,21 @@ export async function removeAllCart(ctx: ProtectedTRPCContext) {
   });
 
   return remove;
+}
+
+export async function getCart({ ctx }: { ctx: ProtectedTRPCContext }) {
+  const carts = await ctx.db.cart.findMany({
+    where: {
+      userId: ctx.user.id,
+    },
+    include,
+  });
+
+  const count = carts.reduce((acc, cur) => acc + cur.amount, 0);
+  return {
+    carts,
+    count,
+  };
 }
 
 const include = {
