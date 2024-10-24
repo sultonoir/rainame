@@ -4,7 +4,7 @@ import React from "react";
 
 export default function CartEmpty() {
   return (
-    <div className="flex flex-col place-items-center space-y-2">
+    <div className="flex flex-col place-items-center gap-3">
       <div className="relative aspect-square size-40">
         <Image
           src="/empty-cart.png"
@@ -20,7 +20,7 @@ export default function CartEmpty() {
       </p>
       <Link
         href="/product"
-        className="rounded-lg bg-primary px-3 py-1 hover:bg-primary/80"
+        className="mt-1 rounded-lg bg-primary px-3 py-1 hover:bg-primary/80"
       >
         Continue Shopping
       </Link>

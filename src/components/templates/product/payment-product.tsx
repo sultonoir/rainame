@@ -25,9 +25,7 @@ const PaymentProduct = (props: Props) => {
   const utils = api.useUtils();
   const { mutate, isPending } = api.cart.create.useMutation({
     onSuccess: async (data) => {
-      toast(<CartCard cart={data} />);
-      reset();
-      setSizes(undefined);
+      toast(<CartCard cart={data} action={false} />);
 
       // Update count
       await Promise.all([
@@ -40,18 +38,20 @@ const PaymentProduct = (props: Props) => {
       });
 
       // Update cart with infinite data
-      utils.cart.getCart.setData(undefined, (olData) => {
-        if (!olData) {
-          return {
-            carts: [data],
-            count: data.amount,
-          };
+      utils.cart.getCart.setData(undefined, (oldData) => {
+        if (!oldData) {
+          return [data];
         }
-        return {
-          carts: [data, ...olData.carts],
-          count: data.amount,
-        };
+        const isExsist = oldData.some((item) => item.id === data.id);
+        const update = oldData.map((item) =>
+          item.id === data.id ? { ...item, ...data } : item,
+        );
+
+        return isExsist ? update : [data, ...oldData];
       });
+
+      reset();
+      setSizes(undefined);
     },
     onError: (e) => {
       toast.error(e.message);

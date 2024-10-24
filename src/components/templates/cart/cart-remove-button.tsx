@@ -19,20 +19,12 @@ export default function CartRemoveButton({ cartId }: Props) {
 
       // Update cart with infinite data
       await utils.cart.getCartInfinite.cancel();
-      utils.cart.getCartInfinite.setInfiniteData({ limit: 10 }, (oldData) => {
+      utils.cart.getCart.setData(undefined, (oldData) => {
         if (!oldData) {
-          return {
-            pages: [],
-            pageParams: [],
-          };
+          return [];
         }
-        return {
-          ...oldData,
-          pages: oldData.pages.map((page) => ({
-            ...page,
-            cart: page.cart.filter((item) => item.id !== data.id),
-          })),
-        };
+
+        return oldData.filter((item) => item.id !== data.id);
       });
     },
   });

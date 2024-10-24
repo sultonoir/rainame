@@ -133,11 +133,7 @@ export async function getCart({ ctx }: { ctx: ProtectedTRPCContext }) {
     include,
   });
 
-  const count = carts.reduce((acc, cur) => acc + cur.amount, 0);
-  return {
-    carts,
-    count,
-  };
+  return carts;
 }
 
 const include = {
