@@ -1,7 +1,6 @@
 import Image from "next/image";
 import ProductsApi from "./product-api";
 import { Suspense } from "react";
-import ProductsElysia from "./product-elysia";
 
 function LoadingSkeleton() {
   return (
@@ -24,9 +23,6 @@ export default async function Home() {
         <div className="flex gap-10 w-full">
           <Suspense fallback={<LoadingSkeleton />}>
             <ProductsApi />
-          </Suspense>
-          <Suspense fallback={<LoadingSkeleton />}>
-            <ProductsElysia />
           </Suspense>
         </div>
         <Image

@@ -1,4 +1,5 @@
-import { getBaseUrl } from "@/lib/base-url";
+import { db } from "@/lib/db";
+import { cacheLife } from "next/cache";
 
 interface Product {
   id: string;
@@ -6,13 +7,7 @@ interface Product {
 }
 
 const ProductsApi = async () => {
-  const response = await fetch(`${getBaseUrl()}/api/v1/products`, {
-    cache: "force-cache",
-    next: {
-      revalidate: 60,
-    },
-  });
-  const { data: products, duration } = await response.json();
+  const { data: products, duration } = await getProducts();
 
   return (
     <div className="flex flex-col space-y-2">
@@ -25,5 +20,24 @@ const ProductsApi = async () => {
     </div>
   );
 };
+
+async function getProducts() {
+  "use cache";
+  cacheLife("hours");
+  const start = performance.now();
+  const products = await db.product.findMany({
+    select: {
+      id: true,
+      name: true,
+    },
+    take: 10,
+  });
+  const end = performance.now();
+  const duration = end - start;
+  return {
+    duration: duration.toFixed(0) + "ms",
+    data: products,
+  };
+}
 
 export default ProductsApi;
