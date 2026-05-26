@@ -1,8 +1,4 @@
-import { api } from "@/lib/api-client";
-import { getBaseUrl } from "@/lib/base-url";
 import Image from "next/image";
-import { Product } from "prisma";
-import { Suspense } from "react";
 
 export default async function Home() {
   return (
@@ -16,9 +12,6 @@ export default async function Home() {
           height={20}
           priority
         />
-        <Suspense>
-          <Products />
-        </Suspense>
         <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
           <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
             To get started, edit the page.tsx file.
@@ -66,27 +59,3 @@ export default async function Home() {
     </div>
   );
 }
-
-const getProducts = async () => {
-  const response = await fetch(`${getBaseUrl()}/api/v1/products`);
-  const products = await response.json();
-  return products;
-};
-
-const Products = async () => {
-  const productData = getProducts();
-
-  const productsv2 = api.get();
-
-  const [products, productsv] = await Promise.all([productData, productsv2]);
-  return (
-    <div>
-      {products.map((product: Product) => (
-        <div key={product.id}>{product.name}</div>
-      ))}
-      {productsv.data?.map((product: Product) => (
-        <div key={product.id}>{product.name}</div>
-      ))}
-    </div>
-  );
-};

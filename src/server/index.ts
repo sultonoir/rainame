@@ -4,10 +4,15 @@ import { Elysia, t } from "elysia";
 export const app = new Elysia({ prefix: "/api/v2" })
   .get("/", async ({ set }) => {
     set.headers["Cache-Control"] = "public, max-age=3600";
+    const start = performance.now();
     const products = await db.product.findMany({
       take: 10,
     });
-    return products;
+    const end = performance.now();
+    return {
+      duration: end - start,
+      data: products,
+    }
   })
   .post("/", ({ body }) => body, {
     body: t.Object({
