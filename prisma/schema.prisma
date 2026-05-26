@@ -1,0 +1,414 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String          @id @default(nanoid())
+  name          String          @db.VarChar
+  email         String          @db.VarChar
+  image         String          @default("https://res.cloudinary.com/dv6cln4gs/image/upload/v1745806830/k97ej5xme96j913p5ntbex30y97e1hfq/u9mvefelkhohmaufuw8x.png") @db.VarChar
+  emailVerified Boolean         @default(false) @map("email_verified")
+  createdAt     DateTime        @default(now()) @map("created_at")
+  updatedAt     DateTime        @default(now()) @map("updated_at")
+  isAnonymous   Boolean?        @default(false) @map("is_anonymous")
+  role          String?         @db.VarChar
+  banned        Boolean?
+  banReason     String?         @map("ban_reason")
+  banExpires    DateTime?       @map("ban_expires") @db.Timestamp(6)
+  imageBlur     String          @default("U8R3TWt7~qxu%MfQayj[?bj[D*ayoffQWBay") @map("image_blur") @db.VarChar
+  buyerAnalytic BuyerAnalytic[]
+  checkouts     Checkout[]
+  couponConsume CouponConsume[]
+  notifi        Notifi[]
+  notifiRead    NotifiRead[]
+  ratings       Rating[]
+  carts         Cart[]
+  wishlists     Wishlist[]
+  sessions      Session[]
+  accounts      Account[]
+
+  @@index([email])
+  @@map("user")
+}
+
+model Session {
+  id             String   @id @default(nanoid())
+  expiresAt      DateTime
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @default(now()) @map("updated_at")
+  ipAddress      String?
+  userAgent      String?
+  userId         String   @map("user_id")
+  impersonatedBy String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  token String
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id @default(nanoid())
+  accountId             String    @map("account_id")
+  providerId            String    @map("provider_id")
+  userId                String    @map("user_id")
+  accessToken           String?   @map("access_token")
+  refreshToken          String?   @map("refresh_token")
+  idToken               String?   @map("id_token")
+  accessTokenExpiresAt  DateTime? @map("access_token_expires_at")
+  refreshTokenExpiresAt DateTime? @map("refresh_token_expires_at")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @default(now()) @map("updated_at")
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  scope    String?
+  password String?
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id @default(nanoid())
+  identifier String   @db.VarChar
+  value      String   @db.VarChar
+  expiresAt  DateTime @default(now())
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+model BuyerAnalytic {
+  id            String   @id @default(nanoid())
+  userId        String?  @map("user_id") @db.VarChar
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  totalPurchase Int?     @default(0) @map("total_purchase")
+  totalSpent    Int?     @default(0) @map("total_spent")
+  user          User?    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "buyer_analytic_userId_user_id_fk")
+
+  @@index([id])
+  @@index([createdAt])
+  @@index([userId])
+  @@map("buyer_analytic")
+}
+
+model Category {
+  id            String        @id @default(nanoid())
+  name          String        @db.VarChar
+  createdAt     DateTime      @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt     DateTime      @default(now()) @map("updated_at") @db.Timestamp(6)
+  slug          String        @unique(map: "category_slug_unique") @db.VarChar
+  desc          String?
+  details       Details[]
+  subcategories Subcategory[]
+
+  @@index([id])
+  @@index([name])
+  @@index([slug])
+  @@map("category")
+}
+
+model Checkout {
+  id            String         @id @default(nanoid())
+  price         Float          @db.Real
+  status        String         @default("pending") @db.VarChar
+  userId        String         @map("user_id") @db.VarChar
+  quantity      Int
+  expiresAt     DateTime       @map("expires_at")
+  createdAt     DateTime       @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt     DateTime       @default(now()) @map("updated_at") @db.Timestamp(6)
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "checkout_userId_user_id_fk")
+  checkoutItems CheckoutItem[]
+  notifies      Notifi[]
+
+  @@index([id])
+  @@index([userId])
+  @@map("checkout")
+}
+
+model CheckoutItem {
+  id         String   @id @default(nanoid())
+  quantity   Int
+  price      Float    @db.Real
+  size       String   @db.VarChar
+  productId  String   @map("product_id") @db.VarChar
+  checkoutId String   @map("checkout_id") @db.VarChar
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt  DateTime @default(now()) @map("updated_at") @db.Timestamp(6)
+  checkout   Checkout @relation(fields: [checkoutId], references: [id], onDelete: Cascade)
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([checkoutId])
+  @@index([id])
+  @@index([productId])
+  @@map("checkout_item")
+}
+
+model Coupon {
+  id             String          @id @default(nanoid())
+  code           String          @db.VarChar
+  title          String          @db.VarChar
+  amount         Int?
+  minOrder       Int             @default(0) @map("min_order")
+  desc           String          @db.VarChar
+  tac            String          @db.VarChar
+  expiresAt      DateTime        @map("expires_at") @db.Timestamp(6)
+  discount       Float           @default(0.1) @db.Real
+  createdAt      DateTime        @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt      DateTime        @default(now()) @map("updated_at") @db.Timestamp(6)
+  couponConsumes CouponConsume[]
+
+  @@index([code])
+  @@index([title], map: "coupon_name_idx")
+}
+
+model CouponConsume {
+  couponId  String   @map("coupon_id") @db.VarChar
+  userId    String   @map("user_id") @db.VarChar
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamp(6)
+  coupon    Coupon   @relation(fields: [couponId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "coupon_consume_couponId_coupon_id_fk")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "coupon_consume_userId_user_id_fk")
+
+  @@id([couponId, userId], map: "coupon_consume_couponId_userId_pk")
+  @@map("coupon_consume")
+}
+
+model Details {
+  productId     String      @map("product_id") @db.VarChar
+  categoryId    String      @map("category_id") @db.VarChar
+  subcategoryId String      @map("subcategory_id") @db.VarChar
+  category      Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "details_category_id_category_id_fk")
+  product       Product     @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "details_product_id_product_id_fk")
+  subcategory   Subcategory @relation(fields: [subcategoryId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "details_subcategory_id_subcategory_id_fk")
+
+  @@id([productId, subcategoryId, categoryId], map: "details_product_id_subcategory_id_category_id_pk")
+  @@map("details")
+}
+
+model Media {
+  id        String   @id @default(nanoid())
+  url       String   @db.VarChar
+  thumbnail String   @db.VarChar
+  productId String   @map("product_id") @db.VarChar
+  caption   String?  @db.VarChar
+  blur      String   @default("U8R3TWt7~qxu%MfQayj[?bj[D*ayoffQWBay") @map("blur") @db.VarChar
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamp(6)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "media_productId_product_id_fk")
+
+  @@index([id])
+  @@index([productId])
+  @@map("media")
+}
+
+model Notifi {
+  id         String       @id @default(nanoid())
+  status     String       @default("OrderPending") @db.VarChar
+  createdAt  DateTime     @default(now()) @map("created_at") @db.Timestamp(6)
+  message    String       @db.VarChar
+  checkoutId String?      @map("checkout_id") @db.VarChar
+  userId     String?      @map("user_id") @db.VarChar
+  link       String?      @db.VarChar
+  checkout   Checkout?    @relation(fields: [checkoutId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "notifi_checkoutId_checkout_id_fk")
+  user       User?        @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "notifi_userId_user_id_fk")
+  notifiRead NotifiRead[]
+
+  @@index([checkoutId], map: "notifi_checkout_id")
+  @@index([id])
+  @@index([userId])
+  @@map("notifi")
+}
+
+model NotifiRead {
+  id        String   @id @default(nanoid())
+  userId    String?  @map("user_id") @db.VarChar
+  isRead    Boolean  @default(false) @map("is_read")
+  notifiId  String   @map("notifi_id") @db.VarChar
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamp(6)
+  notifi    Notifi   @relation(fields: [notifiId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "notifiRead_notifiId_notifi_id_fk")
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "notifiRead_userId_user_id_fk")
+
+  @@index([id])
+  @@index([notifiId])
+  @@index([userId])
+  @@map("notifi_read")
+}
+
+model Posts {
+  id        String   @id @default(nanoid())
+  name      String   @db.VarChar
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamp(6)
+
+  @@index([name], map: "Post_name_idx")
+  @@map("posts")
+}
+
+/// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
+
+model Product {
+  id              String            @id @default(nanoid())
+  name            String            @db.VarChar
+  summary         String            @db.VarChar
+  slug            String            @unique(map: "product_slug_unique") @db.VarChar
+  createdAt       DateTime          @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt       DateTime          @default(now()) @map("updated_at") @db.Timestamp(6)
+  desc            String            @db.VarChar
+  normalPrice     Float             @map("normal_price") @db.Real
+  discount        Float             @default(0) @db.Real
+  discountedPrice Float             @default(0) @map("discounted_price") @db.Real
+  category        String            @db.VarChar(255)
+  subcategory     String            @db.VarChar(255)
+  ratingAverage   Float             @default(0) @map("rating_average") @db.Real
+  ratingCount     Int               @default(0) @map("rating_count")
+  selling         Int               @default(0)
+  checkoutItem    CheckoutItem[]
+  details         Details[]
+  media           Media[]
+  productVariant  ProductVariant[]
+  promoAndProduct PromoAndProduct[]
+  ratings         Rating[]
+  carts           Cart[]
+  wishlist        Wishlist[]
+
+  @@index([discount])
+  @@index([name])
+  @@index([discountedPrice], map: "product_price_idx")
+  @@index([slug])
+  @@map("product")
+}
+
+model Cart {
+  id        String   @id @default(nanoid())
+  productId String   @map("product_id")
+  quantity  Int      @map("quatity")
+  size      String
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "product_cart_productId_product_id_fk")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "cart_userId_user_id_fk")
+
+  @@unique([userId, productId, size])
+  @@index([id])
+  @@index([userId])
+  @@index([productId])
+  @@map("cart")
+}
+
+model Wishlist {
+  id        String   @id @default(nanoid())
+  createdAt DateTime @default(now()) @map("created_at")
+  productId String   @map("product_id")
+  userId    String   @map("user_id")
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+  @@map("wishlist")
+}
+
+model ProductAnalytic {
+  id          String   @id @default(nanoid())
+  productId   String   @map("product_id") @db.VarChar
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  soldCount   Int?     @default(0) @map("sold_count")
+  failedCount Int?     @default(0) @map("failed_count")
+  refundCount Int?     @default(0) @map("refund_count")
+
+  @@index([id])
+  @@index([createdAt], map: "product_analytic_period_idx")
+  @@index([productId])
+  @@map("product_analytic")
+}
+
+model ProductVariant {
+  id        String   @id @default(nanoid())
+  name      String   @db.VarChar
+  amount    Int
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamp(6)
+  productId String   @map("product_id") @db.VarChar
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "product_variant_productId_product_id_fk")
+
+  @@index([name])
+  @@index([productId])
+  @@map("product_variant")
+}
+
+model Promo {
+  id              String            @id @default(nanoid())
+  title           String            @db.VarChar
+  image           String            @db.VarChar
+  slug            String            @db.VarChar
+  desc            String            @db.VarChar
+  discount        Float             @db.Real
+  createdAt       DateTime          @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt       DateTime          @default(now()) @map("updated_at") @db.Timestamp(6)
+  promoAndProduct PromoAndProduct[]
+
+  @@index([slug])
+  @@map("promo")
+}
+
+model PromoAndProduct {
+  promoId   String  @map("promo_id") @db.VarChar
+  productId String  @map("product_id") @db.VarChar
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "promo_and_product_productId_product_id_fk")
+  promo     Promo   @relation(fields: [promoId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "promo_and_product_promoId_promo_id_fk")
+
+  @@id([productId, promoId], map: "promo_and_product_productId_promoId_pk")
+  @@map("promo_and_product")
+}
+
+model Rating {
+  id        String   @id @default(nanoid())
+  value     Int      @db.SmallInt
+  message   String   @db.VarChar
+  productId String   @map("product_id") @db.VarChar
+  userId    String   @map("user_id") @db.VarChar
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamp(6)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "rating_productId_product_id_fk")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "rating_userId_user_id_fk")
+
+  @@map("rating")
+}
+
+model RevenueAnalytic {
+  id        String   @id @default(nanoid())
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  revenue   Float?   @default(0) @db.Real
+
+  @@index([id])
+  @@index([createdAt], map: "revenue_analytic_period_idx")
+  @@map("revenue_analytic")
+}
+
+model Subcategory {
+  id         String    @id @default(nanoid())
+  name       String    @unique(map: "subcategory_name_unique") @db.VarChar
+  slug       String    @unique(map: "subcategory_slug_unique") @db.VarChar
+  desc       String?
+  categoryId String    @map("category_id") @db.VarChar
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt  DateTime  @default(now()) @map("updated_at") @db.Timestamp(6)
+  details    Details[]
+  category   Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "subcategory_categoryId_category_id_fk")
+
+  @@index([categoryId])
+  @@index([name])
+  @@index([slug])
+  @@map("subcategory")
+}
