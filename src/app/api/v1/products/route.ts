@@ -7,7 +7,7 @@ export async function GET() {
   const end = performance.now();
   const duration = end - start;
   return Response.json({
-    duration,
+    duration: duration.toFixed(0) + "ms",
     data: products,
   });
 }

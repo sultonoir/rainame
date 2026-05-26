@@ -1,9 +1,34 @@
 import Image from "next/image";
+import ProductsApi from "./product-api";
+import { Suspense } from "react";
+import ProductsElysia from "./product-elysia";
+
+function LoadingSkeleton() {
+  return (
+    <div className="flex flex-col space-y-1 w-full">
+      {Array.from({ length: 12 }).map((_, index) => (
+        <div
+          className="bg-muted/20 flex flex-col space-y-3 rounded-2xl p-2"
+          key={index}>
+          <div className="h-8 bg-zinc-200 rounded animate-pulse"></div>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export default async function Home() {
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
+        <div className="flex gap-10 w-full">
+          <Suspense fallback={<LoadingSkeleton />}>
+            <ProductsApi />
+          </Suspense>
+          <Suspense fallback={<LoadingSkeleton />}>
+            <ProductsElysia />
+          </Suspense>
+        </div>
         <Image
           className="dark:invert"
           src="/next.svg"
