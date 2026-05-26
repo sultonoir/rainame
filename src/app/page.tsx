@@ -1,3 +1,4 @@
+import { api } from "@/lib/api-client";
 import { getBaseUrl } from "@/lib/base-url";
 import Image from "next/image";
 import { Product } from "prisma";
@@ -66,12 +67,24 @@ export default async function Home() {
   );
 }
 
-const Products = async () => {
+const getProducts = async () => {
   const response = await fetch(`${getBaseUrl()}/api/v1/products`);
   const products = await response.json();
+  return products;
+};
+
+const Products = async () => {
+  const productData = getProducts();
+
+  const productsv2 = api.get();
+
+  const [products, productsv] = await Promise.all([productData, productsv2]);
   return (
     <div>
       {products.map((product: Product) => (
+        <div key={product.id}>{product.name}</div>
+      ))}
+      {productsv.data?.map((product: Product) => (
         <div key={product.id}>{product.name}</div>
       ))}
     </div>
