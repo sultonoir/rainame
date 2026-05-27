@@ -5,7 +5,7 @@ import { Prisma } from "prisma";
 export class ProductRepo {
   async findCards(sort: ProductCardSort = "newest") {
     return db.product.findMany({
-      take: 20,
+      take: 8,
 
       orderBy: this.buildCardOrder(sort),
 

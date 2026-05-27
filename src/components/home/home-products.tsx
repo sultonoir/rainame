@@ -31,7 +31,7 @@ const HomeProduct: FunctionComponent<HomeProductProps> = ({
             {description}
           </p>
         </div>
-        <Suspense fallback={<ProductSkeleton />}>
+        <Suspense fallback={<ProductSkeleton length={8} />}>
           <ProductList sort={sortBy} />
         </Suspense>
       </div>

@@ -9,7 +9,7 @@ export const HomeHero = () => {
   ];
 
   return (
-    <div className="grid min-h-[calc(100vh-4rem)] lg:grid-cols-2">
+    <section className="grid min-h-[calc(100vh-4rem)] lg:grid-cols-2">
       {/* Left Content */}
       <div className="flex items-center px-4 py-12 sm:px-6 lg:px-8 lg:py-0">
         <div className="mx-auto max-w-xl space-y-8 lg:mx-0">
@@ -17,9 +17,11 @@ export const HomeHero = () => {
             <p className="font-medium tracking-wide text-sky-700 dark:text-sky-500">
               NEW COLLECTION 2025
             </p>
+
             <h1 className="mt-3 text-4xl leading-tight font-bold sm:text-5xl lg:text-6xl">
               Elevate Your Style This Season
             </h1>
+
             <p className="text-muted-foreground mt-6 max-w-lg text-lg">
               Discover our curated collection of premium fashion pieces designed
               to make you stand out.
@@ -39,10 +41,12 @@ export const HomeHero = () => {
               <p className="text-3xl font-bold">50+</p>
               <p className="text-muted-foreground mt-1 text-sm">Brands</p>
             </div>
+
             <div>
               <p className="text-3xl font-bold">200+</p>
               <p className="text-muted-foreground mt-1 text-sm">New Items</p>
             </div>
+
             <div>
               <p className="text-3xl font-bold">48h</p>
               <p className="text-muted-foreground mt-1 text-sm">Delivery</p>
@@ -53,30 +57,39 @@ export const HomeHero = () => {
 
       {/* Right Image Grid */}
       <div className="relative grid grid-cols-2 gap-4 p-4 sm:p-6 lg:p-8">
-        <div className="relative aspect-3/4">
+        {/* HERO 1 (LCP) */}
+        <div className="overflow-hidden rounded-xl">
           <Image
             src="/hero-1.avif"
             alt="Fashion model in winter coat"
-            className="absolute inset-0 h-full w-full rounded-xl object-cover"
-            width={370}
+            width={700}
             aspectRatio={3 / 4}
             layout="constrained"
+            className="w-full object-cover"
+            priority
+            fetchPriority="high"
             loading="eager"
-            priority={true}
+            sizes="(max-width: 640px) 45vw, (max-width: 1024px) 40vw, 30vw"
           />
         </div>
-        <div className="relative mt-12 aspect-3/4">
+
+        {/* HERO 2 */}
+        <div className="mt-12 overflow-hidden rounded-xl">
           <Image
             src="/hero-2.avif"
             alt="Fashion model in summer dress"
-            className="absolute inset-0 h-full w-full rounded-xl object-cover"
-            layout="constrained"
-            loading="eager"
-            width={370}
+            width={700}
             aspectRatio={3 / 4}
+            layout="constrained"
+            className="w-full object-cover"
+            sizes="(max-width: 640px) 45vw, (max-width: 1024px) 40vw, 30vw"
             priority
+            fetchPriority="high"
+            loading="eager"
           />
         </div>
+
+        {/* Floating card */}
         <div className="bg-accent absolute -bottom-6 left-1/2 w-[calc(100%-3rem)] -translate-x-1/2 rounded-xl p-6 shadow-xl sm:w-auto lg:bottom-36">
           <div className="flex items-center gap-4 whitespace-nowrap">
             <div className="flex -space-x-3">
@@ -87,13 +100,15 @@ export const HomeHero = () => {
                   <Image
                     src={avatar}
                     alt={`Customer ${i + 1}`}
-                    height={40}
                     width={40}
+                    height={40}
                     className="h-full w-full object-cover"
+                    loading="lazy"
                   />
                 </div>
               ))}
             </div>
+
             <div>
               <p className="font-bold">Join 10k+ others</p>
               <p className="text-sm text-gray-600">Satisfied customers</p>
@@ -101,6 +116,6 @@ export const HomeHero = () => {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
