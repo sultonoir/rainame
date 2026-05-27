@@ -1,5 +1,4 @@
-// import { Image } from "@unpic/react/nextjs";
-import Image from "next/image";
+import { Image } from "@unpic/react/nextjs";
 import Link from "next/link";
 
 const HomeCategory = () => {

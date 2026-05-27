@@ -7,18 +7,30 @@ import { ArrowRight } from "lucide-react";
 import HomeEmailSubscription from "@/components/home/home-email-subscribe";
 import { Banner_01, Banner_05 } from "@/components/home/home-banner";
 import { Suspense } from "react";
+import HomeProduct from "@/components/home/home-products";
 
 export default async function Home() {
   return (
     <main className="min-h-screen py-5">
       <HomeHero />
       <div className="container mx-auto space-y-10">
+        <HomeProduct
+          sortBy="best-discount"
+          name="Best Deals"
+          description="Don’t miss out on our best offers! Save big on top products with limited-time discounts."
+        />
         <HomeFeature />
         <HomeCategory />
         <Banner_01 />
+        <HomeProduct
+          sortBy="newest"
+          name="Fresh & New"
+          description="Check out our newest products that just dropped! Trendy designs and premium quality made for your unique style."
+        />
         <Suspense>
           <Banner_05 />
         </Suspense>
+
         <div className="flex grow items-center justify-center">
           <Button
             className="group h-12 px-8"

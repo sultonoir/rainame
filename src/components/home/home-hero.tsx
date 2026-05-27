@@ -1,5 +1,4 @@
-// import { Image } from "@unpic/react/nextjs";
-import Image from "next/image";
+import { Image } from "@unpic/react/nextjs";
 import Link from "next/link";
 
 export const HomeHero = () => {
@@ -60,7 +59,8 @@ export const HomeHero = () => {
             alt="Fashion model in winter coat"
             className="absolute inset-0 h-full w-full rounded-xl object-cover"
             width={370}
-            height={600}
+            aspectRatio={3 / 4}
+            layout="constrained"
             loading="eager"
             priority={true}
           />
@@ -70,9 +70,10 @@ export const HomeHero = () => {
             src="/hero-2.avif"
             alt="Fashion model in summer dress"
             className="absolute inset-0 h-full w-full rounded-xl object-cover"
+            layout="constrained"
             loading="eager"
             width={370}
-            height={600}
+            aspectRatio={3 / 4}
             priority
           />
         </div>

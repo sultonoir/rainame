@@ -1,5 +1,5 @@
+import { Image } from "@unpic/react/nextjs";
 import { ArrowRight } from "lucide-react";
-import Image from "next/image";
 
 export default function HomeEmailSubscription() {
   return (
