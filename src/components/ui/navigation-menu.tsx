@@ -1,9 +1,15 @@
-import * as React from "react"
-import { cva } from "class-variance-authority"
-import { NavigationMenu as NavigationMenuPrimitive } from "radix-ui"
+import * as React from "react";
+import { cva } from "class-variance-authority";
+import { NavigationMenu as NavigationMenuPrimitive } from "radix-ui";
 
-import { cn } from "@/lib/utils"
-import { ChevronDownIcon } from "lucide-react"
+import { cn } from "@/lib/utils";
+import { ChevronDownIcon } from "lucide-react";
+type NavItemType = {
+  title: string;
+  href: string;
+  description?: string;
+  icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+};
 
 function NavigationMenu({
   className,
@@ -11,7 +17,7 @@ function NavigationMenu({
   viewport = true,
   ...props
 }: React.ComponentProps<typeof NavigationMenuPrimitive.Root> & {
-  viewport?: boolean
+  viewport?: boolean;
 }) {
   return (
     <NavigationMenuPrimitive.Root
@@ -19,14 +25,13 @@ function NavigationMenu({
       data-viewport={viewport}
       className={cn(
         "group/navigation-menu relative flex max-w-max flex-1 items-center justify-center",
-        className
+        className,
       )}
-      {...props}
-    >
+      {...props}>
       {children}
       {viewport && <NavigationMenuViewport />}
     </NavigationMenuPrimitive.Root>
-  )
+  );
 }
 
 function NavigationMenuList({
@@ -38,11 +43,11 @@ function NavigationMenuList({
       data-slot="navigation-menu-list"
       className={cn(
         "group flex flex-1 list-none items-center justify-center gap-0",
-        className
+        className,
       )}
       {...props}
     />
-  )
+  );
 }
 
 function NavigationMenuItem({
@@ -55,12 +60,12 @@ function NavigationMenuItem({
       className={cn("relative", className)}
       {...props}
     />
-  )
+  );
 }
 
 const navigationMenuTriggerStyle = cva(
-  "group/navigation-menu-trigger inline-flex h-9 w-max items-center justify-center rounded-2xl px-2.5 py-1.5 text-sm font-medium transition-all outline-none hover:bg-muted focus:bg-muted focus-visible:ring-3 focus-visible:ring-ring/30 focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 data-popup-open:bg-muted/50 data-popup-open:hover:bg-muted data-open:bg-muted/50 data-open:hover:bg-muted data-open:focus:bg-muted"
-)
+  "group/navigation-menu-trigger inline-flex h-9 w-max items-center justify-center rounded-2xl px-2.5 py-1.5 text-sm font-medium transition-all outline-none hover:bg-muted focus:bg-muted focus-visible:ring-3 focus-visible:ring-ring/30 focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 data-popup-open:bg-muted/50 data-popup-open:hover:bg-muted data-open:bg-muted/50 data-open:hover:bg-muted data-open:focus:bg-muted",
+);
 
 function NavigationMenuTrigger({
   className,
@@ -71,12 +76,14 @@ function NavigationMenuTrigger({
     <NavigationMenuPrimitive.Trigger
       data-slot="navigation-menu-trigger"
       className={cn(navigationMenuTriggerStyle(), "group", className)}
-      {...props}
-    >
+      {...props}>
       {children}{" "}
-      <ChevronDownIcon className="relative top-px ml-1 size-3 transition duration-300 group-data-popup-open/navigation-menu-trigger:rotate-180 group-data-open/navigation-menu-trigger:rotate-180" aria-hidden="true" />
+      <ChevronDownIcon
+        className="relative top-px ml-1 size-3 transition duration-300 group-data-popup-open/navigation-menu-trigger:rotate-180 group-data-open/navigation-menu-trigger:rotate-180"
+        aria-hidden="true"
+      />
     </NavigationMenuPrimitive.Trigger>
-  )
+  );
 }
 
 function NavigationMenuContent({
@@ -88,11 +95,11 @@ function NavigationMenuContent({
       data-slot="navigation-menu-content"
       className={cn(
         "top-0 left-0 w-full p-1.5 ease-[cubic-bezier(0.22,1,0.36,1)] group-data-[viewport=false]/navigation-menu:top-full group-data-[viewport=false]/navigation-menu:mt-1.5 group-data-[viewport=false]/navigation-menu:overflow-hidden group-data-[viewport=false]/navigation-menu:rounded-2xl group-data-[viewport=false]/navigation-menu:bg-popover group-data-[viewport=false]/navigation-menu:text-popover-foreground group-data-[viewport=false]/navigation-menu:shadow-lg group-data-[viewport=false]/navigation-menu:ring-1 group-data-[viewport=false]/navigation-menu:ring-foreground/5 group-data-[viewport=false]/navigation-menu:duration-300 data-[motion=from-end]:slide-in-from-right-52 data-[motion=from-start]:slide-in-from-left-52 data-[motion=to-end]:slide-out-to-right-52 data-[motion=to-start]:slide-out-to-left-52 data-[motion^=from-]:animate-in data-[motion^=from-]:fade-in data-[motion^=to-]:animate-out data-[motion^=to-]:fade-out **:data-[slot=navigation-menu-link]:focus:ring-0 **:data-[slot=navigation-menu-link]:focus:outline-none md:absolute md:w-auto group-data-[viewport=false]/navigation-menu:dark:ring-foreground/10 group-data-[viewport=false]/navigation-menu:data-open:animate-in group-data-[viewport=false]/navigation-menu:data-open:fade-in-0 group-data-[viewport=false]/navigation-menu:data-open:zoom-in-95 group-data-[viewport=false]/navigation-menu:data-closed:animate-out group-data-[viewport=false]/navigation-menu:data-closed:fade-out-0 group-data-[viewport=false]/navigation-menu:data-closed:zoom-out-95",
-        className
+        className,
       )}
       {...props}
     />
-  )
+  );
 }
 
 function NavigationMenuViewport({
@@ -102,19 +109,18 @@ function NavigationMenuViewport({
   return (
     <div
       className={cn(
-        "absolute top-full left-0 isolate z-50 flex justify-center"
-      )}
-    >
+        "absolute top-full left-0 isolate z-50 flex justify-center",
+      )}>
       <NavigationMenuPrimitive.Viewport
         data-slot="navigation-menu-viewport"
         className={cn(
           "origin-top-center relative mt-1.5 h-(--radix-navigation-menu-viewport-height) w-full overflow-hidden rounded-2xl bg-popover text-popover-foreground shadow-lg ring-1 ring-foreground/5 duration-100 md:w-(--radix-navigation-menu-viewport-width) dark:ring-foreground/10 data-open:animate-in data-open:zoom-in-90 data-closed:animate-out data-closed:zoom-out-90",
-          className
+          className,
         )}
         {...props}
       />
     </div>
-  )
+  );
 }
 
 function NavigationMenuLink({
@@ -126,11 +132,11 @@ function NavigationMenuLink({
       data-slot="navigation-menu-link"
       className={cn(
         "flex items-center gap-2 rounded-2xl px-2.5 py-1.5 text-sm font-medium transition-all outline-none hover:bg-muted focus:bg-muted focus-visible:ring-3 focus-visible:ring-ring/30 focus-visible:outline-1 in-data-[slot=navigation-menu-content]:w-full in-data-[slot=navigation-menu-content]:rounded-xl in-data-[slot=navigation-menu-content]:p-2 in-data-[slot=navigation-menu-content]:font-normal data-[active=true]:bg-muted/50 data-[active=true]:hover:bg-muted data-[active=true]:focus:bg-muted [&_svg:not([class*='size-'])]:size-4",
-        className
+        className,
       )}
       {...props}
     />
-  )
+  );
 }
 
 function NavigationMenuIndicator({
@@ -142,13 +148,41 @@ function NavigationMenuIndicator({
       data-slot="navigation-menu-indicator"
       className={cn(
         "top-full z-1 flex h-1.5 items-end justify-center overflow-hidden data-[state=hidden]:animate-out data-[state=hidden]:fade-out data-[state=visible]:animate-in data-[state=visible]:fade-in",
-        className
+        className,
       )}
-      {...props}
-    >
+      {...props}>
       <div className="relative top-[60%] h-2 w-2 rotate-45 rounded-tl-sm bg-border shadow-md" />
     </NavigationMenuPrimitive.Indicator>
-  )
+  );
+}
+function NavItemMobile({
+  item,
+  className,
+  ...props
+}: React.ComponentProps<"a"> & {
+  item: NavItemType;
+}) {
+  return (
+    <a
+      className={cn(
+        "data-[active=true]:focus:bg-accent data-[active=true]:hover:bg-accent data-[active=true]:bg-accent/50 data-[active=true]:text-accent-foreground hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus-visible:ring-ring/50 [&_svg:not([class*='text-'])]:text-muted-foreground group relative flex gap-1 gap-x-2 rounded-sm p-2 text-sm transition-all outline-none focus-visible:ring-[3px] focus-visible:outline-1 [&_svg:not([class*='size-'])]:size-4",
+        className,
+      )}
+      {...props}>
+      <div
+        className={cn(
+          "bg-muted/20 flex size-10 items-center justify-center rounded-lg border",
+        )}>
+        {item.icon && <item.icon />}
+      </div>
+      <div className={cn("flex h-10 flex-col justify-center")}>
+        <p className="text-sm">{item.title}</p>
+        <span className="text-muted-foreground line-clamp-1 text-xs leading-snug">
+          {item.description}
+        </span>
+      </div>
+    </a>
+  );
 }
 
 export {
@@ -161,4 +195,5 @@ export {
   NavigationMenuIndicator,
   NavigationMenuViewport,
   navigationMenuTriggerStyle,
-}
+  NavItemMobile,
+};
