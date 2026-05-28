@@ -35,7 +35,7 @@ function Footer() {
               Join our newsletter for the latest updates and exclusive offers.
             </p>
             <InputGroup>
-              <InputGroupInput placeholder="Card number" />
+              <InputGroupInput placeholder="Enter your email" />
               <InputGroupAddon align="inline-end">
                 <InputGroupButton variant="default">
                   <Send />

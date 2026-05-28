@@ -111,7 +111,7 @@ export const HomeHero = () => {
 
             <div>
               <p className="font-bold">Join 10k+ others</p>
-              <p className="text-sm text-gray-600">Satisfied customers</p>
+              <p className="text-sm">Satisfied customers</p>
             </div>
           </div>
         </div>
