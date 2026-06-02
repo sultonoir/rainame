@@ -1,17 +1,16 @@
-import { Failure, Success } from "./error.type";
+import { ErrorPayload, Failure, Success } from "./error.type";
 
-export class AppError extends Error {
+export class AppError<T = unknown> extends Error {
   constructor(
     message: string,
-    public status = 500,
-    public code = "INTERNAL_ERROR",
-    public details?: unknown,
+    public status: number,
+    public code: string,
+    public details?: T,
   ) {
     super(message);
-    this.name = "AppError";
   }
 
-  toJSON() {
+  toJSON(): ErrorPayload<T> {
     return {
       message: this.message,
       status: this.status,
@@ -26,7 +25,7 @@ export const success = <T>(data: T): Success<T> => ({
   data,
 });
 
-export const failure = (err: unknown): Failure => {
+export const failure = <T>(err: unknown): Failure<T> => {
   const error =
     err instanceof AppError
       ? err

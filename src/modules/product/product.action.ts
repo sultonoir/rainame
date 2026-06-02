@@ -4,6 +4,7 @@ import { inputRecommend, ProductCardSort } from "./product.types";
 import { ProductService } from "./product.service";
 import { ValidationHelper } from "../validation/validation.helper";
 import { failure, success } from "../error/error.helper";
+import { ValidationDetails } from "../error/error.type";
 
 interface Props {
   sort: ProductCardSort;
@@ -52,8 +53,8 @@ export const testServerCommponent = async (input: unknown) => {
   cacheLife("hours");
   try {
     const data = ValidationHelper.validateOrThrow(inputRecommend, input);
-    success(data);
+    return success(data);
   } catch (error) {
-    return failure(error);
+    return failure<ValidationDetails>(error);
   }
 };

@@ -1,7 +1,8 @@
-export type ErrorPayload = {
+export type ErrorPayload<T = unknown> = {
   message: string;
   status: number;
   code: string;
+  details?: T;
 };
 
 export type Success<T> = {
@@ -9,9 +10,13 @@ export type Success<T> = {
   data: T;
 };
 
-export type Failure = {
+export type Failure<T = unknown> = {
   ok: false;
-  error: ErrorPayload;
+  error: ErrorPayload<T>;
 };
 
 export type Result<T> = Success<T> | Failure;
+
+export type ValidationDetails = {
+  errors: Record<string, string[]>;
+};
