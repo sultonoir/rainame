@@ -52,3 +52,17 @@ export type ProductCardSort =
 export const inputMetadata = z.object({
   slug: z.string(),
 });
+
+export const inputRecommend = z.object({
+  productId: z.string(),
+  category: z.string(),
+  subcategory: z.string(),
+});
+
+export type InputRecommend = {
+  filter: {
+    category?: string;
+    subcategory?: string;
+  };
+  productId: string;
+};

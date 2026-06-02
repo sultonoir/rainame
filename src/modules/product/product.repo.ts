@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import { ProductCardSort } from "./product.types";
+import { InputRecommend, ProductCardSort } from "./product.types";
 import { Prisma } from "prisma";
 import { productCardSelect, productDetailSelect } from "./product.select";
 
@@ -32,6 +32,32 @@ export class ProductRepo {
         name: true,
       },
     });
+  }
+
+  async findRecommend({ filter, productId }: InputRecommend) {
+    return await db.product.findMany({
+      where: {
+        ...filter,
+        id: {
+          not: productId,
+        },
+      },
+      select: productCardSelect,
+      take: 8,
+    });
+  }
+
+  async hasSubCategory(subcategory: string) {
+    const product = await db.product.findFirst({
+      where: {
+        subcategory,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    return !!product;
   }
 
   private buildCardOrder(

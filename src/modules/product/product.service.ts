@@ -1,7 +1,11 @@
 import { ValidationHelper } from "../validation/validation.helper";
 import { toProductCardDto, toProductDetailDto } from "./product.mapper";
 import { ProductRepo } from "./product.repo";
-import { inputMetadata, ProductCardSort } from "./product.types";
+import {
+  inputMetadata,
+  inputRecommend,
+  ProductCardSort,
+} from "./product.types";
 
 /**
  * Service responsible for product business logic.
@@ -67,5 +71,42 @@ export class ProductService {
     const rawProduct = await this.productRepo.findDetail(data.slug);
 
     return toProductDetailDto(rawProduct);
+  }
+
+  /**
+   *  Get product for recomendation by category or subcategory
+   *
+   * Flow:
+   * 1. Validate input
+   * 2. Fetch product by subcategory
+   * 3. return empty array if product not found
+   * 4. if subcategory empty find by category
+   *
+   * @param input Raw input data (untrusted source).
+   * @returns Product data.
+   */
+
+  async getProductRecommend(input: unknown) {
+    const data = ValidationHelper.validateOrNull(inputRecommend, input);
+
+    if (!data) {
+      return null;
+    }
+
+    const { productId, subcategory, category } = data;
+
+    const hasSubcategory = await this.productRepo.hasSubCategory(subcategory);
+
+    const filter = hasSubcategory ? { subcategory } : { category };
+
+    const rawRecommend = await this.productRepo.findRecommend({
+      filter,
+      productId,
+    });
+
+    return {
+      products: toProductCardDto(rawRecommend),
+      link: hasSubcategory ? `${category}/${subcategory}` : category,
+    };
   }
 }

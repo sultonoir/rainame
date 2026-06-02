@@ -1,6 +1,9 @@
+"use server";
 import { cacheLife } from "next/cache";
-import { ProductCardSort } from "./product.types";
+import { inputRecommend, ProductCardSort } from "./product.types";
 import { ProductService } from "./product.service";
+import { ValidationHelper } from "../validation/validation.helper";
+import { failure, success } from "../error/error.helper";
 
 interface Props {
   sort: ProductCardSort;
@@ -36,4 +39,21 @@ export const getProductDetail = async (input: unknown) => {
   "use cache";
   cacheLife("hours");
   return await products.getProductDetail(input);
+};
+
+export const getRecommend = async (input: unknown) => {
+  "use cache";
+  cacheLife("hours");
+  return await products.getProductRecommend(input);
+};
+
+export const testServerCommponent = async (input: unknown) => {
+  "use cache";
+  cacheLife("hours");
+  try {
+    const data = ValidationHelper.validateOrThrow(inputRecommend, input);
+    success(data);
+  } catch (error) {
+    return failure(error);
+  }
 };

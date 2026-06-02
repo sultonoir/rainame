@@ -5,6 +5,9 @@ import { notFound } from "next/navigation";
 import ImageGallery from "./image-gallery";
 import PurchasePanel from "./purchase-panel";
 import ProductDescription from "./description";
+import ProductRecommend from "../product-recommend";
+import { Suspense } from "react";
+import ProductSkeleton from "../product-skeleton";
 type Params = Promise<{ slug: string }>;
 
 type Props = {
@@ -20,37 +23,46 @@ const ProductDetail = async ({ params }: Props) => {
   }
 
   return (
-    <div className="flex flex-col gap-4 lg:flex-row lg:gap-10">
-      <div className="relative lg:w-[55%]">
-        <ImageGallery
-          Images={product.images}
-          title={product.name}
-        />
+    <>
+      <div className="flex flex-col gap-4 lg:flex-row lg:gap-10">
+        <div className="relative lg:w-[55%]">
+          <ImageGallery
+            Images={product.images}
+            title={product.name}
+          />
+        </div>
+        <div className="space-y-4 lg:w-[45%]">
+          <h1 className="text-2xl leading-none font-bold tracking-tight">
+            {product.name}
+          </h1>
+          <StarRatingFractions
+            value={product.ratingAverage}
+            readOnly
+            maxStars={5}
+          />
+          <ProductPrice
+            discount={product.discount}
+            price={product.normalPrice}
+            priceAfterDiscount={product.discountedPrice}
+            priceClassName="~text-lg/4xl"
+            discountClassName="~text-sm/2xl"
+          />
+          <PurchasePanel
+            key={product.id}
+            productId={product.id}
+            variants={product.variants}
+          />
+          <ProductDescription desc={product.desc} />
+        </div>
       </div>
-      <div className="space-y-4 lg:w-[45%]">
-        <h1 className="text-2xl leading-none font-bold tracking-tight">
-          {product.name}
-        </h1>
-        <StarRatingFractions
-          value={product.ratingAverage}
-          readOnly
-          maxStars={5}
-        />
-        <ProductPrice
-          discount={product.discount}
-          price={product.normalPrice}
-          priceAfterDiscount={product.discountedPrice}
-          priceClassName="~text-lg/4xl"
-          discountClassName="~text-sm/2xl"
-        />
-        <PurchasePanel
-          key={product.id}
+      <Suspense fallback={<ProductSkeleton />}>
+        <ProductRecommend
           productId={product.id}
-          variants={product.variants}
+          category={product.category}
+          subcategory={product.subcategory}
         />
-        <ProductDescription desc={product.desc} />
-      </div>
-    </div>
+      </Suspense>
+    </>
   );
 };
 
