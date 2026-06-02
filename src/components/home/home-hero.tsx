@@ -58,9 +58,9 @@ export const HomeHero = () => {
       {/* Right Image Grid */}
       <div className="relative grid grid-cols-2 gap-4 p-4 sm:p-6 lg:p-8">
         {/* HERO 1 (LCP) */}
-        <div className="overflow-hidden rounded-xl">
+        <div className="overflow-hidden rounded-xl h-fit">
           <Image
-            src="/hero-1.avif"
+            src="/hero-3.jpeg"
             alt="Fashion model in winter coat"
             width={700}
             aspectRatio={3 / 4}
@@ -74,7 +74,7 @@ export const HomeHero = () => {
         </div>
 
         {/* HERO 2 */}
-        <div className="mt-12 overflow-hidden rounded-xl">
+        <div className="mt-12 overflow-hidden rounded-xl h-fit">
           <Image
             src="/hero-2.avif"
             alt="Fashion model in summer dress"
@@ -111,7 +111,9 @@ export const HomeHero = () => {
 
             <div>
               <p className="font-bold">Join 10k+ others</p>
-              <p className="text-sm">Satisfied customers</p>
+              <p className="text-sm text-muted-foreground">
+                Satisfied customers
+              </p>
             </div>
           </div>
         </div>

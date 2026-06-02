@@ -1,15 +1,36 @@
 import { db } from "@/lib/db";
-import { productCardSelect, ProductCardSort } from "./product.types";
+import { ProductCardSort } from "./product.types";
 import { Prisma } from "prisma";
+import { productCardSelect, productDetailSelect } from "./product.select";
 
 export class ProductRepo {
   async findCards(sort: ProductCardSort = "newest") {
-    return db.product.findMany({
+    return await db.product.findMany({
       take: 8,
 
       orderBy: this.buildCardOrder(sort),
 
       select: productCardSelect,
+    });
+  }
+
+  async findDetail(slug: string) {
+    return await db.product.findUnique({
+      where: {
+        slug,
+      },
+      select: productDetailSelect,
+    });
+  }
+
+  async findMetadata(slug: string) {
+    return await db.product.findUnique({
+      where: {
+        slug,
+      },
+      select: {
+        name: true,
+      },
     });
   }
 

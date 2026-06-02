@@ -1,5 +1,10 @@
 import { AppError } from "../error/error.helper";
-import { ProductCardDto, ProductCardRaw } from "./product.types";
+import {
+  ProductCardDto,
+  ProductCardRaw,
+  ProductDetailDto,
+  ProductDetailRaw,
+} from "./product.types";
 
 export const toProductCardDto = (
   products: ProductCardRaw[],
@@ -24,9 +29,33 @@ export const toProductCardDto = (
       ratingAverage: product.ratingAverage,
       ratingCount: product.ratingCount,
       selling: product.selling,
-      category : product.category,
-      subcategory : product.subcategory,
+      category: product.category,
+      subcategory: product.subcategory,
       image,
     };
   });
+};
+
+export const toProductDetailDto = (
+  product: ProductDetailRaw | null,
+): ProductDetailDto | null => {
+  if (!product) return null;
+  
+  return {
+    id: product.id,
+    name: product.name,
+    slug: product.slug,
+    summary: product.summary,
+    normalPrice: product.normalPrice,
+    discountedPrice: product.discountedPrice,
+    discount: product.discount,
+    ratingAverage: product.ratingAverage,
+    ratingCount: product.ratingCount,
+    selling: product.selling,
+    category: product.category,
+    subcategory: product.subcategory,
+    desc : product.desc,
+    images: product.media,
+    variants: product.productVariant,
+  };
 };

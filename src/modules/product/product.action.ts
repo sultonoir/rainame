@@ -13,3 +13,27 @@ export const getProductCard = async ({ sort }: Props) => {
   cacheLife("hours");
   return products.getProductCard(sort);
 };
+
+/**
+   * Get metadata product by slug.
+   *
+   *
+   * @param input Raw input data (untrusted source).
+   * @returns Product data.
+
+   */
+export const getMetadata = async (input: unknown) => {
+  return await products.getProductMetadata(input);
+};
+
+/**
+   * Get product detail by slug.
+   * @param input Raw input data (untrusted source).
+   * @returns Product detail data.
+
+   */
+export const getProductDetail = async (input: unknown) => {
+  "use cache";
+  cacheLife("hours");
+  return await products.getProductDetail(input);
+};

@@ -5,6 +5,7 @@ export class AppError extends Error {
     message: string,
     public status = 500,
     public code = "INTERNAL_ERROR",
+    public details?: unknown,
   ) {
     super(message);
     this.name = "AppError";
@@ -15,6 +16,7 @@ export class AppError extends Error {
       message: this.message,
       status: this.status,
       code: this.code,
+      details: this.details,
     };
   }
 }

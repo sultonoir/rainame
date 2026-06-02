@@ -19,15 +19,13 @@ const HomeProduct: FunctionComponent<HomeProductProps> = ({
     <section
       className={cn("py-12 md:py-16", className)}
       id="home-products">
-      <div className={`container`}>
+      <div className="container">
         <div className="mb-8 flex flex-col items-center text-center">
-          <h2
-            className={`font-display text-3xl leading-tight font-bold tracking-tight md:text-4xl`}>
+          <h2 className="font-display text-3xl leading-tight font-bold tracking-tight md:text-4xl">
             {name}
           </h2>
           <div className="bg-primary mt-2 h-1 w-12 rounded-full" />
-          <p
-            className={`text-muted-foreground mt-4 max-w-2xl text-center md:text-lg`}>
+          <p className="text-muted-foreground mt-4 max-w-2xl text-center md:text-lg">
             {description}
           </p>
         </div>

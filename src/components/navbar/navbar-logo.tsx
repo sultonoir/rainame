@@ -12,6 +12,7 @@ const NavbarLogo = () => {
         height={40}
         width={40}
         alt="logo"
+        loading="eager"
       />
       <p className="hidden text-lg font-bold lg:block">Rainame</p>
     </Link>

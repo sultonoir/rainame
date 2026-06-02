@@ -1,6 +1,5 @@
 import { getProductCard } from "@/modules/product/product.action";
 import { ProductCardSort } from "@/modules/product/product.types";
-import React from "react";
 import ProductCard from "./product-card";
 
 type Props = {

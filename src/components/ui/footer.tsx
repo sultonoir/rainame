@@ -37,7 +37,9 @@ function Footer() {
             <InputGroup>
               <InputGroupInput placeholder="Enter your email" />
               <InputGroupAddon align="inline-end">
-                <InputGroupButton variant="default">
+                <InputGroupButton
+                  variant="default"
+                  aria-label="button subscription email">
                   <Send />
                 </InputGroupButton>
               </InputGroupAddon>
