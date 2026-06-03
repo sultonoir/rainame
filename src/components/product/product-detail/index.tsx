@@ -8,6 +8,8 @@ import ProductDescription from "./description";
 import ProductRecommend from "../product-recommend";
 import { Suspense } from "react";
 import ProductSkeleton from "../product-skeleton";
+import ReviewSkeleton from "@/components/review/review-skeleton";
+import ReviewContainer from "@/components/review/review-section";
 type Params = Promise<{ slug: string }>;
 
 type Props = {
@@ -23,7 +25,7 @@ const ProductDetail = async ({ params }: Props) => {
   }
 
   return (
-    <>
+    <div className="mx-auto relative z-0 container my-10 min-h-screen space-y-10">
       <div className="flex flex-col gap-4 lg:flex-row lg:gap-10">
         <div className="relative lg:w-[55%]">
           <ImageGallery
@@ -55,6 +57,14 @@ const ProductDetail = async ({ params }: Props) => {
           <ProductDescription desc={product.desc} />
         </div>
       </div>
+      <Suspense fallback={<ReviewSkeleton />}>
+        <ReviewContainer
+          slug={slug}
+          totalReviewCount={product.ratingCount}
+          overallRating={product.ratingAverage}
+          verifiedPurchases={product.selling}
+        />
+      </Suspense>
       <Suspense fallback={<ProductSkeleton />}>
         <ProductRecommend
           productId={product.id}
@@ -62,7 +72,7 @@ const ProductDetail = async ({ params }: Props) => {
           subcategory={product.subcategory}
         />
       </Suspense>
-    </>
+    </div>
   );
 };
 

@@ -19,7 +19,7 @@ const ProductRecommend = async (props: Props) => {
   return (
     <div className="flex flex-col space-y-5">
       <div className="flex justify-between">
-        <p className="text-xl font-bold">Related Product</p>
+        <p className="text-2xl font-bold">Related Product</p>
         <Button asChild>
           <Link href={`/collections/${link}`}>Browse all</Link>
         </Button>

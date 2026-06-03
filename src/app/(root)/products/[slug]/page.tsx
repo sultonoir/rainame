@@ -24,11 +24,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 const page = async ({ params }: Props) => {
   return (
-    <div className="mx-auto relative z-0 container my-10 min-h-screen space-y-4">
-      <Suspense fallback={<ProductPageSkeleton />}>
-        <ProductDetail params={params} />
-      </Suspense>
-    </div>
+    <Suspense fallback={<ProductPageSkeleton />}>
+      <ProductDetail params={params} />
+    </Suspense>
   );
 };
 
