@@ -8,9 +8,10 @@ import { Label } from "@/components/ui/label";
 
 type Props = {
   max: number;
+  onAmountChange: (amount: number) => void;
 };
 
-const QuantitySelector = ({ max }: Props) => {
+const QuantitySelector = ({ max, onAmountChange }: Props) => {
   const [count, setCount] = React.useState(1);
   const min = 1;
 
@@ -49,6 +50,7 @@ const QuantitySelector = ({ max }: Props) => {
 
       const newVal = Math.min(Math.max(count + diff, min), max);
       setCount(newVal); // Update the value with the new value
+      onAmountChange(newVal);
     };
 
   return (

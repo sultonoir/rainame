@@ -1,6 +1,7 @@
 import { Category } from "@/modules/category/category.types";
 import React from "react";
 import NavbarCategoryMobile from "./navbar-category-mobile";
+import CartLink from "../cart/cart-link";
 
 interface Props {
   categories: Category[];
@@ -9,8 +10,7 @@ interface Props {
 const NavbarMobile = ({ categories }: Props) => {
   return (
     <div className="flex items-center gap-2">
-      {/* <SearchForm />
-          <CartSidebar /> */}
+      <CartLink />
       <NavbarCategoryMobile categories={categories} />
     </div>
   );

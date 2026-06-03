@@ -296,10 +296,17 @@ exports.Prisma.ProductScalarFieldEnum = {
 
 exports.Prisma.CartScalarFieldEnum = {
   id: 'id',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CartItemScalarFieldEnum = {
+  id: 'id',
+  cartId: 'cartId',
   productId: 'productId',
   quantity: 'quantity',
   size: 'size',
-  userId: 'userId',
   createdAt: 'createdAt'
 };
 
@@ -404,6 +411,7 @@ exports.Prisma.ModelName = {
   Posts: 'Posts',
   Product: 'Product',
   Cart: 'Cart',
+  CartItem: 'CartItem',
   Wishlist: 'Wishlist',
   ProductAnalytic: 'ProductAnalytic',
   ProductVariant: 'ProductVariant',

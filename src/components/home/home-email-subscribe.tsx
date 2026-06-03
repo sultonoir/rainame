@@ -40,7 +40,7 @@ export default function HomeEmailSubscription() {
         </ul>
         <div className="relative mt-10 w-full md:max-w-sm">
           <input
-            className="border-default focus:border-primary-300 focus:ring-primary-200 disabled:bg-primary-200 dark:border-primary-700 dark:bg-default-900 dark:focus:ring-primary-600 dark:disabled:bg-primary-800 focus:ring-opacity-50 dark:focus:ring-opacity-25 placeholder:text-muted-foreground block h-11 w-full rounded-full border bg-white px-4 py-3 text-sm font-normal outline-none focus:ring text-foreground"
+            className="border-default focus:border-primary-300 focus:ring-primary-200 disabled:bg-primary-200 dark:border-primary-700 dark:bg-default-900 dark:focus:ring-primary-600 dark:disabled:bg-primary-800 focus:ring-opacity-50 dark:focus:ring-opacity-25 placeholder:text-muted-foreground block h-11 w-full rounded-full border bg-white px-4 py-3 text-sm font-normal outline-none focus:ring text-black"
             placeholder="Enter your email"
             type="email"
           />

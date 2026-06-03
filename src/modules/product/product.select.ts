@@ -42,7 +42,6 @@ export const productCardSelect = {
   id: true,
   name: true,
   slug: true,
-  summary: true,
   normalPrice: true,
   discountedPrice: true,
   discount: true,

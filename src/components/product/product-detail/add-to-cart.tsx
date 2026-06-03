@@ -1,16 +1,40 @@
 import { Button } from "@/components/ui/button";
-import { Variant } from "@/modules/product/product.types";
+import { addToCart } from "@/modules/cart/cart.action";
+import { useTransition } from "react";
+import { toast } from "sonner";
 
 type Props = {
   productId: string;
-  variant?: Variant;
+  size?: string;
+  quantity: number;
 };
 
-const AddToCart = ({ productId, variant }: Props) => {
-  const isPending = !variant;
+const AddToCart = ({ productId, size, quantity }: Props) => {
+  const [isPending, startTransition] = useTransition();
+  const isDisabled = !size || isPending;
+
+  const handleAddtoCart = () => {
+    if (!size) {
+      return;
+    }
+    startTransition(async () => {
+      const result = await addToCart({
+        productId,
+        size,
+        quantity
+      });
+
+      if (!result.ok) {
+        toast.error(result.error.message);
+        return;
+      }
+      toast.success(result.data.message);
+    });
+  };
   return (
     <Button
-      disabled={isPending}
+      onClick={handleAddtoCart}
+      disabled={isDisabled}
       className="h-full w-3/4">
       Add to cart
     </Button>

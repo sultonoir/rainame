@@ -11,11 +11,16 @@ type Props = {
 };
 
 const PurchasePanel = ({ variants, productId }: Props) => {
+  const [count, setCount] = useState(1);
   const [select, setSelect] = useState<Variant | undefined>(undefined);
 
   // handle select
   const handleSelect = (variant: Variant) => {
     setSelect((prev) => (prev?.id === variant.id ? undefined : variant));
+  };
+
+  const handleAmountChange = (amount: number) => {
+    setCount(amount);
   };
 
   return (
@@ -39,11 +44,13 @@ const PurchasePanel = ({ variants, productId }: Props) => {
         <QuantitySelector
           max={select?.amount ?? 1}
           key={select?.id}
+          onAmountChange={handleAmountChange}
         />
         <div className="flex-1">
           <AddToCart
             productId={productId}
-            variant={select}
+            quantity={count}
+            size={select?.name}
           />
         </div>
       </div>

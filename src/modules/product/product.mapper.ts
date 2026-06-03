@@ -22,7 +22,6 @@ export const toProductCardDto = (
       id: product.id,
       name: product.name,
       slug: product.slug,
-      summary: product.summary,
       normalPrice: product.normalPrice,
       discountedPrice: product.discountedPrice,
       discount: product.discount,
