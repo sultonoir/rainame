@@ -43,7 +43,6 @@ const PurchasePanel = ({ variants, productId }: Props) => {
       <div className="flex gap-4 mt-2 w-full">
         <QuantitySelector
           max={select?.amount ?? 1}
-          key={select?.id}
           onAmountChange={handleAmountChange}
         />
         <div className="flex-1">

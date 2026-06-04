@@ -49,6 +49,38 @@ export const addToCart = async (input: unknown) => {
   }
 };
 
+export const updateCartItem = async (input: unknown) => {
+  try {
+    const cartId = await getOrCreateCartId();
+
+    await carts.updateCartItem(input, cartId);
+
+    updateTag(`cart-items-${cartId}`);
+
+    return success({
+      message: "Product quantity updated",
+    });
+  } catch (error) {
+    return failure(error);
+  }
+};
+
+export const removeFromCart = async (input: unknown) => {
+  try {
+    const cartId = await getOrCreateCartId();
+
+    await carts.removeFromCart(input, cartId);
+
+    updateTag(`cart-items-${cartId}`);
+
+    return success({
+      message: "Product has been removed",
+    });
+  } catch (error) {
+    return failure(error);
+  }
+};
+
 export const getCartItems = async () => {
   const cartId = await getCartId();
 

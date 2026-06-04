@@ -13,13 +13,13 @@ export const cartItemSelect = {
       discountedPrice: true,
       normalPrice: true,
       media: {
-        select: {
-          id: true,
-          url: true,
-          blur: true,
-        },
         orderBy: {
           createdAt: "asc",
+        },
+        select: {
+          url: true,
+          id: true,
+          blur: true,
         },
       },
     },

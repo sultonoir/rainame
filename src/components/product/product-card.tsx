@@ -13,7 +13,7 @@ interface ProductCardProps {
 const ProductCard: FunctionComponent<ProductCardProps> = ({ product }) => {
   return (
     <Card className="relative isolate gap-2 overflow-hidden p-4">
-      <div className="rounded-ele relative aspect-square w-full overflow-hidden pb-4">
+      <div className="relative aspect-square w-full overflow-hidden pb-4">
         <Image
           alt="Wireless Bluetooth Headphones"
           className="h-full w-full shrink-0 overflow-hidden rounded-lg object-cover"

@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import { InputAddTocart } from "./cart.types";
+import { InputAddTocart, InputUpdateQuantity } from "./cart.types";
 
 export class CartRepository {
   async findById(id: string) {
@@ -63,12 +63,33 @@ export class CartRepository {
                 url: true,
                 blur: true,
               },
-              orderBy :{
-                createdAt : "asc"
-              }
+              orderBy: {
+                createdAt: "asc",
+              },
             },
           },
         },
+      },
+    });
+  }
+
+  async updateQuantity({ cartId, itemId, quantity }: InputUpdateQuantity) {
+    await db.cartItem.update({
+      where: {
+        id: itemId,
+        cartId,
+      },
+      data: {
+        quantity,
+      },
+    });
+  }
+
+  async removeCartItemById(itemId: string, cartId: string) {
+    await db.cartItem.delete({
+      where: {
+        id: itemId,
+        cartId,
       },
     });
   }

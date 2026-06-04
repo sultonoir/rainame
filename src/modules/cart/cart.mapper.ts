@@ -12,18 +12,14 @@ export const toCartDto = (carts: CartItemRaw[]): CartItemDto[] => {
       );
     }
 
-    const price =
-      cart.product.discount > 0
-        ? cart.product.discountedPrice
-        : cart.product.normalPrice;
-
     return {
       id: cart.id,
       size: cart.size,
       quantity: cart.quantity,
       slug: cart.product.slug,
       discount: cart.product.discount,
-      price,
+      price: cart.product.discountedPrice,
+      originalPrice: cart.product.normalPrice,
       name: cart.product.name,
       image,
     };
